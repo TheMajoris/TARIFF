@@ -18,7 +18,8 @@ jobs:
           distribution: 'temurin'
 
       - name: Make gradlew executable
-        run: chmod +x ./core/gradlew
+        working-directory: core
+        run: chmod +x ./gradlew
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -34,9 +35,11 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./core/gradlew build
+        working-directory: core
+        run: chmod +x ./gradlew
 
       - name: Run tests
-        run: ./core/gradlew test
+        working-directory: core
+        run: .gradlew test
 
 
