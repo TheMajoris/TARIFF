@@ -40,6 +40,6 @@ jobs:
 
       - name: Run tests
         working-directory: core
-        run: .gradlew test
+        run: ./gradlew test
 
 
