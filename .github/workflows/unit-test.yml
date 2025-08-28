@@ -31,7 +31,6 @@ jobs:
         run: chmod +x ./core/gradlew
 
       - name: Run tests
-        working-directory: core
         run: ./core/gradlew test
 
 
