@@ -55,8 +55,8 @@ cd core
 ```
 ./gradlew build
 ```
-
-1. **Navigate to the frontend directory:**
+### **Frontend Setup**
+1. Navigate to the frontend directory:
 ```bash
 cd frontend
 ```
