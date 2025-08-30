@@ -47,16 +47,21 @@ git clone https://github.com/your-org/repository-name.git
 ```
 ### **Backend Setup**
 1. **Navigate to the backend directory:**
-```
+```bash
 cd core
 ```
 
 2. **Setup the application:**
-```
+```bash
 ./gradlew build
 ```
+
+3. **Run Tests:**
+```bash
+./gradlew test
+```
 ### **Frontend Setup**
-1. Navigate to the frontend directory:
+1. **Navigate to the frontend directory:**
 ```bash
 cd frontend
 ```
@@ -70,3 +75,29 @@ npm install
 ```bash
 npm run dev -- --open
 ```
+
+4. **Run Tests:**
+```bash
+# Unit tests
+npm run test:unit
+
+#E2E tests
+npm run test:e2e
+```
+
+## API Documentation
+
+API documentation is available in [docs/api.json](docs/api.json).
+
+## Development Workflow
+
+- **Issue Tracking**: Issues are tracked in JIRA
+- **Branch Naming**: Relevant 
+- **Pull Requests**: Use the provided [PR template](.github/pull_request_template.md)
+- **CI/CD**: Automated testing via GitHub Actions
+
+## Testing
+
+- **Backend**: Unit tests with JUnit
+- **Frontend**: Unit tests with Vitest, E2E tests with Playwright
+- **CI**: Automated testing on pull requests
