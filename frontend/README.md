@@ -41,4 +41,4 @@ npm run preview
 ## Contributing
 - View feature requests on JIRA.
 - Follow branch naming and commit message conventions such as titling the respective JIRA key.
-- Issues are tracked in Jira..
+- Issues are tracked in Jira.
