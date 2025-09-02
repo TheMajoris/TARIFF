@@ -37,13 +37,13 @@ TARIFF is an application designed to help international traders navigate current
 ## Getting Started
 
 ### Prerequisites
-- **Node.js** (v18 or higher)
-- **Java** (JDK 17 or higher)
+- **Node.js** (v20.19.0 or higher)
+- **Java** (JDK 17)
 - **PostgreSQL** (for production database)
 
 ### **Clone Repo**
 ```
-git clone https://github.com/your-org/repository-name.git
+git clone https://github.com/TheMajoris/CS203
 ```
 ### **Backend Setup**
 1. **Navigate to the backend directory:**
@@ -53,12 +53,12 @@ cd core
 
 2. **Setup the application:**
 ```bash
-./gradlew build
+bash gradlew build
 ```
 
 3. **Run Tests:**
 ```bash
-./gradlew test
+bash gradlew test
 ```
 ### **Frontend Setup**
 1. **Navigate to the frontend directory:**
@@ -69,6 +69,7 @@ cd frontend
 2. **Install dependencies:**
 ```bash
 npm install
+npx playwright install
 ```
 
 3. **Start development server:**
