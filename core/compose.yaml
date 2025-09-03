@@ -1,1 +1,14 @@
 services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ilovecs203
+      POSTGRES_USER: ilovecs203
+      POSTGRES_PASSWORD: ilovecs203
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
