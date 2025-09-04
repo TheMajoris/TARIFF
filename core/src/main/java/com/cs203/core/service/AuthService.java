@@ -6,8 +6,11 @@ import com.cs203.core.dto.responses.RefreshLoginResponseDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
-    GenericResponseDTO login(LoginRequestDTO loginRequestDTO);
-    String generateAccessToken(UserDetails userDetails);
-    String getJwkSet();
-    RefreshLoginResponseDTO buildUserInformationResponse(UserEntity userEntity);
+  GenericResponseDTO login(LoginRequestDTO loginRequestDTO);
+
+  String generateAccessToken(UserDetails userDetails);
+
+  String getJwkSet();
+
+  RefreshLoginResponseDTO buildUserInformationResponse(UserEntity userEntity);
 }
