@@ -85,6 +85,14 @@ npm run test:unit
 npm run test:e2e
 ```
 
+5. **Database Setup**
+```bash
+#Setup an admin user in the database
+sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin123';"
+sudo -u postgres psql -c "CREATE DATABASE tariff_db OWNER admin;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tariff_db TO admin;"
+```
+
 ## API Documentation
 
 API documentation is available in [docs/api.json](docs/api.json).
