@@ -1,7 +1,13 @@
 package com.cs203.core.service;
 
+import com.cs203.core.dto.requests.LoginRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;
+import com.cs203.core.dto.responses.RefreshLoginResponseDTO;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
-    GenericResponseDTOseDTO login(LoginRequestDTO loginRequestDTO);
+    GenericResponseDTO login(LoginRequestDTO loginRequestDTO);
+    String generateAccessToken(UserDetails userDetails);
+    String getJwkSet();
+    RefreshLoginResponseDTO buildUserInformationResponse(UserEntity userEntity);
 }
