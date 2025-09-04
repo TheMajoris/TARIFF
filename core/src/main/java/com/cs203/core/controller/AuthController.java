@@ -1,6 +1,7 @@
 package com.cs203.core.controller;
 
 import com.cs203.core.service.AuthService;
+import com.cs203.core.utils.CookieUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
