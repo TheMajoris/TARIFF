@@ -1,3 +1,5 @@
+package com.cs203.core.entity;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
