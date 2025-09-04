@@ -23,6 +23,7 @@ class CoreApplicationTests {
         try {
             Integer result = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
             assertNotNull(result, "Could not execute simple query. Check database connection.");
+            System.out.println("Database connection test succeeded: SELECT 1 returned " + result);
         } catch (Exception e) {
             throw new AssertionError("Exception during database test: " + e.getMessage(), e);
         }
