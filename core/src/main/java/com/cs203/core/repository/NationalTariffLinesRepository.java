@@ -39,11 +39,11 @@ public interface NationalTariffLinesRepository extends JpaRepository<NationalTar
     List<NationalTariffLinesEntity> findByTariffLineCodeContaining(String tariffLineCode);
     
     // Custom query to find tariff lines by country code
-    @Query("SELECT ntl FROM NationalTariffLines ntl WHERE ntl.country.countryCode = :countryCode")
+    @Query("SELECT ntl FROM NationalTariffLinesEntity ntl JOIN ntl.country c WHERE c.countryCode = :countryCode")
     List<NationalTariffLinesEntity> findByCountryCode(@Param("countryCode") String countryCode);
     
     // Custom query to find tariff lines by HS code and country
-    @Query("SELECT ntl FROM NationalTariffLines ntl WHERE ntl.parentHsCode.categoryCode = :hsCode AND ntl.country.id = :countryId")
+    @Query("SELECT ntl FROM NationalTariffLinesEntity ntl WHERE ntl.parentHsCode.categoryCode = :hsCode AND ntl.country.id = :countryId")
     List<NationalTariffLinesEntity> findByHsCodeAndCountryId(@Param("hsCode") Integer hsCode, @Param("countryId") Long countryId);
     
     // Check if tariff line exists for country and code
