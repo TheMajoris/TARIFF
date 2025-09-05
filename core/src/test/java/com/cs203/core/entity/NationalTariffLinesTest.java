@@ -34,7 +34,7 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should create valid NationalTariffLines")
     void shouldCreateValidNationalTariffLines() {
-        NationalTariffLines tariffLine = new NationalTariffLines(
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
             testCountry,
             "8501.10.10",
             "DC motors not exceeding 37.5 W",
@@ -55,9 +55,9 @@ class NationalTariffLinesTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
-        NationalTariffLines tariffLine = new NationalTariffLines();
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity();
         
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         assertFalse(violations.isEmpty());
         
         // Should have violations for required fields
@@ -71,12 +71,12 @@ class NationalTariffLinesTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
-        NationalTariffLines tariffLine = new NationalTariffLines();
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity();
         tariffLine.setCountry(testCountry);
         
         // Test empty tariff line code
         tariffLine.setTariffLineCode("");
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Tariff line code is required")));
         
         // Test tariff line code too long
@@ -97,12 +97,12 @@ class NationalTariffLinesTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
-        NationalTariffLines tariffLine = new NationalTariffLines(testCountry, "8501.10.10", null, null, null);
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(testCountry, "8501.10.10", null, null, null);
         
         // Test description too long
         String longDescription = "A".repeat(501);
         tariffLine.setDescription(longDescription);
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Description cannot exceed 500 characters")));
         
         // Test valid description
@@ -122,11 +122,11 @@ class NationalTariffLinesTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
-        NationalTariffLines tariffLine = new NationalTariffLines(testCountry, "8501.10.10", "Test description", null, null);
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(testCountry, "8501.10.10", "Test description", null, null);
         
         // Test level too low
         tariffLine.setLevel(0);
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Level must be at least 1")));
         
         // Test level too high
@@ -148,7 +148,7 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should handle all getters and setters")
     void shouldHandleAllGettersAndSetters() {
-        NationalTariffLines tariffLine = new NationalTariffLines();
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity();
         
         tariffLine.setId(100L);
         tariffLine.setCountry(testCountry);
@@ -172,11 +172,11 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should create tariff line with minimal required fields")
     void shouldCreateTariffLineWithMinimalRequiredFields() {
-        NationalTariffLines tariffLine = new NationalTariffLines(testCountry, "8501.10.90", null, null, null);
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(testCountry, "8501.10.90", null, null, null);
         
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         
         assertTrue(violations.isEmpty());
         assertEquals(testCountry, tariffLine.getCountry());
@@ -189,7 +189,7 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should handle empty constructor")
     void shouldHandleEmptyConstructor() {
-        NationalTariffLines tariffLine = new NationalTariffLines();
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity();
         
         assertNull(tariffLine.getId());
         assertNull(tariffLine.getCountry());
@@ -204,7 +204,7 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should handle complete tariff line creation")
     void shouldHandleCompleteTariffLineCreation() {
-        NationalTariffLines tariffLine = new NationalTariffLines(
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
             testCountry,
             "8501.31.10",
             "DC motors over 750 W but not exceeding 75 kW",
@@ -216,7 +216,7 @@ class NationalTariffLinesTest {
         
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         
         assertTrue(violations.isEmpty());
         assertEquals(testCountry, tariffLine.getCountry());
@@ -241,7 +241,7 @@ class NationalTariffLinesTest {
         UserEntity otherUser = new UserEntity("adminuser", "admin@example.com", "adminpassword");
         otherUser.setId(2L);
         
-        NationalTariffLines tariffLine = new NationalTariffLines(
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
             canadaCountry,
             "8501.20.10",
             "Canadian specific tariff line",
@@ -253,7 +253,7 @@ class NationalTariffLinesTest {
         
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         
         assertTrue(violations.isEmpty());
         assertEquals(canadaCountry, tariffLine.getCountry());
@@ -268,11 +268,11 @@ class NationalTariffLinesTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
-        NationalTariffLines tariffLine = new NationalTariffLines(testCountry, "8501.10.10", "Test", null, null);
+        NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(testCountry, "8501.10.10", "Test", null, null);
         
         // Test minimum valid level
         tariffLine.setLevel(1);
-        Set<ConstraintViolation<NationalTariffLines>> violations = validator.validate(tariffLine);
+        Set<ConstraintViolation<NationalTariffLinesEntity>> violations = validator.validate(tariffLine);
         assertTrue(violations.stream().noneMatch(v -> v.getPropertyPath().toString().equals("level")));
         
         // Test maximum valid level

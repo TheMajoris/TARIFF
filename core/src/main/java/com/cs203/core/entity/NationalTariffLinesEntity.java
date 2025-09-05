@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "national_tariff_lines")
-public class NationalTariffLines {
+public class NationalTariffLinesEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +44,9 @@ public class NationalTariffLines {
     private UserEntity updatedBy;
 
     // Constructors
-    public NationalTariffLines() {}
+    public NationalTariffLinesEntity() {}
 
-    public NationalTariffLines(CountryEntity country, String tariffLineCode, String description, ProductCategoriesEntity parentHsCode, Integer level) {
+    public NationalTariffLinesEntity(CountryEntity country, String tariffLineCode, String description, ProductCategoriesEntity parentHsCode, Integer level) {
         this.country = country;
         this.tariffLineCode = tariffLineCode;
         this.description = description;
