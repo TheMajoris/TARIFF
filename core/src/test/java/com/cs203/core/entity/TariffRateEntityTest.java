@@ -19,10 +19,23 @@ class TariffRateEntityTest {
     @Test
     @DisplayName("Should create valid TariffRateEntity")
     void shouldCreateValidTariffRateEntity() {
+        // Create entity objects
+        CountryEntity importingCountry = new CountryEntity();
+        importingCountry.setId(1L);
+        importingCountry.setCountryCode("US");
+        
+        CountryEntity exportingCountry = new CountryEntity();
+        exportingCountry.setId(2L);
+        exportingCountry.setCountryCode("SG");
+        
+        ProductCategoriesEntity productCategory = new ProductCategoriesEntity();
+        productCategory.setCategoryCode(850110);
+        productCategory.setCategoryName("Electronics");
+        
         TariffRateEntity tariffRate = new TariffRateEntity(
-            1L, 
-            2L, 
-            850110,
+            importingCountry, 
+            exportingCountry, 
+            productCategory,
             new BigDecimal("5.25"), 
             "AD_VALOREM", 
             "PERCENT", 
@@ -68,10 +81,23 @@ class TariffRateEntityTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         
+        // Create entity objects for testing
+        CountryEntity importingCountry = new CountryEntity();
+        importingCountry.setId(1L);
+        importingCountry.setCountryCode("US");
+        
+        CountryEntity exportingCountry = new CountryEntity();
+        exportingCountry.setId(2L);
+        exportingCountry.setCountryCode("SG");
+        
+        ProductCategoriesEntity productCategory = new ProductCategoriesEntity();
+        productCategory.setCategoryCode(850110);
+        productCategory.setCategoryName("Electronics");
+        
         TariffRateEntity tariffRate = new TariffRateEntity();
-        tariffRate.setImportingCountryId(1L);
-        tariffRate.setExportingCountryId(2L);
-        tariffRate.setHsCode(850110);
+        tariffRate.setImportingCountry(importingCountry);
+        tariffRate.setExportingCountry(exportingCountry);
+        tariffRate.setProductCategory(productCategory);
         tariffRate.setTariffType("AD_VALOREM");
         tariffRate.setEffectiveDate(LocalDate.now());
         
@@ -145,12 +171,25 @@ class TariffRateEntityTest {
     @Test
     @DisplayName("Should handle all getters and setters")
     void shouldHandleAllGettersAndSetters() {
+        // Create entity objects
+        CountryEntity importingCountry = new CountryEntity();
+        importingCountry.setId(1L);
+        importingCountry.setCountryCode("US");
+        
+        CountryEntity exportingCountry = new CountryEntity();
+        exportingCountry.setId(2L);
+        exportingCountry.setCountryCode("SG");
+        
+        ProductCategoriesEntity productCategory = new ProductCategoriesEntity();
+        productCategory.setCategoryCode(850110);
+        productCategory.setCategoryName("Electronics");
+        
         TariffRateEntity tariffRate = new TariffRateEntity();
         
         tariffRate.setId(100L);
-        tariffRate.setImportingCountryId(1L);
-        tariffRate.setExportingCountryId(2L);
-        tariffRate.setHsCode(850110);
+        tariffRate.setImportingCountry(importingCountry);
+        tariffRate.setExportingCountry(exportingCountry);
+        tariffRate.setProductCategory(productCategory);
         tariffRate.setTariffRate(new BigDecimal("7.5"));
         tariffRate.setTariffType("SPECIFIC");
         tariffRate.setRateUnit("USD_PER_KG");
