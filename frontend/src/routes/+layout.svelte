@@ -122,7 +122,7 @@
 				<li class="menu-title"><span>Main</span></li>
 				<li><a href="/" class:active={page.url.pathname === '/'}>Dashboard</a></li>
 				<li><a href="/tariff" class:active={page.url.pathname === '/tariff'}>Tariff</a></li>
-                <li class="menu-title"><span>Support</span></li>
+				<li class="menu-title"><span>Support</span></li>
 				<li><a href="/settings" class:active={page.url.pathname === '/settings'}>Settings</a></li>
 				<li><a href="/support" class:active={page.url.pathname === '/support'}>Support</a></li>
 			</ul>
