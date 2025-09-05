@@ -1,7 +1,6 @@
 package com.cs203.core.repository;
 
 import com.cs203.core.entity.*;
-import com.cs203.core.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
