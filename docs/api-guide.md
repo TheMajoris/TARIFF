@@ -6,7 +6,6 @@ This API guide is mainly for TARIFF developers.
 
 | Keywords | Definition |
 | --- | --- |
-| Internal API | Represents _all_ the APIs that are used by TCS. In the docs, these are marked with `x-internal: true` attribute. |
 | Public API | Represents the APIs that do not require authentication. |
 | Private API | Represents the APIs that require authentication. |
 
