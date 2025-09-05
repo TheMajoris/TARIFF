@@ -30,12 +30,6 @@ public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
     // Check if country name exists
     boolean existsByCountryName(String countryName);
     
-    // Find countries by partial name (case insensitive)
-    List<CountryEntity> findByCountryNameContainingIgnoreCase(String countryName);
-    
-    // Find countries by region (case insensitive)
-    List<CountryEntity> findByRegionIgnoreCase(String region);
-    
     // Find all unique regions
     @Query("SELECT DISTINCT c.region FROM CountryEntity c WHERE c.region IS NOT NULL ORDER BY c.region")
     List<String> findAllRegions();
@@ -43,9 +37,6 @@ public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
     // Find all unique currency codes
     @Query("SELECT DISTINCT c.currencyCode FROM CountryEntity c WHERE c.currencyCode IS NOT NULL ORDER BY c.currencyCode")
     List<String> findAllCurrencyCodes();
-    
-    // Find countries by multiple regions
-    List<CountryEntity> findByRegionIn(List<String> regions);
     
     // Find countries by multiple currency codes
     List<CountryEntity> findByCurrencyCodeIn(List<String> currencyCodes);

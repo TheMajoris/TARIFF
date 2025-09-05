@@ -20,15 +20,15 @@ class TariffRateEntityTest {
     @DisplayName("Should create valid TariffRateEntity")
     void shouldCreateValidTariffRateEntity() {
         TariffRateEntity tariffRate = new TariffRateEntity(
-            1L,  // importing country
-            2L,  // exporting country
-            850110, // HS code
-            new BigDecimal("5.25"), // tariff rate
-            "AD_VALOREM", // tariff type
-            "PERCENT", // rate unit
-            LocalDate.of(2024, 1, 1), // effective date
-            LocalDate.of(2025, 12, 31), // expiry date
-            false // preferential tariff
+            1L, 
+            2L, 
+            850110,
+            new BigDecimal("5.25"), 
+            "AD_VALOREM", 
+            "PERCENT", 
+            LocalDate.of(2024, 1, 1), 
+            LocalDate.of(2025, 12, 31),
+            false 
         );
 
         assertEquals(1L, tariffRate.getImportingCountryId());
