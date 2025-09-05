@@ -12,10 +12,11 @@ public class ProductCategoriesEntity {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(name = "hs_code", nullable = false, unique = true, length = 20)
-    @NotBlank(message = "HS code is required")
-    @Size(min = 2, max = 20, message = "HS code must be between 2 and 6 characters")
-    private int categoryCode;
+    @Column(name = "hs_code", nullable = false, unique = true)
+    @NotNull(message = "HS code is required")
+    @Min(value = 10, message = "HS code must be at least 2 digits")
+    @Max(value = 999999999, message = "HS code cannot exceed 9 digits")
+    private Integer categoryCode;
 
     @Column(name = "category_name", nullable = false, length = 100)
     @NotBlank(message = "Category name is required")
@@ -35,7 +36,7 @@ public class ProductCategoriesEntity {
     // Constructors
     public ProductCategoriesEntity() {}
 
-    public ProductCategoriesEntity(int categoryCode, String categoryName, String description, Double tariffBaseRate) {
+    public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description, Double tariffBaseRate) {
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
         this.description = description;
@@ -46,8 +47,8 @@ public class ProductCategoriesEntity {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public int getCategoryCode() { return categoryCode; }
-    public void setCategoryCode(int categoryCode) { this.categoryCode = categoryCode; }
+    public Integer getCategoryCode() { return categoryCode; }
+    public void setCategoryCode(Integer categoryCode) { this.categoryCode = categoryCode; }
 
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }

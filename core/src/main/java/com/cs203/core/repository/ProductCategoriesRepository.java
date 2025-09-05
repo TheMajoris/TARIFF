@@ -35,11 +35,11 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
     List<ProductCategoriesEntity> findByTariffBaseRateBetween(Double minRate, Double maxRate);
     
     // Find categories with tariff rate greater than specified value
-    List<ProductCategoriesEntity> findByTariffBaseRateGreaterThan(Double rate);
+    List<ProductCategoriesEntity> findByTariffBaseRateGreaterThan(Double rate);     
     
     // Find categories with tariff rate less than specified value
     List<ProductCategoriesEntity> findByTariffBaseRateLessThan(Double rate);
-    
+
     // Find active categories ordered by name
     List<ProductCategoriesEntity> findByIsActiveTrueOrderByCategoryNameAsc();
     
