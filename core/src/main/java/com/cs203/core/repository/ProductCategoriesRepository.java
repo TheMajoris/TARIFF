@@ -17,7 +17,7 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
     Optional<ProductCategoriesEntity> findByCategoryName(String categoryName);
     
     // Check if category code exists
-    boolean existsByCategoryCode(String categoryCode);
+    boolean existsByCategoryCode(int categoryCode);
     
     // Check if category name exists
     boolean existsByCategoryName(String categoryName);
@@ -30,9 +30,6 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
     
     // Find categories by partial name (case insensitive)
     List<ProductCategoriesEntity> findByCategoryNameContainingIgnoreCase(String categoryName);
-    
-    // Find categories by partial code (case insensitive)
-    List<ProductCategoriesEntity> findByCategoryCodeContainingIgnoreCase(String categoryCode);
     
     // Find categories by tariff rate range
     List<ProductCategoriesEntity> findByTariffBaseRateBetween(Double minRate, Double maxRate);
