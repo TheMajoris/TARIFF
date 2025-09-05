@@ -2,8 +2,6 @@ package com.cs203.core.repository;
 
 import com.cs203.core.entity.ProductCategoriesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,13 +48,6 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
     
     // Find active categories ordered by tariff rate
     List<ProductCategoriesEntity> findByIsActiveTrueOrderByTariffBaseRateAsc();
-    
-    // Search categories by any field containing text
-    @Query("SELECT p FROM ProductCategoriesEntity p WHERE " +
-           "LOWER(p.categoryCode) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(p.categoryName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(p.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-    List<ProductCategoriesEntity> searchCategories(@Param("searchTerm") String searchTerm);
     
     // Count active categories
     long countByIsActiveTrue();
