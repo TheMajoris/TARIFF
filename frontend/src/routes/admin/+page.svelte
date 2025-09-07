@@ -20,7 +20,7 @@
 
 	let edit = false;
 	let create = false;
-	// Dummy news
+
 	let tariff = [
 		{
 			tariff_id: 'TAR001',
@@ -96,6 +96,7 @@
 
 	// function to validate & submit tariff
 	function submitTariff() {
+		// check for blank values
 		if (
 			selectedTariff.tariff_id &&
 			selectedTariff.importing_country &&
@@ -161,7 +162,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- <ul class="space-y-4"> -->
 						{#each tariff as line}
 							<tr>
 								<td>{line.tariff_id}</td>
@@ -180,7 +180,6 @@
 								>
 							</tr>
 						{/each}
-						<!-- </ul> -->
 					</tbody>
 				</table>
 			</div>
