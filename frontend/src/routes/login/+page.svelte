@@ -34,12 +34,13 @@
 		<div class="card bg-base-100 p-6 shadow-md">
 			<h2 class="mb-1 text-lg font-semibold">Login</h2>
 
-			<form class="space-y-4">
+			<form class="space-y-4"  on:submit|preventDefault={login}>
 				<!-- Email -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Email</label>
+					<label class="label text-sm font-medium" for="emailInput">Email</label>
 					<input
 						type="email"
+						id="emailInput"
 						bind:value={email}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your email"
@@ -49,9 +50,10 @@
 
 				<!-- Password -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Password</label>
+					<label class="label text-sm font-medium" for="passwordInput">Password</label>
 					<input
 						type="password"
+						id="passwordInput"
 						bind:value={password}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your password"
@@ -70,7 +72,7 @@
 				<!-- Submit -->
 				<div class="form-control flex justify-around">
 					<a href="./register" class="btn btn-primary btn-sm w-1/3">Register</a>
-					<button type="button" onclick={login} class="btn btn-primary btn-sm w-1/3">Login</button>
+					<button type="submit" class="btn btn-primary btn-sm w-1/3">Login</button>
 				</div>
 			</form>
 		</div>

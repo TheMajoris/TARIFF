@@ -82,12 +82,13 @@
 		<div class="card bg-base-100 p-6 shadow-md">
 			<h2 class="mb-1 text-lg font-semibold">Register</h2>
 
-			<form class="space-y-4">
+			<form class="space-y-4"  on:submit|preventDefault={register}>
 				<!-- First Name -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">First Name</label>
+					<label class="label text-sm font-medium" for="firstNameInput">First Name</label>
 					<input
 						type="text"
+						id="firstNameInput"
 						bind:value={firstName}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your first name"
@@ -97,9 +98,10 @@
 
 				<!-- Last Name -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Last Name</label>
+					<label class="label text-sm font-medium" for="lastNameInput">Last Name</label>
 					<input
 						type="text"
+						id="lastNameInput"
 						bind:value={lastName}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your last name"
@@ -109,9 +111,10 @@
 
 				<!-- Username -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Username</label>
+					<label class="label text-sm font-medium" for="usernameInput">Username</label>
 					<input
 						type="text"
+						id="usernameInput"
 						bind:value={username}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your username"
@@ -121,9 +124,10 @@
 
 				<!-- Email -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Email</label>
+					<label class="label text-sm font-medium" for="emailInput">Email</label>
 					<input
 						type="email"
+						id="emailInput"
 						bind:value={email}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your email"
@@ -133,9 +137,10 @@
 
 				<!-- Password -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Password</label>
+					<label class="label text-sm font-medium" for="passwordInput">Password</label>
 					<input
 						type="password"
+						id="passwordInput"
 						bind:value={password}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your password"
@@ -144,24 +149,27 @@
 				</div>
 
 				<div>
+					<!-- to load the color classes, if not it will not work -->
+					<p class="text-green-500 text-red-500 invisible"></p>
 					<p class="mt-2 text-sm text-gray-500">
 						Password requirements:<br />
-						<span class="text-{passwordLength() ? 'green' : 'red'}-500 text-xl">✖</span>
+						<span class="text-{passwordLength() ? 'green' : 'red'}-500 text-xl">{passwordLength() ? '✔' : '✖'}</span>
 						Contain at least 8 characters<br />
-						<span class="text-{passwordUpperLower() ? 'green' : 'red'}-500 text-xl">✖</span>
+						<span class="text-{passwordUpperLower() ? 'green' : 'red'}-500 text-xl">{passwordUpperLower() ? '✔' : '✖'}</span>
 						Contain both lower and uppercase letters<br />
-						<span class="text-{passwordNumber() ? 'green' : 'red'}-500 text-xl">✖</span>
+						<span class="text-{passwordNumber() ? 'green' : 'red'}-500 text-xl">{passwordNumber() ? '✔' : '✖'}</span>
 						Contain at least 1 number<br />
-						<span class="text-{passwordSpecialCharacter() ? 'green' : 'red'}-500 text-xl">✖</span>
+						<span class="text-{passwordSpecialCharacter() ? 'green' : 'red'}-500 text-xl">{passwordSpecialCharacter() ? '✔' : '✖'}</span>
 						Contain at least 1 special character<br />
 					</p>
 				</div>
 
 				<!-- Password -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Confirm Password</label>
+					<label class="label text-sm font-medium" for="password2Input">Confirm Password</label>
 					<input
 						type="password"
+						id="password2Input"
 						bind:value={password2}
 						class="input input-bordered w-full text-sm"
 						placeholder="Enter your password again"
@@ -172,7 +180,7 @@
 				<!-- Submit -->
 				<div class="form-control flex justify-around">
 					<button class="btn btn-primary btn-sm invisible w-1/3"></button>
-					<button type="button" onclick={register} class="btn btn-primary btn-sm w-1/3"
+					<button type="submit" class="btn btn-primary btn-sm w-1/3"
 						>Register</button
 					>
 				</div>
