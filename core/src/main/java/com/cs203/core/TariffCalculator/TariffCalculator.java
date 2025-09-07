@@ -1,21 +1,30 @@
 package com.cs203.core.TariffCalculator;
 
+import java.math.BigDecimal;
 
 public class TariffCalculator {
     // takes in the ID from the database
-    Double tariff;
+    private BigDecimal tariffRate;
+    private BigDecimal finalPrice;
 
-    public TariffCalculator(String originCountry, String destinationCountry, Long itemId, Integer itemCount, Double itemValue){
-        this.tariff = calculateTariff(originCountry, destinationCountry, itemId, itemCount, itemValue);
+    public TariffCalculator(BigDecimal tariffRate, BigDecimal finalPrice) {
+        this.tariffRate = tariffRate;
+        this.finalPrice = finalPrice;
     }
 
-    public Double calculateTariff(String originCountry, String destinationCountry, Long itemId, Integer itemCount, Double itemValue){
-        //Temporary placeholder for method to obtain tariff between countries
-        return 0.20;
+    public void setTariffRate(BigDecimal Tariff) {
+        this.tariffRate = Tariff;
     }
 
-    public double finalPrice(Integer itemCount, Double itemValue){
-        double initialPrice = itemValue * itemCount;
-        return initialPrice + (initialPrice * tariff);
+    public void setFinalPrice(BigDecimal finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public BigDecimal getTariffRate(){
+        return tariffRate;
+    }
+
+    public BigDecimal getFinalPrice(){
+        return finalPrice;
     }
 }
