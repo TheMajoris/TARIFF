@@ -10,5 +10,5 @@ public interface TokenService {
 
     RefreshToken validateRefreshToken(UUID refreshToken);
 
-    GenericResponseDTO refreshToken(String refreshToken);
+    GenericResponseDTO logout(UUID refreshToken);
 }
