@@ -1,16 +1,29 @@
 package com.cs203.core.TariffCalculator;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
 
 @RestController
+@RequestMapping("/Calculator")
 public class TariffCalculatorController {
-    @GetMapping("/Calculator")
-    
-    // public TariffCalculator calculator(Long importingCountryId, Long exportingCountryId, Integer hsCode, Integer itemCount,
-    // Double itemValue) {
-    //     return new TariffCalculator(importingCountryId, exportingCountryId, hsCode, itemCount,
-    //             itemValue);
-    // }
+    private final TariffCalculatorService tariffCalculatorService;
+
+    public TariffCalculatorController(TariffCalculatorService tariffCalculatorService) {
+        this.tariffCalculatorService = tariffCalculatorService;
+    }
+
+    //creating a new calculator object based on the input params, & setting the rates and finalPrice
+    @GetMapping("/Calculator/{importingCountryId}/{exportingCountryId}/{hsCode}/{initialPrice}")
+    public TariffCalculator calculator(
+            @PathVariable Long importingCountryId,
+            @PathVariable Long exportingCountryId,
+            @PathVariable Integer hsCode,
+            @PathVariable BigDecimal initialPrice) {
+
+        TariffCalculator calculator = new TariffCalculator(null, null);
+        tariffCalculatorService.setTariffRate(calculator, importingCountryId, exportingCountryId, hsCode);
+        tariffCalculatorService.setFinalPrice(initialPrice, calculator);
+        return calculator;
+    }
 
 }
