@@ -3,11 +3,11 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: ilovecs203
-      POSTGRES_USER: ilovecs203
-      POSTGRES_PASSWORD: ilovecs203
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
