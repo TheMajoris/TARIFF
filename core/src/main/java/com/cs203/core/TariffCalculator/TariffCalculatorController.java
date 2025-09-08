@@ -13,12 +13,12 @@ public class TariffCalculatorController {
     }
 
     //creating a new calculator object based on the input params, & setting the rates and finalPrice
-    @GetMapping("/Calculator/{importingCountryId}/{exportingCountryId}/{hsCode}/{initialPrice}")
+    @GetMapping
     public TariffCalculator calculator(
-            @PathVariable Long importingCountryId,
-            @PathVariable Long exportingCountryId,
-            @PathVariable Integer hsCode,
-            @PathVariable BigDecimal initialPrice) {
+            @RequestParam Long importingCountryId,
+            @RequestParam Long exportingCountryId,
+            @RequestParam Integer hsCode,
+            @RequestParam BigDecimal initialPrice) {
 
         TariffCalculator calculator = new TariffCalculator(null, null);
         tariffCalculatorService.setTariffRate(calculator, importingCountryId, exportingCountryId, hsCode);
