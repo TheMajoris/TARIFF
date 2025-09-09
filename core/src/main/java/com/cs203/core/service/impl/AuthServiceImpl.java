@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         UserEntity userEntity = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new InvalidUserCredentials("User does not exist"));
 
-        logger.info("{} login successful", userEmail)
+        logger.info("{} login successful", userEmail);
 
         return new GenericResponseDTO(
                 true,
