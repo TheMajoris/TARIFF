@@ -2,17 +2,14 @@ package com.cs203.core.TariffCalculator;
 
 import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.repository.TariffRateRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class TariffCalculatorServiceTests {
