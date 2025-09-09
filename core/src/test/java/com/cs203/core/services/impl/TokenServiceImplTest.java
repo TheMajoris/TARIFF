@@ -4,6 +4,7 @@ import com.cs203.core.repository.TokenRepository;
 import com.cs203.core.repository.UserRepository;
 import com.cs203.core.service.impl.TokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 public class TokenServiceImplTest {
