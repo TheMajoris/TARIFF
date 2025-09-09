@@ -37,6 +37,9 @@ public class UserEntity {
     @Size(max = 100, message = "Last name cannot exceed 100 characters")
     private String lastName;
 
+    @Column(nullable = false)
+    private boolean enabled;
+
     // Constructors
     public UserEntity() {}
 
@@ -67,4 +70,11 @@ public class UserEntity {
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public boolean isEnabled() { return enabled; }
+
+    @PrePersist
+    void setUp() {
+        this.enabled = true;
+    }
 }
