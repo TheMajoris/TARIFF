@@ -17,7 +17,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
-                new SimpleGrantedAuthority(userEntity.getIsAdmin() ? "Admin" : "Trader")
+                new SimpleGrantedAuthority(userEntity.getUserRole().getAuthority())
         );
     }
 

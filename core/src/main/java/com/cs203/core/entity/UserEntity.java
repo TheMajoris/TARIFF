@@ -1,5 +1,6 @@
 package com.cs203.core.entity;
 
+import com.cs203.core.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -72,6 +73,9 @@ public class UserEntity {
     public void setLastName(String lastName) { this.lastName = lastName; }
 
     public boolean isEnabled() { return enabled; }
+
+    @Transient
+    public UserRole getUserRole() { return getIsAdmin() ? UserRole.ADMIN : UserRole.TRADER; }
 
     @PrePersist
     void setUp() {
