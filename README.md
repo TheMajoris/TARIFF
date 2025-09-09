@@ -51,6 +51,11 @@ git clone https://github.com/TheMajoris/CS203
 cd core
 ```
 
+1.5. **Setup local instance of DB**
+```bash
+docker compose up build -d
+```
+
 2. **Setup the application:**
 ```bash
 bash gradlew build
@@ -92,6 +97,11 @@ npm run test:e2e
 sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin123';"
 sudo -u postgres psql -c "CREATE DATABASE tariff_db OWNER admin;"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tariff_db TO admin;"
+```
+
+6. **Tear Down**
+```bash
+docker compose down -v
 ```
 
 ## API Documentation
