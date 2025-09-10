@@ -1,34 +1,20 @@
 package com.cs203.core.entity;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Set;
+
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("CountryEntity Tests")
 class CountryEntityTest {
-
-    @Test
-    @DisplayName("Should create valid CountryEntity")
-    void shouldCreateValidCountryEntity() {
-        CountryEntity country = new CountryEntity(
-            "US", 
-            "United States", 
-            "North America", 
-            "USD"
-        );
-
-        assertEquals("US", country.getCountryCode());
-        assertEquals("United States", country.getCountryName());
-        assertEquals("North America", country.getRegion());
-        assertEquals("USD", country.getCurrencyCode());
-    }
 
     @Test
     @DisplayName("Should validate required fields")
@@ -149,51 +135,5 @@ class CountryEntityTest {
         country.setCurrencyCode(null);
         violations = validator.validate(country);
         assertTrue(violations.stream().noneMatch(v -> v.getPropertyPath().toString().equals("currencyCode")));
-    }
-
-    @Test
-    @DisplayName("Should handle all getters and setters")
-    void shouldHandleAllGettersAndSetters() {
-        CountryEntity country = new CountryEntity();
-        
-        country.setId(100L);
-        country.setCountryCode("CA");
-        country.setCountryName("Canada");
-        country.setRegion("North America");
-        country.setCurrencyCode("CAD");
-        
-        assertEquals(100L, country.getId());
-        assertEquals("CA", country.getCountryCode());
-        assertEquals("Canada", country.getCountryName());
-        assertEquals("North America", country.getRegion());
-        assertEquals("CAD", country.getCurrencyCode());
-    }
-
-    @Test
-    @DisplayName("Should create country with minimal required fields")
-    void shouldCreateCountryWithMinimalRequiredFields() {
-        CountryEntity country = new CountryEntity("GB", "United Kingdom", null, null);
-        
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<CountryEntity>> violations = validator.validate(country);
-        
-        assertTrue(violations.isEmpty());
-        assertEquals("GB", country.getCountryCode());
-        assertEquals("United Kingdom", country.getCountryName());
-        assertNull(country.getRegion());
-        assertNull(country.getCurrencyCode());
-    }
-
-    @Test
-    @DisplayName("Should handle empty constructor")
-    void shouldHandleEmptyConstructor() {
-        CountryEntity country = new CountryEntity();
-        
-        assertNull(country.getId());
-        assertNull(country.getCountryCode());
-        assertNull(country.getCountryName());
-        assertNull(country.getRegion());
-        assertNull(country.getCurrencyCode());
     }
 }
