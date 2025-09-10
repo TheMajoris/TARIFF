@@ -8,6 +8,7 @@ on:
       - SCRUM-22-fix-github-unit-test
     paths:
       - core/**
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   run-unit-test:
