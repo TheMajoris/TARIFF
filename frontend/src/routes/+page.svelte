@@ -22,6 +22,7 @@
             bind:value={productSearch}
             class="input input-bordered w-full text-sm mb-2"
             on:focus={() => (showProductDropdown = true)}
+			required
           />
           {#if showProductDropdown && filteredProducts.length > 0}
             <ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
