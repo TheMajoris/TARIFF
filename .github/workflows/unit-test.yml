@@ -7,6 +7,22 @@ on:
 jobs:
   run-unit-test:
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: admin123
+          POSTGRES_USER: admin
+          POSTGRES_DB: tariff_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -33,10 +49,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
-      - name: Build with Gradle
-        working-directory: core
-        run: chmod +x ./gradlew
 
       - name: Run tests
         working-directory: core
