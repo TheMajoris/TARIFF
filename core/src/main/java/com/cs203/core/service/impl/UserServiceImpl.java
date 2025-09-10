@@ -3,6 +3,7 @@ package com.cs203.core.service.impl;
 import com.cs203.core.dto.requests.CreateUserRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;
 import com.cs203.core.entity.UserEntity;
+import com.cs203.core.mapper.UserEntityMapper;
 import com.cs203.core.repository.UserRepository;
 import com.cs203.core.service.UserService;
 import jakarta.transaction.Transactional;
@@ -32,11 +33,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public GenericResponseDTO createUser(CreateUserRequestDTO createUserRequestDTO) {
         String passwordHash = passwordEncoder.encode(createUserRequestDTO.password());
-        UserEntity userEntity = new UserEntity(
-                createUserRequestDTO.firstName(),
-                createUserRequestDTO.email(),
-                passwordHash
-        );
+        UserEntity userEntity = UserEntityMapper.INSTANCE.createUserRequestDTOtoUserEntity(createUserRequestDTO);
+        userEntity.setPasswordHash(passwordHash);
         userEntity.setEnabled(true);
         userRepository.save(userEntity);
         logger.info("User Entity created successfully");

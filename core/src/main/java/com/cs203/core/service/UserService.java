@@ -4,5 +4,5 @@ import com.cs203.core.dto.requests.CreateUserRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;
 
 public interface UserService {
-    GenericResponseDTO createUser(CreateUserRequestDTO createUserResponseDTO);
+    GenericResponseDTO createUser(CreateUserRequestDTO createUserRequestDTO);
 }

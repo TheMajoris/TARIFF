@@ -50,7 +50,8 @@ public class UserServiceImplTest {
                 "Bananini",
                 "cb@example.com",
                 "password",
-                Boolean.FALSE
+                "Chimpanzini Bananini",
+                false
         );
         SecurityContextHolder.setContext(securityContext);
 
