@@ -1,4 +1,4 @@
-package com.cs203.core.configs;
+package com.cs203.core.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

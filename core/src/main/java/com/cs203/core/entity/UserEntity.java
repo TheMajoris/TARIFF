@@ -73,6 +73,7 @@ public class UserEntity {
     public void setLastName(String lastName) { this.lastName = lastName; }
 
     public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
     @Transient
     public UserRole getUserRole() { return getIsAdmin() ? UserRole.ADMIN : UserRole.TRADER; }
