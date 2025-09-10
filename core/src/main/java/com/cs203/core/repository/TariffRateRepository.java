@@ -15,14 +15,20 @@ import java.util.Optional;
 public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Long> {
     
     // Find tariff rates by country pair and HS code
+    @Query("SELECT t FROM TariffRateEntity t WHERE " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.exportingCountry.id = :exportingCountryId AND " +
+           "t.productCategory.categoryCode = :hsCode")
     List<TariffRateEntity> findByImportingCountryIdAndExportingCountryIdAndHsCode(
-        Long importingCountryId, Long exportingCountryId, Integer hsCode);
+        @Param("importingCountryId") Long importingCountryId, 
+        @Param("exportingCountryId") Long exportingCountryId, 
+        @Param("hsCode") Integer hsCode);
     
     // Find current active tariff rate for a specific trade scenario
     @Query("SELECT t FROM TariffRateEntity t WHERE " +
-           "t.importingCountryId = :importingCountryId AND " +
-           "t.exportingCountryId = :exportingCountryId AND " +
-           "t.hsCode = :hsCode AND " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.exportingCountry.id = :exportingCountryId AND " +
+           "t.productCategory.categoryCode = :hsCode AND " +
            "t.effectiveDate <= :currentDate AND " +
            "(t.expiryDate IS NULL OR t.expiryDate >= :currentDate) " +
            "ORDER BY t.effectiveDate DESC")
@@ -33,13 +39,16 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
         @Param("currentDate") LocalDate currentDate);
     
     // Find all tariff rates by importing country
-    List<TariffRateEntity> findByImportingCountryId(Long importingCountryId);
+    @Query("SELECT t FROM TariffRateEntity t WHERE t.importingCountry.id = :importingCountryId")
+    List<TariffRateEntity> findByImportingCountryId(@Param("importingCountryId") Long importingCountryId);
     
     // Find all tariff rates by exporting country
-    List<TariffRateEntity> findByExportingCountryId(Long exportingCountryId);
+    @Query("SELECT t FROM TariffRateEntity t WHERE t.exportingCountry.id = :exportingCountryId")
+    List<TariffRateEntity> findByExportingCountryId(@Param("exportingCountryId") Long exportingCountryId);
     
     // Find all tariff rates for a specific HS code
-    List<TariffRateEntity> findByHsCode(Integer hsCode);
+    @Query("SELECT t FROM TariffRateEntity t WHERE t.productCategory.categoryCode = :hsCode")
+    List<TariffRateEntity> findByHsCode(@Param("hsCode") Integer hsCode);
     
     // Find tariff rates by type
     List<TariffRateEntity> findByTariffType(String tariffType);
@@ -84,18 +93,29 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
     List<TariffRateEntity> findFutureRates(@Param("currentDate") LocalDate currentDate);
     
     // Find tariff rates by country pair
+    @Query("SELECT t FROM TariffRateEntity t WHERE " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.exportingCountry.id = :exportingCountryId")
     List<TariffRateEntity> findByImportingCountryIdAndExportingCountryId(
-        Long importingCountryId, Long exportingCountryId);
+        @Param("importingCountryId") Long importingCountryId, 
+        @Param("exportingCountryId") Long exportingCountryId);
     
     // Find preferential rates for country pair
+    @Query("SELECT t FROM TariffRateEntity t WHERE " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.exportingCountry.id = :exportingCountryId AND " +
+           "t.preferentialTariff = true")
     List<TariffRateEntity> findByImportingCountryIdAndExportingCountryIdAndPreferentialTariffTrue(
-        Long importingCountryId, Long exportingCountryId);
+        @Param("importingCountryId") Long importingCountryId, 
+        @Param("exportingCountryId") Long exportingCountryId);
     
     // Count tariff rates by importing country
-    long countByImportingCountryId(Long importingCountryId);
+    @Query("SELECT COUNT(t) FROM TariffRateEntity t WHERE t.importingCountry.id = :importingCountryId")
+    long countByImportingCountryId(@Param("importingCountryId") Long importingCountryId);
     
     // Count tariff rates by exporting country
-    long countByExportingCountryId(Long exportingCountryId);
+    @Query("SELECT COUNT(t) FROM TariffRateEntity t WHERE t.exportingCountry.id = :exportingCountryId")
+    long countByExportingCountryId(@Param("exportingCountryId") Long exportingCountryId);
     
     // Count preferential tariff rates
     long countByPreferentialTariffTrue();
@@ -113,16 +133,23 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
     List<TariffRateEntity> findAllByOrderByEffectiveDateDesc();
     
     // Find rates for importing country ordered by HS code
-    List<TariffRateEntity> findByImportingCountryIdOrderByHsCodeAsc(Long importingCountryId);
+    @Query("SELECT t FROM TariffRateEntity t WHERE t.importingCountry.id = :importingCountryId ORDER BY t.productCategory.categoryCode ASC")
+    List<TariffRateEntity> findByImportingCountryIdOrderByHsCodeAsc(@Param("importingCountryId") Long importingCountryId);
     
     // Check if a tariff rate exists for specific trade scenario
+    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM TariffRateEntity t WHERE " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.exportingCountry.id = :exportingCountryId AND " +
+           "t.productCategory.categoryCode = :hsCode")
     boolean existsByImportingCountryIdAndExportingCountryIdAndHsCode(
-        Long importingCountryId, Long exportingCountryId, Integer hsCode);
+        @Param("importingCountryId") Long importingCountryId, 
+        @Param("exportingCountryId") Long exportingCountryId, 
+        @Param("hsCode") Integer hsCode);
     
     // Complex query to find competitive rates (comparing with other exporters)
     @Query("SELECT t FROM TariffRateEntity t WHERE " +
-           "t.importingCountryId = :importingCountryId AND " +
-           "t.hsCode = :hsCode AND " +
+           "t.importingCountry.id = :importingCountryId AND " +
+           "t.productCategory.categoryCode = :hsCode AND " +
            "t.effectiveDate <= :currentDate AND " +
            "(t.expiryDate IS NULL OR t.expiryDate >= :currentDate) " +
            "ORDER BY t.tariffRate ASC")

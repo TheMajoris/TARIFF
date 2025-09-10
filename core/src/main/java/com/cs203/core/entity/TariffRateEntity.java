@@ -18,18 +18,6 @@ public class TariffRateEntity {
     @Column(name = "tariff_id")
     private Long id;
 
-    @Column(name = "importing_country_id", nullable = false)
-    @NotNull(message = "Importing country is required")
-    private Long importingCountryId;
-
-    @Column(name = "exporting_country_id", nullable = false)
-    @NotNull(message = "Exporting country is required")
-    private Long exportingCountryId;
-
-    @Column(name = "hs_code", nullable = false)
-    @NotNull(message = "HS code is required")
-    private Integer hsCode;
-
     @Column(name = "tariff_rate", nullable = false, precision = 10, scale = 4)
     @NotNull(message = "Tariff rate is required")
     @DecimalMin(value = "0.0", message = "Tariff rate must be non-negative")
@@ -63,28 +51,32 @@ public class TariffRateEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Foreign Key Relationships
+    // Foreign Key Relationships (REMOVED insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "importing_country_id", referencedColumnName = "country_id", insertable = false, updatable = false)
+    @JoinColumn(name = "importing_country_id", referencedColumnName = "country_id", nullable = false)
+    @NotNull(message = "Importing country is required")
     private CountryEntity importingCountry;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exporting_country_id", referencedColumnName = "country_id", insertable = false, updatable = false)
+    @JoinColumn(name = "exporting_country_id", referencedColumnName = "country_id", nullable = false)
+    @NotNull(message = "Exporting country is required")
     private CountryEntity exportingCountry;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hs_code", referencedColumnName = "hs_code", insertable = false, updatable = false)
+    @JoinColumn(name = "hs_code", referencedColumnName = "hs_code", nullable = false)
+    @NotNull(message = "HS code is required")
     private ProductCategoriesEntity productCategory;
 
     // Constructors
     public TariffRateEntity() {}
 
-    public TariffRateEntity(Long importingCountryId, Long exportingCountryId, Integer hsCode, 
-                           BigDecimal tariffRate, String tariffType, String rateUnit, 
-                           LocalDate effectiveDate, LocalDate expiryDate, Boolean preferentialTariff) {
-        this.importingCountryId = importingCountryId;
-        this.exportingCountryId = exportingCountryId;
-        this.hsCode = hsCode;
+    public TariffRateEntity(CountryEntity importingCountry, CountryEntity exportingCountry, 
+                           ProductCategoriesEntity productCategory, BigDecimal tariffRate, 
+                           String tariffType, String rateUnit, LocalDate effectiveDate, 
+                           LocalDate expiryDate, Boolean preferentialTariff) {
+        this.importingCountry = importingCountry;
+        this.exportingCountry = exportingCountry;
+        this.productCategory = productCategory;
         this.tariffRate = tariffRate;
         this.tariffType = tariffType;
         this.rateUnit = rateUnit;
@@ -97,14 +89,14 @@ public class TariffRateEntity {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getImportingCountryId() { return importingCountryId; }
-    public void setImportingCountryId(Long importingCountryId) { this.importingCountryId = importingCountryId; }
+    public CountryEntity getImportingCountry() { return importingCountry; }
+    public void setImportingCountry(CountryEntity importingCountry) { this.importingCountry = importingCountry; }
 
-    public Long getExportingCountryId() { return exportingCountryId; }
-    public void setExportingCountryId(Long exportingCountryId) { this.exportingCountryId = exportingCountryId; }
+    public CountryEntity getExportingCountry() { return exportingCountry; }
+    public void setExportingCountry(CountryEntity exportingCountry) { this.exportingCountry = exportingCountry; }
 
-    public Integer getHsCode() { return hsCode; }
-    public void setHsCode(Integer hsCode) { this.hsCode = hsCode; }
+    public ProductCategoriesEntity getProductCategory() { return productCategory; }
+    public void setProductCategory(ProductCategoriesEntity productCategory) { this.productCategory = productCategory; }
 
     public BigDecimal getTariffRate() { return tariffRate; }
     public void setTariffRate(BigDecimal tariffRate) { this.tariffRate = tariffRate; }
@@ -130,14 +122,18 @@ public class TariffRateEntity {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public CountryEntity getImportingCountry() { return importingCountry; }
-    public void setImportingCountry(CountryEntity importingCountry) { this.importingCountry = importingCountry; }
+    // Convenience getters for backward compatibility with your repository queries
+    public Long getImportingCountryId() {
+        return importingCountry != null ? importingCountry.getId() : null;
+    }
 
-    public CountryEntity getExportingCountry() { return exportingCountry; }
-    public void setExportingCountry(CountryEntity exportingCountry) { this.exportingCountry = exportingCountry; }
+    public Long getExportingCountryId() {
+        return exportingCountry != null ? exportingCountry.getId() : null;
+    }
 
-    public ProductCategoriesEntity getProductCategory() { return productCategory; }
-    public void setProductCategory(ProductCategoriesEntity productCategory) { this.productCategory = productCategory; }
+    public Integer getHsCode() {
+        return productCategory != null ? productCategory.getCategoryCode() : null;
+    }
 
     // Helper methods
     public boolean isCurrentlyActive() {

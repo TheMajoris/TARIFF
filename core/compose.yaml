@@ -3,9 +3,9 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: tariff_db
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
