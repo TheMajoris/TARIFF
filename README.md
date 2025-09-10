@@ -53,7 +53,9 @@ cd core
 
 1.5. **Setup local instance of DB**
 ```bash
-docker compose up build -d
+docker compose up --build -d
+or
+docker compose up -f
 ```
 
 2. **Setup the application:**
@@ -97,7 +99,12 @@ npm run test:e2e
 sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin123';"
 sudo -u postgres psql -c "CREATE DATABASE tariff_db OWNER admin;"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tariff_db TO admin;"
+sudo docker exec -it core-db-1 psql -U admin -d tariff_db
 ```
+You guys should see something like this
+<img width="800" height="651" alt="image" src="https://github.com/user-attachments/assets/aa80d9c1-1bbe-4ec6-9a17-ecbd176704db" />
+
+
 
 6. **Tear Down**
 ```bash
