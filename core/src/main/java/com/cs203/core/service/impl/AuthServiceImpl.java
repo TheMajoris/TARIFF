@@ -77,6 +77,4 @@ public class AuthServiceImpl implements AuthService {
                 this.generateAccessToken(new User(userEntity))
         );
     }
-
-
 }

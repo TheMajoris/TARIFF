@@ -8,7 +8,9 @@ import com.cs203.core.repository.UserRepository;
 import com.cs203.core.service.impl.TokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.OffsetDateTime;
@@ -21,11 +23,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TokenServiceImplTest {
 
     @Mock
     private TokenRepository tokenRepository;
-
     @Mock
     private UserRepository userRepository;
 
@@ -39,7 +41,7 @@ public class TokenServiceImplTest {
     @Test
     void createRefreshToken_ValidEmail_ReturnsToken() {
         // Arrange
-        String email = "test@example.com";
+        String email = "cb@example.com";
         UserEntity user = new UserEntity();
         user.setEmail(email);
 

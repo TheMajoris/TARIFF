@@ -5,11 +5,9 @@ import com.cs203.core.dto.responses.GenericResponseDTO;
 import com.cs203.core.entity.UserEntity;
 import com.cs203.core.repository.UserRepository;
 import com.cs203.core.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.persistence.Transient;
 import jakarta.transaction.Transactional;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,5 +47,4 @@ public class UserServiceImpl implements UserService {
                 ZonedDateTime.now()
         );
     }
-
 }

@@ -16,12 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -42,10 +40,6 @@ public class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         userService = new UserServiceImpl(userRepository, passwordEncoder);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(jwt);
-        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -58,14 +52,14 @@ public class UserServiceImplTest {
                 "password",
                 Boolean.FALSE
         );
-
-        when(jwt.getClaimAsString("sub")).thenReturn(UUID.randomUUID().toString());
-        when(userRepository.findById(any())).thenReturn(Optional.of(new UserEntity()));
+        SecurityContextHolder.setContext(securityContext);
 
         // Act
         GenericResponseDTO response = userService.createUser(request);
 
         // Assert
+        verify(userRepository).save(any(UserEntity.class)); // verify interaction
         assertTrue(response.success());
+        assertEquals("User creation successful.", response.message());
     }
 }
