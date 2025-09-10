@@ -17,10 +17,8 @@ class NationalTariffLinesTest {
     void setUp() {
         testCountry = new CountryEntity("US", "United States", "North America", "USD");
         testCountry.setId(1L);
-        
         testCategory = new ProductCategoriesEntity(850110, "Electric Motors", "Electric motors description", 5.5);
         testCategory.setId(1L);
-        
         testUser = new UserEntity("testuser", "test@example.com", "hashedpassword");
         testUser.setId(1L);
     }
@@ -46,16 +44,12 @@ class NationalTariffLinesTest {
     @Test
     @DisplayName("Should handle relationships correctly")
     void shouldHandleRelationshipsCorrectly() {
-        // Create different entities for relationships
         CountryEntity canadaCountry = new CountryEntity("CA", "Canada", "North America", "CAD");
         canadaCountry.setId(2L);
-        
         ProductCategoriesEntity otherCategory = new ProductCategoriesEntity(850120, "Electric Generators", "Generator description", 7.0);
         otherCategory.setId(2L);
-        
         UserEntity otherUser = new UserEntity("adminuser", "admin@example.com", "adminpassword");
         otherUser.setId(2L);
-        
         NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
             canadaCountry,
             "8501.20.10",
@@ -65,7 +59,6 @@ class NationalTariffLinesTest {
         );
         tariffLine.setCreatedBy(testUser);
         tariffLine.setUpdatedBy(otherUser);
-
         assertEquals(canadaCountry, tariffLine.getCountry());
         assertEquals(otherCategory, tariffLine.getParentHsCode());
         assertEquals(testUser, tariffLine.getCreatedBy());
