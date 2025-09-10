@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum UserRole {
-    TRADER("ROLE_TRADER"),
+    NOT_ADMIN("ROLE_NOT_ADMIN"),
     ADMIN("ROLE_ADMIN");
 
     private final String authority;

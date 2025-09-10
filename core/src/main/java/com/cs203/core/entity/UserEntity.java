@@ -76,7 +76,7 @@ public class UserEntity {
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
     @Transient
-    public UserRole getUserRole() { return getIsAdmin() ? UserRole.ADMIN : UserRole.TRADER; }
+    public UserRole getUserRole() { return getIsAdmin() ? UserRole.ADMIN : UserRole.NOT_ADMIN; }
 
     @PrePersist
     void setUp() {
