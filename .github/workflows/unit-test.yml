@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - core/**
+  push:
+    branches:
+      - SCRUM-22-fix-github-unit-test
+    paths:
+      - core/**
 
 jobs:
   run-unit-test:
