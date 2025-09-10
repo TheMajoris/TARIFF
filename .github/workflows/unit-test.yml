@@ -59,5 +59,12 @@ jobs:
       - name: Run tests
         working-directory: core
         env:
-          SPRING_APP_NAME: core
-        run: ./gradlew test
+        SPRING_APP_NAME: core
+        DATABASE_URL: jdbc:postgresql://localhost:5432/testdb
+        DATABASE_USERNAME: testuser
+        DATABASE_PASSWORD: testpass
+        JPA_DDL_AUTO: create-drop
+        JPA_SHOW_SQL: true
+      run: |
+        cd core
+        ./gradlew test
