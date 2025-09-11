@@ -1,7 +1,16 @@
 package com.cs203.core.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "product_categories")
@@ -15,7 +24,7 @@ public class ProductCategoriesEntity {
     @Column(name = "hs_code", nullable = false, unique = true)
     @NotNull(message = "HS code is required")
     @Min(value = 10, message = "HS code must be at least 2 digits")
-    @Max(value = 999999999, message = "HS code cannot exceed 9 digits")
+    @Max(value = 999999, message = "HS code cannot exceed 6 digits")
     private Integer categoryCode;
 
     @Column(name = "category_name", nullable = false, length = 100)
