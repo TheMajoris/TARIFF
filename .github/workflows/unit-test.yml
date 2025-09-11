@@ -3,18 +3,25 @@ on:
   pull_request:
     paths:
       - core/**
+  push:
+    branches:
+      - SCRUM-22-fix-github-unit-test
+    paths:
+      - core/**
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   run-unit-test:
+    environment: balls
     runs-on: ubuntu-latest
     
     services:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_PASSWORD: admin123
-          POSTGRES_USER: admin
-          POSTGRES_DB: tariff_db
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         ports:
           - 5432:5432
         options: >-
@@ -52,6 +59,11 @@ jobs:
 
       - name: Run tests
         working-directory: core
+        env:
+          SPRING_APP_NAME: core
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          JPA_DDL_AUTO: create-drop
+          JPA_SHOW_SQL: true
         run: ./gradlew test
-
-
