@@ -33,6 +33,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenericResponseDTO'
+        '401':
+          description: Invalid credentials
 
   /api/v1/auth/logout:
     post:
