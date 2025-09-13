@@ -45,6 +45,12 @@ public class ProductCategoriesEntity {
     // Constructors
     public ProductCategoriesEntity() {}
 
+    public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description) {
+        this.categoryCode = categoryCode;
+        this.categoryName = categoryName;
+        this.description = description;
+    }
+
     public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description, Double tariffBaseRate) {
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
