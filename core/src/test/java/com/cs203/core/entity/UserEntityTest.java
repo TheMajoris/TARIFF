@@ -1,11 +1,9 @@
 package com.cs203.core.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("UserEntity Tests")
 class UserEntityTest {
@@ -13,11 +11,14 @@ class UserEntityTest {
     @Test
     @DisplayName("Should create valid UserEntity")
     void shouldCreateValidUserEntity() {
-        UserEntity user = new UserEntity(
-            "testuser", 
-            "test@example.com", 
-            "hashedpassword123"
-        );
+        UserEntity user = new UserEntity();
+        user.setUsername("testuser");
+        user.setEmail("test@example.com");
+        user.setPasswordHash("hashedpassword123");
+        user.setIsAdmin(false);
+        user.setFirstName("Test");
+        user.setLastName("User");
+        user.setEnabled(true);
 
         assertEquals("testuser", user.getUsername());
         assertEquals("test@example.com", user.getEmail());
@@ -28,8 +29,16 @@ class UserEntityTest {
     @Test
     @DisplayName("Should allow setting admin status")
     void shouldAllowSettingAdminStatus() {
-        UserEntity user = new UserEntity("adminuser", "admin@example.com", "securehashedpassword");
+        UserEntity user = new UserEntity();
+        user.setUsername("adminuser");
+        user.setEmail("admin@example.com");
+        user.setPasswordHash("securehashedpassword");
+        user.setIsAdmin(false);
+        user.setFirstName("Test");
+        user.setLastName("User");
+        user.setEnabled(true);
         user.setIsAdmin(true);
+
         assertTrue(user.getIsAdmin());
     }
 }
