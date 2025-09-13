@@ -9,6 +9,7 @@
 	<!-- Main content -->
 	<div class="drawer-content bg-base-200 flex min-h-screen flex-col">
 		<!-- Navbar (mobile only) -->
+		{#if (page.url.pathname !== '/login' && page.url.pathname !== '/register')}
 		<div class="navbar bg-base-100 px-4 shadow lg:hidden">
 			<label for="sidebar-toggle" class="btn btn-square btn-ghost drawer-button">
 				<!-- Hamburger -->
@@ -29,6 +30,7 @@
 			</label>
 			<span class="text-primary flex-1 text-xl font-bold">TARIFF</span>
 		</div>
+		{/if}
 
 		<!-- Page content -->
 		<main class="flex-1 p-6">
@@ -112,6 +114,7 @@
 	</div>
 
 	<!-- Sidebar -->
+	{#if (page.url.pathname !== '/login' && page.url.pathname !== '/register')}
 	<div class="drawer-side">
 		<label for="sidebar-toggle" class="drawer-overlay"></label>
 		<aside class="bg-base-100 flex min-h-screen w-64 flex-col shadow-lg">
@@ -164,4 +167,5 @@
 			</div>
 		</aside>
 	</div>
+	{/if}
 </div>
