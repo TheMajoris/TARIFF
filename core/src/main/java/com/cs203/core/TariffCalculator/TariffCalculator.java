@@ -3,7 +3,6 @@ package com.cs203.core.TariffCalculator;
 import java.math.BigDecimal;
 
 public class TariffCalculator {
-    // takes in the ID from the database
     private BigDecimal tariffRate;
     private BigDecimal finalPrice;
 
