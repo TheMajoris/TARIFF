@@ -96,7 +96,7 @@
           <button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
         </div>
       </form>
-	  <!-- Calculation Result -->
+	<!-- Calculation Result -->
 	{#if calculationResult}
 	<div class="card bg-base-100 shadow-md mt-6 p-6">
 		<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
