@@ -285,7 +285,7 @@
 			};
 
 		} catch (err) {
-			console.error("Error calculating cost:", err);
+			console.error("Error calculating cost: ", err);
 		}
 		} else {
 		alert("Please fill in all fields before calculating.");
