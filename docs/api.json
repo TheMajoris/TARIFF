@@ -16,26 +16,19 @@ tags:
     description: Authentication operations
 
 paths:
-  /auth/login:
+  /api/v1/auth/login:
     post:
-      summary: User login
+      summary: Login with email and password
       tags: [Authentication]
       requestBody:
-        description: User credentials
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-              required: [email, password]
+              $ref: '#/components/schemas/LoginRequestDTO'
       responses:
         '200':
-          description: Successful login
+          description: Successful login, sets access & refresh tokens in cookies
           content:
             application/json:
               schema:
@@ -43,6 +36,71 @@ paths:
         '401':
           description: Invalid credentials
 
+  /api/v1/auth/logout:
+    post:
+      summary: Logout user
+      tags: [Authentication]
+      parameters:
+        - name: refreshToken
+          in: cookie
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDTO'
+
+  /api/v1/auth/refresh:
+    post:
+      summary: Refresh access token using refresh token
+      tags: [Authentication]
+      parameters:
+        - name: refreshToken
+          in: cookie
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully refreshed token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDTO'
+
+  /api/v1/auth/.well-known/jwks.json:
+    get:
+      summary: Retrieve JWKS (JSON Web Key Set)
+      tags: [Authentication]
+      responses:
+        '200':
+          description: JWKS JSON
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /api/v1/users:
+    post:
+      summary: Create a new user
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDTO'
 # Skeleton placeholders for later
   /tariffs:
     get:
@@ -52,24 +110,55 @@ paths:
         '501':
           description: Not implemented
 
-  /users:
-    get:
-      summary: Placeholder for user operations
-      tags: [User]
-      responses:
-        '501':
-          description: Not implemented
-
 components:
   schemas:
+    CreateUserRequestDTO:
+      type: object
+      required: [firstName, lastName, email, password, username]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        username:
+          type: string
+        isAdmin:
+          type: boolean
+
+    LoginRequestDTO:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
     GenericResponseDTO:
       type: object
       properties:
         success:
           type: boolean
         message:
-          description: Generic payload (may be string or object depending on use case)
+          type: object
         timestamp:
           type: string
           format: date-time
 
+    RefreshLoginResponseDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+        fullName:
+          type: string
+        role:
+          type: string
+        jwt:
+          type: string
