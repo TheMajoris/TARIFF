@@ -1,12 +1,8 @@
 package com.cs203.core.TariffCalculator;
 
-import com.cs203.core.entity.CountryEntity;
-import com.cs203.core.entity.ProductCategoriesEntity;
-import com.cs203.core.entity.TariffRateEntity;
-import com.cs203.core.repository.TariffRateRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,10 +10,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import com.cs203.core.entity.CountryEntity;
+import com.cs203.core.entity.ProductCategoriesEntity;
+import com.cs203.core.entity.TariffRateEntity;
+import com.cs203.core.repository.TariffRateRepository;
 
 class TariffCalculatorServiceTests {
 
@@ -34,10 +34,19 @@ class TariffCalculatorServiceTests {
     }
 
     @Test
-    @DisplayName("setTariffRate picks the lowest available rate")
-    void setTariffRate_usesLowestRate() {
+    @DisplayName("getFinalPrice picks lowest rate and computes final price")
+    void getFinalPrice_usesLowestRate() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
-        TariffCalculatorService service = new TariffCalculatorService(repository);
+        TariffCalculatorService service = new TariffCalculatorService();
+
+        // Wire mock repo into service via reflection (field injection in impl)
+        try {
+            java.lang.reflect.Field f = TariffCalculatorService.class.getDeclaredField("tariffRateRepository");
+            f.setAccessible(true);
+            f.set(service, repository);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         CountryEntity importing = country(1L);
         CountryEntity exporting = country(2L);
@@ -51,38 +60,34 @@ class TariffCalculatorServiceTests {
                 LocalDate.now(), null, false);
 
         List<TariffRateEntity> rates = Arrays.asList(high, low);
-        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(1L, 2L, 123)).thenReturn(rates);
+        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123))).thenReturn(rates);
 
-        TariffCalculator calculator = new TariffCalculator(null, null);
-        service.setTariffRate(calculator, 1L, 2L, 123);
+        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"));
 
-        assertEquals(0, calculator.getTariffRate().compareTo(new BigDecimal("0.10")));
+        assertEquals(0, result.compareTo(new BigDecimal("110.00")));
     }
 
     @Test
-    @DisplayName("setFinalPrice computes price + (price * tariffRate)")
-    void setFinalPrice_computesCorrectly() {
+    @DisplayName("getFinalPrice with no rates returns initial price")
+    void getFinalPrice_noRates_returnsInitialPrice() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
-        TariffCalculatorService service = new TariffCalculatorService(repository);
+        TariffCalculatorService service = new TariffCalculatorService();
 
-        TariffCalculator calculator = new TariffCalculator(new BigDecimal("0.10"), null);
-        service.setFinalPrice(new BigDecimal("100.00"), calculator);
-
-        assertEquals(0, calculator.getFinalPrice().compareTo(new BigDecimal("110.00")));
-    }
-
-    @Test
-    @DisplayName("setTariffRate throws when repository returns no rates")
-    void setTariffRate_noRates_throws() {
-        TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
-        TariffCalculatorService service = new TariffCalculatorService(repository);
+        try {
+            java.lang.reflect.Field f = TariffCalculatorService.class.getDeclaredField("tariffRateRepository");
+            f.setAccessible(true);
+            f.set(service, repository);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123)))
                 .thenReturn(Collections.emptyList());
 
-        TariffCalculator calculator = new TariffCalculator(null, null);
+        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"));
 
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> service.setTariffRate(calculator, 1L, 2L, 123));
+        assertEquals(0, result.compareTo(new BigDecimal("100.00")));
     }
 }
+
+
