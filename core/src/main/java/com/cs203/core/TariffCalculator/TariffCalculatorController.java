@@ -1,29 +1,29 @@
 package com.cs203.core.TariffCalculator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/Calculator")
+@RequestMapping("/api/v1/tariff-rate/calculate")
 public class TariffCalculatorController {
-    private final TariffCalculatorService tariffCalculatorService;
+    @Autowired
+    private TariffCalculatorService tariffCalculatorService;
 
-    public TariffCalculatorController(TariffCalculatorService tariffCalculatorService) {
-        this.tariffCalculatorService = tariffCalculatorService;
-    }
 
-    //creating a new calculator object based on the input params, & setting the rates and finalPrice
-    @GetMapping
-    public TariffCalculator calculator(
-            @RequestParam Long importingCountryId,
-            @RequestParam Long exportingCountryId,
-            @RequestParam Integer hsCode,
-            @RequestParam BigDecimal initialPrice) {
 
-        TariffCalculator calculator = new TariffCalculator(null, null);
-        tariffCalculatorService.setTariffRate(calculator, importingCountryId, exportingCountryId, hsCode);
-        tariffCalculatorService.setFinalPrice(initialPrice, calculator);
-        return calculator;
+    //using the params from request DTO, create final price n return response as DTO
+    @PostMapping
+    public ResponseEntity<TariffCalculatorResponseDTO> getTariffCalculation(@RequestBody TariffCalculatorRequestDTO requestBodyDTO) {
+
+        BigDecimal finalPrice = tariffCalculatorService.getFinalPrice(
+                requestBodyDTO.importingCountryId(),
+                requestBodyDTO.exportingCountryId(),
+                requestBodyDTO.hsCode(),
+                requestBodyDTO.initialPrice()
+        );
+        return ResponseEntity.ok(new TariffCalculatorResponseDTO(finalPrice));
     }
 
 }
