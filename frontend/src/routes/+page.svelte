@@ -1,147 +1,147 @@
 <div class="space-y-6 p-6">
-  <!-- Page Title -->
-  <h1 class="text-primary text-2xl font-semibold">Tariff Calculator</h1>
-  <p class="text-sm text-gray-500">
-    Enter product details, select countries, and calculate the cost of importing goods.
-  </p>
+	<!-- Page Title -->
+	<h1 class="text-primary text-2xl font-semibold">Tariff Calculator</h1>
+	<p class="text-sm text-gray-500">
+		Enter product details, select countries, and calculate the cost of importing goods.
+	</p>
 
-  <!-- Two-column layout -->
-  <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-    <!-- Tariff Calculator Card -->
-    <div class="card bg-base-100 p-6 shadow-md">
-      <h2 class="mb-1 text-lg font-semibold">Tariff Calculator</h2>
-      <p class="mb-4 text-xs text-gray-500">Calculate the cost of importing a product</p>
+  	<!-- Two-column layout -->
+  	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+    	<!-- Tariff Calculator Card -->
+		<div class="card bg-base-100 p-6 shadow-md">
+			<h2 class="mb-1 text-lg font-semibold">Tariff Calculator</h2>
+			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing a product</p>
 
-      <form class="space-y-4" on:submit|preventDefault={calculateCost}>
-        <!-- Product with Search -->
-        <div class="form-control relative">
-          <label class="label text-sm font-medium">Product</label>
-          <input
-            type="text"
-            placeholder="Search product..."
-            bind:value={productSearch}
-            class="input input-bordered w-full text-sm mb-2"
-            on:focus={() => (showProductDropdown = true)}
-            required
-          />
-          {#if showProductDropdown && filteredProducts.length > 0}
-            <ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
-              {#each filteredProducts as item}
-                <li>
-                  <a
-                    class="text-sm"
-                    on:click={() => {
-                      product = item;
-                      productSearch = item;
-                      showProductDropdown = false;
-                    }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              {/each}
-            </ul>
-          {/if}
-        </div>
+			<form class="space-y-4" on:submit|preventDefault={calculateCost}>
+				<!-- Product with Search -->
+				<div class="form-control relative">
+					<label class="label text-sm font-medium">Product</label>
+					<input
+						type="text"
+						placeholder="Search product..."
+						bind:value={productSearch}
+						class="input input-bordered w-full text-sm mb-2"
+						on:focus={() => (showProductDropdown = true)}
+						required
+					/>
+					{#if showProductDropdown && filteredProducts.length > 0}
+					<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
+					{#each filteredProducts as item}
+						<li>
+						<a
+							class="text-sm"
+							on:click={() => {
+							product = item;
+							productSearch = item;
+							showProductDropdown = false;
+							}}
+						>
+							{item}
+						</a>
+						</li>
+					{/each}
+					</ul>
+				{/if}
+				</div>
 
-        <!-- Exporting From -->
-        <div class="form-control">
-			<label class="label text-sm font-medium">Export From</label>
-			<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
-				<option disabled value="">Select country</option>
-				{#each countries as country}
-				<option>{country}</option>
-				{/each}
-			</select>
+				<!-- Exporting From -->
+				<div class="form-control">
+					<label class="label text-sm font-medium">Export From</label>
+					<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
+						<option disabled value="">Select country</option>
+						{#each countries as country}
+						<option>{country}</option>
+						{/each}
+					</select>
+				</div>
+				<!-- Importing To -->
+				<div class="form-control mt-4">
+					<label class="label text-sm font-medium">Importing To</label>
+					<select bind:value={importTo} class="select select-bordered w-full text-sm" required>
+						<option disabled value="">Select country</option>
+						{#each countries as country}
+						<option>{country}</option>
+						{/each}
+					</select>
+				</div>
+
+				<!-- Calculation Date -->
+				<div class="form-control">
+				<label class="label text-sm font-medium">Calculation Date</label>
+				<input
+					type="date"
+					bind:value={calculationDate}
+					class="input input-bordered w-full text-sm"
+					required
+					/>
+				</div>
+
+				<!-- Goods Value -->
+				<div class="form-control">
+				<label class="label text-sm font-medium">Value of Goods (USD)</label>
+				<input
+					type="number"
+					bind:value={goodsValue}
+					min="0"
+					step="0.01"
+					class="input input-bordered w-full text-sm"
+					placeholder="Enter value"
+					on:blur={formatCurrency}
+					required
+				/>
+				</div>
+
+				<!-- Submit -->
+				<div class="form-control">
+				<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
+				</div>
+			</form>
+			<!-- Calculation Result -->
+			{#if calculationResult}
+			<div class="card bg-base-100 shadow-md mt-6 p-6">
+				<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
+
+				<div class="flex justify-between text-sm mb-2">
+				<span>Base Value:</span>
+				<span class="font-medium">${calculationResult.baseValue}</span>
+				</div>
+
+				<div class="flex justify-between text-sm mb-2">
+				<span>Tariff:</span>
+				<span class="text-green-600">+ ${calculationResult.tariff}</span>
+				</div>
+
+				<div class="flex justify-between text-sm mb-4">
+				<span>Customs Duty:</span>
+				<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
+				</div>
+
+				<div class="flex justify-between border-t border-base-300 pt-3">
+				<span class="font-semibold">Total Import Cost:</span>
+				<span class="font-bold text-primary">${calculationResult.totalCost}</span>
+				</div>
+			</div>
+			{/if}
 		</div>
-        <!-- Importing To -->
-        <div class="form-control mt-4">
-			<label class="label text-sm font-medium">Importing To</label>
-			<select bind:value={importTo} class="select select-bordered w-full text-sm" required>
-				<option disabled value="">Select country</option>
-				{#each countries as country}
-				<option>{country}</option>
-				{/each}
-			</select>
+
+		<!-- Related News Card -->
+		<div class="card bg-base-100 p-6 shadow-md">
+		<h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
+		<p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
+
+		<ul class="space-y-4">
+			{#each news as article}
+			<li
+				class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
+				on:click={() => (selectedArticle = article)}
+			>
+				<h3 class="text-base font-medium">{article.title}</h3>
+				<p class="text-xs text-gray-500">{article.date}</p>
+				<p class="mt-1 text-sm">{article.summary}</p>
+			</li>
+			{/each}
+		</ul>
 		</div>
-
-        <!-- Calculation Date -->
-        <div class="form-control">
-          <label class="label text-sm font-medium">Calculation Date</label>
-		  <input
-			type="date"
-			bind:value={calculationDate}
-			class="input input-bordered w-full text-sm"
-			required
-			/>
-        </div>
-
-        <!-- Goods Value -->
-        <div class="form-control">
-          <label class="label text-sm font-medium">Value of Goods (USD)</label>
-          <input
-            type="number"
-			bind:value={goodsValue}
-			min="0"
-			step="0.01"
-			class="input input-bordered w-full text-sm"
-			placeholder="Enter value"
-			on:blur={formatCurrency}
-			required
-          />
-        </div>
-
-        <!-- Submit -->
-        <div class="form-control">
-          <button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
-        </div>
-      </form>
-	  <!-- Calculation Result -->
-	{#if calculationResult}
-	<div class="card bg-base-100 shadow-md mt-6 p-6">
-		<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
-
-		<div class="flex justify-between text-sm mb-2">
-		<span>Base Value:</span>
-		<span class="font-medium">${calculationResult.baseValue}</span>
-		</div>
-
-		<div class="flex justify-between text-sm mb-2">
-		<span>Tariff:</span>
-		<span class="text-green-600">+ ${calculationResult.tariff}</span>
-		</div>
-
-		<div class="flex justify-between text-sm mb-4">
-		<span>Customs Duty:</span>
-		<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
-		</div>
-
-		<div class="flex justify-between border-t border-base-300 pt-3">
-		<span class="font-semibold">Total Import Cost:</span>
-		<span class="font-bold text-primary">${calculationResult.totalCost}</span>
-		</div>
-	</div>
-	{/if}
-    </div>
-
-    <!-- Related News Card -->
-    <div class="card bg-base-100 p-6 shadow-md">
-      <h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
-      <p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
-
-      <ul class="space-y-4">
-        {#each news as article}
-          <li
-            class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
-            on:click={() => (selectedArticle = article)}
-          >
-            <h3 class="text-base font-medium">{article.title}</h3>
-            <p class="text-xs text-gray-500">{article.date}</p>
-            <p class="mt-1 text-sm">{article.summary}</p>
-          </li>
-        {/each}
-      </ul>
-    </div>
   </div>
 </div>
 
@@ -176,6 +176,12 @@
   	let productSearch = "";
   	let showProductDropdown = false;
 
+	/* Jiajun - 14/9/2025
+	This is a placeholder as data have not been done yet. 
+	This will be replaced with a function to fetch the real 
+	product data in the next sprint when the necessary 
+	dependancies are finished.
+	*/
 	const products = [
 		"Electronics",
 		"Textiles",
@@ -192,6 +198,12 @@
 	let countries = [];
 	onMount(async () => {
 		try {
+			/* Jiajun - 14/9/2025
+			This is a placeholder as the APIs have not been done yet. 
+			This will be replaced with ___ in the next sprint when the 
+			necessary dependancies are finished.
+			*/
+
 			// const res = await fetch("/api/countries");
 			// if (!res.ok) throw new Error("Failed to fetch");
 			// countries = await res.json();
@@ -254,6 +266,11 @@
 	async function calculateCost() {
 		if (product && exportFrom && importTo && calculationDate && goodsValue) {
 		try {
+			/* Jiajun - 14/9/2025
+			This is a placeholder as the APIs have not been done yet. 
+			This will be replaced in the next sprint when the 
+			necessary dependancies are finished.
+			*/
 			/*
 			const res = await fetch("/api/calculate-cost", {
 			method: "POST",
@@ -278,10 +295,10 @@
 			const totalCost = (parseFloat(baseValue) + 35 + 20).toFixed(2);
 
 			calculationResult = {
-			baseValue,
-			tariff,
-			customsDuty,
-			totalCost
+				baseValue,
+				tariff,
+				customsDuty,
+				totalCost
 			};
 
 		} catch (err) {
