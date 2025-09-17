@@ -200,7 +200,7 @@
 		try {
 			/* Jiajun - 14/9/2025
 			This is a placeholder as the APIs have not been done yet. 
-			This will be replaced with ___ in the next sprint when the 
+			This will be replaced in the next sprint when the 
 			necessary dependancies are finished.
 			*/
 
