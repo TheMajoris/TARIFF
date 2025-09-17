@@ -25,23 +25,23 @@
 						required
 					/>
 					{#if showProductDropdown && filteredProducts.length > 0}
-					<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
-					{#each filteredProducts as item}
-						<li>
-						<a
-							class="text-sm"
-							on:click={() => {
-							product = item;
-							productSearch = item;
-							showProductDropdown = false;
-							}}
-						>
-							{item}
-						</a>
-						</li>
-					{/each}
-					</ul>
-				{/if}
+						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
+						{#each filteredProducts as item}
+							<li>
+							<a
+								class="text-sm"
+								on:click={() => {
+								product = item;
+								productSearch = item;
+								showProductDropdown = false;
+								}}
+							>
+								{item}
+							</a>
+							</li>
+						{/each}
+						</ul>
+					{/if}
 				</div>
 
 				<!-- Exporting From -->
@@ -50,7 +50,7 @@
 					<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
 						<option disabled value="">Select country</option>
 						{#each countries as country}
-						<option>{country}</option>
+							<option>{country}</option>
 						{/each}
 					</select>
 				</div>
@@ -60,67 +60,67 @@
 					<select bind:value={importTo} class="select select-bordered w-full text-sm" required>
 						<option disabled value="">Select country</option>
 						{#each countries as country}
-						<option>{country}</option>
+							<option>{country}</option>
 						{/each}
 					</select>
 				</div>
 
 				<!-- Calculation Date -->
 				<div class="form-control">
-				<label class="label text-sm font-medium">Calculation Date</label>
-				<input
-					type="date"
-					bind:value={calculationDate}
-					class="input input-bordered w-full text-sm"
-					required
-					/>
+					<label class="label text-sm font-medium">Calculation Date</label>
+					<input
+						type="date"
+						bind:value={calculationDate}
+						class="input input-bordered w-full text-sm"
+						required
+						/>
 				</div>
 
 				<!-- Goods Value -->
 				<div class="form-control">
-				<label class="label text-sm font-medium">Value of Goods (USD)</label>
-				<input
-					type="number"
-					bind:value={goodsValue}
-					min="0"
-					step="0.01"
-					class="input input-bordered w-full text-sm"
-					placeholder="Enter value"
-					on:blur={formatCurrency}
-					required
-				/>
+					<label class="label text-sm font-medium">Value of Goods (USD)</label>
+					<input
+						type="number"
+						bind:value={goodsValue}
+						min="0"
+						step="0.01"
+						class="input input-bordered w-full text-sm"
+						placeholder="Enter value"
+						on:blur={formatCurrency}
+						required
+					/>
 				</div>
 
 				<!-- Submit -->
 				<div class="form-control">
-				<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
+					<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
 				</div>
 			</form>
 			<!-- Calculation Result -->
 			{#if calculationResult}
-			<div class="card bg-base-100 shadow-md mt-6 p-6">
-				<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
+				<div class="card bg-base-100 shadow-md mt-6 p-6">
+					<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
 
-				<div class="flex justify-between text-sm mb-2">
-				<span>Base Value:</span>
-				<span class="font-medium">${calculationResult.baseValue}</span>
-				</div>
+					<div class="flex justify-between text-sm mb-2">
+						<span>Base Value:</span>
+						<span class="font-medium">${calculationResult.baseValue}</span>
+					</div>
 
-				<div class="flex justify-between text-sm mb-2">
-				<span>Tariff:</span>
-				<span class="text-green-600">+ ${calculationResult.tariff}</span>
-				</div>
+					<div class="flex justify-between text-sm mb-2">
+						<span>Tariff:</span>
+						<span class="text-green-600">+ ${calculationResult.tariff}</span>
+					</div>
 
-				<div class="flex justify-between text-sm mb-4">
-				<span>Customs Duty:</span>
-				<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
-				</div>
+					<div class="flex justify-between text-sm mb-4">
+						<span>Customs Duty:</span>
+						<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
+					</div>
 
-				<div class="flex justify-between border-t border-base-300 pt-3">
-				<span class="font-semibold">Total Import Cost:</span>
-				<span class="font-bold text-primary">${calculationResult.totalCost}</span>
+					<div class="flex justify-between border-t border-base-300 pt-3">
+						<span class="font-semibold">Total Import Cost:</span>
+						<span class="font-bold text-primary">${calculationResult.totalCost}</span>
+					</div>
 				</div>
-			</div>
 			{/if}
 		</div>
 
@@ -131,14 +131,14 @@
 
 		<ul class="space-y-4">
 			{#each news as article}
-			<li
-				class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
-				on:click={() => (selectedArticle = article)}
-			>
-				<h3 class="text-base font-medium">{article.title}</h3>
-				<p class="text-xs text-gray-500">{article.date}</p>
-				<p class="mt-1 text-sm">{article.summary}</p>
-			</li>
+				<li
+					class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
+					on:click={() => (selectedArticle = article)}
+					>
+					<h3 class="text-base font-medium">{article.title}</h3>
+					<p class="text-xs text-gray-500">{article.date}</p>
+					<p class="mt-1 text-sm">{article.summary}</p>
+				</li>
 			{/each}
 		</ul>
 		</div>
