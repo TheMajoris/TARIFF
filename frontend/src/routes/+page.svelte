@@ -165,6 +165,8 @@
 <!-- Product and Calculator Logic-->
 <script>
 	import { onMount } from "svelte";
+	import { fetchCountries } from "$lib/api/countries.js";
+  	import { calculateTariffCost } from "$lib/api/tariff.js";
 
 	let product = '';
 	let exportFrom = '';
@@ -197,55 +199,7 @@
 
 	let countries = [];
 	onMount(async () => {
-		try {
-			/* Jiajun - 14/9/2025
-			This is a placeholder as the APIs have not been done yet. 
-			This will be replaced in the next sprint when the 
-			necessary dependancies are finished.
-			*/
-
-			// const res = await fetch("/api/countries");
-			// if (!res.ok) throw new Error("Failed to fetch");
-			// countries = await res.json();
-
-			const res = {
-				ok: true,
-				json: async () => [
-					"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda",
-					"Argentina","Armenia","Australia","Austria","Azerbaijan",
-					"Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
-					"Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi",
-					"Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czechia",
-					"Denmark","Djibouti","Dominica","Dominican Republic",
-					"Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
-					"Fiji","Finland","France",
-					"Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana",
-					"Haiti","Honduras","Hungary",
-					"Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy",
-					"Jamaica","Japan","Jordan",
-					"Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan",
-					"Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
-					"Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
-					"Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway",
-					"Oman",
-					"Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
-					"Qatar",
-					"Romania","Russia","Rwanda",
-					"Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
-					"Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu",
-					"Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
-					"Vanuatu","Vatican City","Venezuela","Vietnam",
-					"Yemen",
-					"Zambia","Zimbabwe"
-				]
-			};
-
-			if (res.ok) {
-				countries = await res.json();
-			}
-		} catch (err) {
-			console.error("Failed to fetch countries:", err);
-		}
+		countries = await fetchCountries();
   	});
 
 	$: filteredProducts = products.filter((p) =>
@@ -262,52 +216,19 @@
 
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
-
 	async function calculateCost() {
 		if (product && exportFrom && importTo && calculationDate && goodsValue) {
-		try {
-			/* Jiajun - 14/9/2025
-			This is a placeholder as the APIs have not been done yet. 
-			This will be replaced in the next sprint when the 
-			necessary dependancies are finished.
-			*/
-			/*
-			const res = await fetch("/api/calculate-cost", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
+			calculationResult = await calculateTariffCost({
 				product,
 				exportFrom,
 				importTo,
 				calculationDate,
 				goodsValue
-			})
 			});
-			if (!res.ok) throw new Error("Failed to calculate");
-			const data = await res.json();
-			calculationResult = data; // Assume backend return { baseValue, tariff, customsDuty, totalCost }
-			*/
-
-			// Dummy Logic;
-			const baseValue = parseFloat(goodsValue).toFixed(2);
-			const tariff = (35).toFixed(2);        // dummy
-			const customsDuty = (20).toFixed(2);   // dummy
-			const totalCost = (parseFloat(baseValue) + 35 + 20).toFixed(2);
-
-			calculationResult = {
-				baseValue,
-				tariff,
-				customsDuty,
-				totalCost
-			};
-
-		} catch (err) {
-			console.error("Error calculating cost: ", err);
-		}
 		} else {
-		alert("Please fill in all fields before calculating.");
+			alert("Please fill in all fields before calculating.");
 		}
-  	}
+	}
 	// End: Tariff Calculation Section 
 
 
