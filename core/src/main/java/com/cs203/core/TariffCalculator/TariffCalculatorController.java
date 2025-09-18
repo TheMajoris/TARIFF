@@ -15,7 +15,7 @@ public class TariffCalculatorController {
 
     //using the params from request DTO, create final price n return response as DTO
     @PostMapping
-    public ResponseEntity<TariffCalculatorResponseDTO> getTariffCalculation(@RequestBody TariffCalculatorRequestDTO requestBodyDTO) {
+    public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(@RequestBody TariffCalculatorRequestDto requestBodyDTO) {
 
         BigDecimal finalPrice = tariffCalculatorService.getFinalPrice(
                 requestBodyDTO.importingCountryId(),
@@ -23,7 +23,7 @@ public class TariffCalculatorController {
                 requestBodyDTO.hsCode(),
                 requestBodyDTO.initialPrice()
         );
-        return ResponseEntity.ok(new TariffCalculatorResponseDTO(finalPrice));
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(finalPrice));
     }
 
 }
