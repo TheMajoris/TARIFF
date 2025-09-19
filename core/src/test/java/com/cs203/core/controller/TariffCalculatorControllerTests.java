@@ -1,4 +1,4 @@
-package com.cs203.core.TariffCalculator;
+package com.cs203.core.controller;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,16 +15,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-class TariffCalculatorControllerTests {
+import com.cs203.core.service.TariffRateService;
+
+class TariffCalculatorControllerTest {
 
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculate returns final price via DTOs")
     void post_calculate_returnsFinalPrice() throws Exception {
-        TariffCalculatorService service = Mockito.mock(TariffCalculatorService.class);
-        TariffCalculatorController controller = new TariffCalculatorController();
+        TariffRateService service = Mockito.mock(TariffRateService.class);
+        TariffRateController controller = new TariffRateController();
 
         // Inject mocked service into controller (field injection)
-        Field f = TariffCalculatorController.class.getDeclaredField("tariffCalculatorService");
+        Field f = TariffRateController.class.getDeclaredField("tariffRateService");
         f.setAccessible(true);
         f.set(controller, service);
 

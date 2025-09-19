@@ -1,4 +1,4 @@
-package com.cs203.core.TariffCalculator;
+package com.cs203.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -18,8 +18,10 @@ import com.cs203.core.entity.CountryEntity;
 import com.cs203.core.entity.ProductCategoriesEntity;
 import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.repository.TariffRateRepository;
+import com.cs203.core.service.TariffRateService;
+import com.cs203.core.service.impl.TariffRateServiceImpl;
 
-class TariffCalculatorServiceTests {
+class TariffCalculatorServiceTest {
 
     private CountryEntity country(long id) {
         CountryEntity c = new CountryEntity();
@@ -37,11 +39,11 @@ class TariffCalculatorServiceTests {
     @DisplayName("getFinalPrice picks lowest rate and computes final price")
     void getFinalPrice_usesLowestRate() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
-        TariffCalculatorService service = new TariffCalculatorService();
+        TariffRateService service = new TariffRateServiceImpl();
 
         // Wire mock repo into service via reflection (field injection in impl)
         try {
-            java.lang.reflect.Field f = TariffCalculatorService.class.getDeclaredField("tariffRateRepository");
+            java.lang.reflect.Field f = TariffRateService.class.getDeclaredField("tariffRateRepository");
             f.setAccessible(true);
             f.set(service, repository);
         } catch (Exception e) {
@@ -71,10 +73,10 @@ class TariffCalculatorServiceTests {
     @DisplayName("getFinalPrice with no rates returns initial price")
     void getFinalPrice_noRates_returnsInitialPrice() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
-        TariffCalculatorService service = new TariffCalculatorService();
+        TariffRateService service = new TariffRateServiceImpl();
 
         try {
-            java.lang.reflect.Field f = TariffCalculatorService.class.getDeclaredField("tariffRateRepository");
+            java.lang.reflect.Field f = TariffRateService.class.getDeclaredField("tariffRateRepository");
             f.setAccessible(true);
             f.set(service, repository);
         } catch (Exception e) {

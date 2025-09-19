@@ -1,4 +1,4 @@
-package com.cs203.core.TariffCalculator;
+package com.cs203.core.dto.responses;
 
 import java.math.BigDecimal;
 
