@@ -1,4 +1,4 @@
-package com.cs203.core.services.impl;
+package com.cs203.core.service.impl;
 
 import com.cs203.core.dto.requests.LoginRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;

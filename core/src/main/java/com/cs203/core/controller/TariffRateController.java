@@ -1,5 +1,6 @@
 package com.cs203.core.controller;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.TariffRateDto;
+import com.cs203.core.dto.requests.TariffCalculatorRequestDto;
+import com.cs203.core.dto.responses.TariffCalculatorResponseDto;
 import com.cs203.core.service.TariffRateService;
 
 import jakarta.validation.Valid;
@@ -55,5 +58,17 @@ public class TariffRateController {
     public ResponseEntity<GenericResponse<Void>> deleteTariffRate(@PathVariable Long tariffRateId) {
         GenericResponse<Void> response = tariffRateService.deleteTariffRate(tariffRateId);
         return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    // using the params from request DTO, create final price n return response as DTO
+    @PostMapping("/calculate")
+    public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(@RequestBody TariffCalculatorRequestDto requestBodyDTO) {
+        BigDecimal finalPrice = tariffRateService.getFinalPrice(
+                requestBodyDTO.importingCountryId(),
+                requestBodyDTO.exportingCountryId(),
+                requestBodyDTO.hsCode(),
+                requestBodyDTO.initialPrice()
+        );
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(finalPrice));
     }
 }

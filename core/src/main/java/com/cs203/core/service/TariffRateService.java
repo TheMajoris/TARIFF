@@ -1,5 +1,6 @@
 package com.cs203.core.service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.cs203.core.dto.CreateTariffRateDto;
@@ -18,4 +19,7 @@ public interface TariffRateService {
     GenericResponse<TariffRateDto> updateTariffRate(TariffRateDto tariffRateDto, Long tariffRateId);
 
     GenericResponse<Void> deleteTariffRate(Long tariffRateId);
+
+    BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+            BigDecimal initialPrice);
 }

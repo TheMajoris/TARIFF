@@ -19,6 +19,7 @@ import com.cs203.core.repository.ProductCategoriesRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,6 +120,22 @@ public class TariffRateServiceImpl implements TariffRateService {
         tariffRateRepository.deleteById(tariffRateId);
         // Eventually, handle national tariff lines associated with this tariff rate
         return new GenericResponse<Void>(HttpStatus.OK, "Successfully deleted Tariff Rate", null);
+    }
+
+    // get tariffRate
+    public BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+            BigDecimal initialPrice) {
+        // get List of rates based on input and attributed data in repo
+        List<TariffRateEntity> tariffRates = tariffRateRepository
+                .findByImportingCountryIdAndExportingCountryIdAndHsCode(importingCountryId, exportingCountryId, hsCode);
+        // get n set lowest rate
+        BigDecimal tariffRate = tariffRates
+                .stream()
+                .map(TariffRateEntity::getTariffRate)
+                .min(Comparable::compareTo)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRate));
+        return finalPrice;
     }
 
     /*
