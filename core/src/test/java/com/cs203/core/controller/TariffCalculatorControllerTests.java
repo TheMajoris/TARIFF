@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.cs203.core.service.TariffRateService;
 
-class TariffCalculatorControllerTest {
+class TariffRateControllerTest {
 
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculate returns final price via DTOs")

@@ -21,7 +21,7 @@ import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.TariffRateService;
 import com.cs203.core.service.impl.TariffRateServiceImpl;
 
-class TariffCalculatorServiceTest {
+class TariffRateServiceTest {
 
     private CountryEntity country(long id) {
         CountryEntity c = new CountryEntity();
@@ -43,7 +43,7 @@ class TariffCalculatorServiceTest {
 
         // Wire mock repo into service via reflection (field injection in impl)
         try {
-            java.lang.reflect.Field f = TariffRateService.class.getDeclaredField("tariffRateRepository");
+            java.lang.reflect.Field f = TariffRateServiceImpl.class.getDeclaredField("tariffRateRepository");
             f.setAccessible(true);
             f.set(service, repository);
         } catch (Exception e) {
@@ -76,7 +76,7 @@ class TariffCalculatorServiceTest {
         TariffRateService service = new TariffRateServiceImpl();
 
         try {
-            java.lang.reflect.Field f = TariffRateService.class.getDeclaredField("tariffRateRepository");
+            java.lang.reflect.Field f = TariffRateServiceImpl.class.getDeclaredField("tariffRateRepository");
             f.setAccessible(true);
             f.set(service, repository);
         } catch (Exception e) {
