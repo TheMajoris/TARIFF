@@ -32,7 +32,7 @@ public class CountryServiceImpl implements CountryService {
         dto.setCountryCode(entity.getCountryCode());
         dto.setRegion(entity.getRegion());
         dto.setCurrencyCode(entity.getCurrencyCode());
-        dto.setCurrencyName(null); // CountryEntity doesn't have currencyName field
+        dto.setCurrencyName(entity.getCurrencyName());
         return dto;
     }
 }
