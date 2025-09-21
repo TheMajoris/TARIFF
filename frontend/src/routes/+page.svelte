@@ -50,7 +50,7 @@
 					<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
 						<option disabled value="">Select country</option>
 						{#each countries as country}
-							<option>{country}</option>
+							<option value={country.id}>({country.code}) {country.name} ({country.code})</option>
 						{/each}
 					</select>
 				</div>
@@ -60,7 +60,7 @@
 					<select bind:value={importTo} class="select select-bordered w-full text-sm" required>
 						<option disabled value="">Select country</option>
 						{#each countries as country}
-							<option>{country}</option>
+							<option value={country.id}>({country.code}) ({country.name})</option>
 						{/each}
 					</select>
 				</div>
@@ -164,9 +164,9 @@
 
 <!-- Product and Calculator Logic-->
 <script>
-	import { onMount } from "svelte";
 	import { fetchCountries } from "$lib/api/countries.js";
-  	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import { onMount } from "svelte";
 
 	let product = '';
 	let exportFrom = '';
@@ -199,7 +199,9 @@
 
 	let countries = [];
 	onMount(async () => {
+		console.log('Fetching countries...');
 		countries = await fetchCountries();
+		console.log('Countries loaded:', countries);
   	});
 
 	$: filteredProducts = products.filter((p) =>
