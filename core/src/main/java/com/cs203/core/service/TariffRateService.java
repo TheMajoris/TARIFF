@@ -22,4 +22,9 @@ public interface TariffRateService {
 
     BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
             BigDecimal initialPrice);
+
+    BigDecimal getLowestTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+            BigDecimal initialPrice);
+
+    BigDecimal getTariffCost(BigDecimal finalPrice, BigDecimal initialPrice);
 }

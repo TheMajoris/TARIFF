@@ -126,6 +126,15 @@ public class TariffRateServiceImpl implements TariffRateService {
     public BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
             BigDecimal initialPrice) {
         // get List of rates based on input and attributed data in repo
+        BigDecimal tariffRate = getLowestTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice);
+        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRate));
+        return finalPrice;
+    }
+
+    // get LowestTariffRate
+    public BigDecimal getLowestTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+            BigDecimal initialPrice) {
+        // get List of rates based on input and attributed data in repo
         List<TariffRateEntity> tariffRates = tariffRateRepository
                 .findByImportingCountryIdAndExportingCountryIdAndHsCode(importingCountryId, exportingCountryId, hsCode);
         // get n set lowest rate
@@ -134,8 +143,12 @@ public class TariffRateServiceImpl implements TariffRateService {
                 .map(TariffRateEntity::getTariffRate)
                 .min(Comparable::compareTo)
                 .orElse(BigDecimal.ZERO);
-        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRate));
-        return finalPrice;
+        return tariffRate;
+    }
+
+    // get TariffCost
+    public BigDecimal getTariffCost(BigDecimal finalPrice, BigDecimal initialPrice) {
+        return finalPrice.subtract(initialPrice);
     }
 
     /*
