@@ -55,7 +55,6 @@ class UserServiceImplDuplicateEmailTest {
     void createUser_EmailAlreadyExists_ThrowsDuplicateEmailException() {
         // Arrange
         when(userRepository.existsByEmail("john@example.com")).thenReturn(true);
-        when(passwordEncoder.encode(any())).thenReturn("hashedpassword");
 
         // Act & Assert
         DuplicateEmailException exception = assertThrows(
