@@ -1,10 +1,10 @@
 package com.cs203.core.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("NationalTariffLines Tests")
 class NationalTariffLinesTest {
@@ -19,7 +19,7 @@ class NationalTariffLinesTest {
         testCountry.setId(1L);
         testCategory = new ProductCategoriesEntity(850110, "Electric Motors", "Electric motors description", 5.5);
         testCategory.setId(1L);
-        testUser = new UserEntity(1L, "testuser", "test@example.com", "hashedpassword", false, "Test", "User", true);
+        testUser = new UserEntity(1L, "testuser", "test@example.com", "hashedpassword", false, "Test", "User", true, null);
         testUser.setId(1L);
     }
 
@@ -48,7 +48,7 @@ class NationalTariffLinesTest {
         canadaCountry.setId(2L);
         ProductCategoriesEntity otherCategory = new ProductCategoriesEntity(850120, "Electric Generators", "Generator description", 7.0);
         otherCategory.setId(2L);
-        UserEntity otherUser = new UserEntity(2L, "adminuser", "admin@example.com", "adminpassword", true, "Admin", "User", true);
+        UserEntity otherUser = new UserEntity(2L, "adminuser", "admin@example.com", "adminpassword", true, "Admin", "User", true, null);
         otherUser.setId(2L);
         NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
                 canadaCountry,
