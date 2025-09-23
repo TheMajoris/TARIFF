@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,16 +32,17 @@ class TariffRateControllerTest {
         f.set(controller, service);
 
         // Mock the service methods to return expected values
-        Mockito.when(service.getLowestTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00"))))
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        Mockito.when(service.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
             .thenReturn(new BigDecimal("0.10"));
-        Mockito.when(service.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00"))))
+        Mockito.when(service.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
             .thenReturn(new BigDecimal("110.00"));
         Mockito.when(service.getTariffCost(eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
             .thenReturn(new BigDecimal("10.00"));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,16 +65,17 @@ class TariffRateControllerTest {
         f.set(controller, service);
 
         // Mock the service methods to return expected values for zero tariff rate
-        Mockito.when(service.getLowestTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00"))))
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        Mockito.when(service.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
             .thenReturn(BigDecimal.ZERO);
-        Mockito.when(service.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00"))))
+        Mockito.when(service.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
             .thenReturn(new BigDecimal("100.00"));
         Mockito.when(service.getTariffCost(eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
             .thenReturn(BigDecimal.ZERO);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculate")
                 .contentType(MediaType.APPLICATION_JSON)

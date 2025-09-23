@@ -65,16 +65,18 @@ public class TariffRateController {
     @PostMapping("/calculate")
     public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
             @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
-        BigDecimal tariffRate = tariffRateService.getLowestTariffRate(
+        BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
-                requestBodyDTO.initialPrice());
+                requestBodyDTO.initialPrice(),
+                requestBodyDTO.date()); 
         BigDecimal finalPrice = tariffRateService.getFinalPrice(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
-                requestBodyDTO.initialPrice());
+                requestBodyDTO.initialPrice(),
+                requestBodyDTO.date());
         BigDecimal tariffCost = tariffRateService.getTariffCost(finalPrice, requestBodyDTO.initialPrice());
         return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate, tariffCost, finalPrice));
     }

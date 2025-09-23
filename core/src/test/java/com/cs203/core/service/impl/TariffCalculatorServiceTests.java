@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -60,10 +59,11 @@ class TariffRateServiceTest {
                 importing, exporting, cat, new BigDecimal("0.10"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
 
-        List<TariffRateEntity> rates = Arrays.asList(high, low);
-        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123))).thenReturn(rates);
+        List<TariffRateEntity> rates = Arrays.asList(low, high);
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        when(repository.findCurrentTariffRate(eq(1L), eq(2L), eq(123), eq(date))).thenReturn(rates.stream().findFirst());
 
-        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"));
+        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"), date);
 
         assertEquals(0, result.compareTo(new BigDecimal("110.00")));
     }
@@ -82,10 +82,11 @@ class TariffRateServiceTest {
             throw new RuntimeException(e);
         }
 
-        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123)))
-                .thenReturn(Collections.emptyList());
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        when(repository.findCurrentTariffRate(eq(1L), eq(2L), eq(123), eq(date)))
+                .thenReturn(java.util.Optional.empty());
 
-        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"));
+        BigDecimal result = service.getFinalPrice(1L, 2L, 123, new BigDecimal("100.00"), date);
 
         assertEquals(0, result.compareTo(new BigDecimal("100.00")));
     }
@@ -115,10 +116,11 @@ class TariffRateServiceTest {
                 importing, exporting, cat, new BigDecimal("0.10"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
 
-        List<TariffRateEntity> rates = Arrays.asList(high, low);
-        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123))).thenReturn(rates);
+        List<TariffRateEntity> rates = Arrays.asList(low, high);
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        when(repository.findCurrentTariffRate(eq(1L), eq(2L), eq(123), eq(date))).thenReturn(rates.stream().findFirst());
 
-        BigDecimal result = service.getLowestTariffRate(1L, 2L, 123, new BigDecimal("100.00"));
+        BigDecimal result = service.getLowestActiveTariffRate(1L, 2L, 123, new BigDecimal("100.00"), date);
 
         assertEquals(0, result.compareTo(new BigDecimal("0.10")));
     }
@@ -137,10 +139,11 @@ class TariffRateServiceTest {
             throw new RuntimeException(e);
         }
 
-        when(repository.findByImportingCountryIdAndExportingCountryIdAndHsCode(eq(1L), eq(2L), eq(123)))
-                .thenReturn(Collections.emptyList());
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        when(repository.findCurrentTariffRate(eq(1L), eq(2L), eq(123), eq(date)))
+                .thenReturn(java.util.Optional.empty());
 
-        BigDecimal result = service.getLowestTariffRate(1L, 2L, 123, new BigDecimal("100.00"));
+        BigDecimal result = service.getLowestActiveTariffRate(1L, 2L, 123, new BigDecimal("100.00"), date);
 
         assertEquals(0, result.compareTo(BigDecimal.ZERO));
     }

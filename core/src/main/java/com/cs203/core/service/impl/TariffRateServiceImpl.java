@@ -20,8 +20,10 @@ import com.cs203.core.repository.ProductCategoriesRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,21 +126,21 @@ public class TariffRateServiceImpl implements TariffRateService {
 
     // get tariffRate
     public BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
-            BigDecimal initialPrice) {
+            BigDecimal initialPrice, LocalDate date) {
         // get List of rates based on input and attributed data in repo
-        BigDecimal tariffRate = getLowestTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice);
+        BigDecimal tariffRate = getLowestActiveTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice, date);
         BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRate));
         return finalPrice;
     }
 
     // get LowestTariffRate
-    public BigDecimal getLowestTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
-            BigDecimal initialPrice) {
+    public BigDecimal getLowestActiveTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+            BigDecimal initialPrice, LocalDate date) {
         // get List of rates based on input and attributed data in repo
-        List<TariffRateEntity> tariffRates = tariffRateRepository
-                .findByImportingCountryIdAndExportingCountryIdAndHsCode(importingCountryId, exportingCountryId, hsCode);
+        Optional<TariffRateEntity> currentTariffRates = tariffRateRepository
+                .findCurrentTariffRate(importingCountryId, exportingCountryId, hsCode, date);
         // get n set lowest rate
-        BigDecimal tariffRate = tariffRates
+        BigDecimal tariffRate = currentTariffRates
                 .stream()
                 .map(TariffRateEntity::getTariffRate)
                 .min(Comparable::compareTo)
