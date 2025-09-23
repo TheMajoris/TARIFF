@@ -1,10 +1,16 @@
 <script>
+	import { goto } from '$app/navigation';
+	import { registerUser } from '$lib/api/users';
+
 	let firstName = '';
 	let lastName = '';
 	let username = '';
 	let email = '';
 	let password = '';
 	let password2 = '';
+	let isLoading = false;
+	let error = '';
+	let success = '';
 
 	// Function that will use regex to validate the email
 	function validateEmail() {
@@ -54,21 +60,46 @@
 		}
 	}
 
-	function register() {
-		if (firstName && lastName && username && email && password && password2) {
-			if (validateEmail()) {
-				if (checkPasswords()) {
-					alert(`register:
-  Username: ${username}
-  Email: ${email}
-  Password: ${password}
-  Password2: ${password2}`);
-				}
-			} else {
-				alert('The email is not in a valid format.');
-			}
-		} else {
-			alert('Please fill in all fields before registering.');
+	async function register() {
+		if (!firstName || !lastName || !username || !email || !password || !password2) {
+			error = 'Please fill in all fields before registering.';
+			return;
+		}
+
+		if (!validateEmail()) {
+			error = 'The email is not in a valid format.';
+			return;
+		}
+
+		if (!checkPasswords()) {
+			return; // Error already set by checkPasswords()
+		}
+
+		isLoading = true;
+		error = '';
+		success = '';
+
+		try {
+			const result = await registerUser({
+				firstName,
+				lastName,
+				username,
+				email,
+				password
+			});
+
+			success = 'Registration successful! Redirecting to login...';
+			
+			// Redirect to login page after 2 seconds
+			setTimeout(() => {
+				goto('/login');
+			}, 2000);
+
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+			console.error('Registration error:', err);
+		} finally {
+			isLoading = false;
 		}
 	}
 </script>
@@ -81,6 +112,25 @@
 	<div class="flex justify-center pt-10">
 		<div class="card bg-base-100 p-6 shadow-md">
 			<h2 class="mb-1 text-lg font-semibold">Register</h2>
+
+			<!-- Error/Success Messages -->
+			{#if error}
+				<div class="alert alert-error">
+					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<span>{error}</span>
+				</div>
+			{/if}
+
+			{#if success}
+				<div class="alert alert-success">
+					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<span>{success}</span>
+				</div>
+			{/if}
 
 			<form class="space-y-4"  on:submit|preventDefault={register}>
 				<!-- First Name -->
@@ -179,10 +229,20 @@
 
 				<!-- Submit -->
 				<div class="form-control flex justify-around">
-					<button class="btn btn-primary btn-sm invisible w-1/3"></button>
-					<button type="submit" class="btn btn-primary btn-sm w-1/3"
-						>Register</button
+					<button class="btn btn-primary btn-sm invisible w-1/3" aria-label="Spacer button"></button>
+					<button 
+						type="submit" 
+						class="btn btn-primary btn-sm w-1/3"
+						class:loading={isLoading}
+						disabled={isLoading}
 					>
+						{#if isLoading}
+							<span class="loading loading-spinner loading-sm"></span>
+							Registering...
+						{:else}
+							Register
+						{/if}
+					</button>
 				</div>
 			</form>
 		</div>

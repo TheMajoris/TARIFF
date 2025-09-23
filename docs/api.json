@@ -101,6 +101,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenericResponseDTO'
+        '400':
+          description: Bad request - validation errors or duplicate email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 # Skeleton placeholders for later
   /tariffs:
     get:
