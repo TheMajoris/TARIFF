@@ -36,6 +36,27 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('TW', 'Taiwan', 'Asia-Pacific', 'TWD'),
 ('TH', 'Thailand', 'Asia-Pacific', 'THB'),
 ('VN', 'Vietnam', 'Asia-Pacific', 'VND'),
+-- Additional Asian Countries
+('AF', 'Afghanistan', 'Asia-Pacific', 'AFN'),
+('BD', 'Bangladesh', 'Asia-Pacific', 'BDT'),
+('BT', 'Bhutan', 'Asia-Pacific', 'BTN'),
+('BN', 'Brunei', 'Asia-Pacific', 'BND'),
+('KH', 'Cambodia', 'Asia-Pacific', 'KHR'),
+('FJ', 'Fiji', 'Asia-Pacific', 'FJD'),
+('KZ', 'Kazakhstan', 'Asia-Pacific', 'KZT'),
+('KG', 'Kyrgyzstan', 'Asia-Pacific', 'KGS'),
+('LA', 'Laos', 'Asia-Pacific', 'LAK'),
+('MV', 'Maldives', 'Asia-Pacific', 'MVR'),
+('MN', 'Mongolia', 'Asia-Pacific', 'MNT'),
+('MM', 'Myanmar', 'Asia-Pacific', 'MMK'),
+('NP', 'Nepal', 'Asia-Pacific', 'NPR'),
+('KP', 'North Korea', 'Asia-Pacific', 'KPW'),
+('PK', 'Pakistan', 'Asia-Pacific', 'PKR'),
+('PG', 'Papua New Guinea', 'Asia-Pacific', 'PGK'),
+('LK', 'Sri Lanka', 'Asia-Pacific', 'LKR'),
+('TJ', 'Tajikistan', 'Asia-Pacific', 'TJS'),
+('TM', 'Turkmenistan', 'Asia-Pacific', 'TMT'),
+('UZ', 'Uzbekistan', 'Asia-Pacific', 'UZS'),
 
 -- Europe
 ('AT', 'Austria', 'Europe', 'EUR'),
@@ -69,11 +90,61 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('GB', 'United Kingdom', 'Europe', 'GBP'),
 ('NO', 'Norway', 'Europe', 'NOK'),
 ('IS', 'Iceland', 'Europe', 'ISK'),
+-- Additional European Countries
+('AL', 'Albania', 'Europe', 'ALL'),
+('AD', 'Andorra', 'Europe', 'EUR'),
+('AM', 'Armenia', 'Europe', 'AMD'),
+('AZ', 'Azerbaijan', 'Europe', 'AZN'),
+('BY', 'Belarus', 'Europe', 'BYN'),
+('BA', 'Bosnia and Herzegovina', 'Europe', 'BAM'),
+('GE', 'Georgia', 'Europe', 'GEL'),
+('XK', 'Kosovo', 'Europe', 'EUR'),
+('MD', 'Moldova', 'Europe', 'MDL'),
+('MC', 'Monaco', 'Europe', 'EUR'),
+('ME', 'Montenegro', 'Europe', 'EUR'),
+('MK', 'North Macedonia', 'Europe', 'MKD'),
+('RU', 'Russia', 'Europe', 'RUB'),
+('SM', 'San Marino', 'Europe', 'EUR'),
+('RS', 'Serbia', 'Europe', 'RSD'),
+('UA', 'Ukraine', 'Europe', 'UAH'),
+('VA', 'Vatican City', 'Europe', 'EUR'),
 
 -- North America
 ('CA', 'Canada', 'North America', 'CAD'),
 ('MX', 'Mexico', 'North America', 'MXN'),
 ('US', 'United States', 'North America', 'USD'),
+
+-- Central America
+('BZ', 'Belize', 'Central America', 'BZD'),
+('CR', 'Costa Rica', 'Central America', 'CRC'),
+('SV', 'El Salvador', 'Central America', 'USD'),
+('GT', 'Guatemala', 'Central America', 'GTQ'),
+('HN', 'Honduras', 'Central America', 'HNL'),
+('NI', 'Nicaragua', 'Central America', 'NIO'),
+('PA', 'Panama', 'Central America', 'PAB'),
+
+-- Caribbean
+('BS', 'Bahamas', 'Caribbean', 'BSD'),
+('BB', 'Barbados', 'Caribbean', 'BBD'),
+('CU', 'Cuba', 'Caribbean', 'CUP'),
+('DO', 'Dominican Republic', 'Caribbean', 'DOP'),
+('HT', 'Haiti', 'Caribbean', 'HTG'),
+('JM', 'Jamaica', 'Caribbean', 'JMD'),
+('TT', 'Trinidad and Tobago', 'Caribbean', 'TTD'),
+
+-- Oceania
+('CK', 'Cook Islands', 'Oceania', 'NZD'),
+('KI', 'Kiribati', 'Oceania', 'AUD'),
+('MH', 'Marshall Islands', 'Oceania', 'USD'),
+('FM', 'Micronesia', 'Oceania', 'USD'),
+('NR', 'Nauru', 'Oceania', 'AUD'),
+('NU', 'Niue', 'Oceania', 'NZD'),
+('PW', 'Palau', 'Oceania', 'USD'),
+('WS', 'Samoa', 'Oceania', 'WST'),
+('SB', 'Solomon Islands', 'Oceania', 'SBD'),
+('TO', 'Tonga', 'Oceania', 'TOP'),
+('TV', 'Tuvalu', 'Oceania', 'AUD'),
+('VU', 'Vanuatu', 'Oceania', 'VUV'),
 
 -- South America
 ('AR', 'Argentina', 'South America', 'ARS'),
@@ -82,6 +153,8 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('CL', 'Chile', 'South America', 'CLP'),
 ('CO', 'Colombia', 'South America', 'COP'),
 ('EC', 'Ecuador', 'South America', 'USD'),
+('FK', 'Falkland Islands', 'South America', 'FKP'),
+('GF', 'French Guiana', 'South America', 'EUR'),
 ('GY', 'Guyana', 'South America', 'GYD'),
 ('PY', 'Paraguay', 'South America', 'PYG'),
 ('PE', 'Peru', 'South America', 'PEN'),
@@ -89,16 +162,63 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('UY', 'Uruguay', 'South America', 'UYU'),
 ('VE', 'Venezuela', 'South America', 'VES'),
 
--- Middle East & Africa
+-- Africa
 ('DZ', 'Algeria', 'Africa', 'DZD'),
+('AO', 'Angola', 'Africa', 'AOA'),
+('BJ', 'Benin', 'Africa', 'XOF'),
+('BW', 'Botswana', 'Africa', 'BWP'),
+('BF', 'Burkina Faso', 'Africa', 'XOF'),
+('BI', 'Burundi', 'Africa', 'BIF'),
+('CM', 'Cameroon', 'Africa', 'XAF'),
+('CV', 'Cape Verde', 'Africa', 'CVE'),
+('CF', 'Central African Republic', 'Africa', 'XAF'),
+('TD', 'Chad', 'Africa', 'XAF'),
+('KM', 'Comoros', 'Africa', 'KMF'),
+('CG', 'Congo', 'Africa', 'XAF'),
+('CD', 'Democratic Republic of the Congo', 'Africa', 'CDF'),
+('DJ', 'Djibouti', 'Africa', 'DJF'),
 ('EG', 'Egypt', 'Africa', 'EGP'),
+('GQ', 'Equatorial Guinea', 'Africa', 'XAF'),
+('ER', 'Eritrea', 'Africa', 'ERN'),
+('SZ', 'Eswatini', 'Africa', 'SZL'),
 ('ET', 'Ethiopia', 'Africa', 'ETB'),
+('GA', 'Gabon', 'Africa', 'XAF'),
+('GM', 'Gambia', 'Africa', 'GMD'),
 ('GH', 'Ghana', 'Africa', 'GHS'),
+('GN', 'Guinea', 'Africa', 'GNF'),
+('GW', 'Guinea-Bissau', 'Africa', 'XOF'),
+('CI', 'Ivory Coast', 'Africa', 'XOF'),
 ('KE', 'Kenya', 'Africa', 'KES'),
+('LS', 'Lesotho', 'Africa', 'LSL'),
+('LR', 'Liberia', 'Africa', 'LRD'),
+('LY', 'Libya', 'Africa', 'LYD'),
+('MG', 'Madagascar', 'Africa', 'MGA'),
+('MW', 'Malawi', 'Africa', 'MWK'),
+('ML', 'Mali', 'Africa', 'XOF'),
+('MR', 'Mauritania', 'Africa', 'MRU'),
+('MU', 'Mauritius', 'Africa', 'MUR'),
 ('MA', 'Morocco', 'Africa', 'MAD'),
+('MZ', 'Mozambique', 'Africa', 'MZN'),
+('NA', 'Namibia', 'Africa', 'NAD'),
+('NE', 'Niger', 'Africa', 'XOF'),
 ('NG', 'Nigeria', 'Africa', 'NGN'),
+('RW', 'Rwanda', 'Africa', 'RWF'),
+('ST', 'Sao Tome and Principe', 'Africa', 'STN'),
+('SN', 'Senegal', 'Africa', 'XOF'),
+('SC', 'Seychelles', 'Africa', 'SCR'),
+('SL', 'Sierra Leone', 'Africa', 'SLE'),
+('SO', 'Somalia', 'Africa', 'SOS'),
 ('ZA', 'South Africa', 'Africa', 'ZAR'),
+('SS', 'South Sudan', 'Africa', 'SSP'),
+('SD', 'Sudan', 'Africa', 'SDG'),
+('TZ', 'Tanzania', 'Africa', 'TZS'),
+('TG', 'Togo', 'Africa', 'XOF'),
 ('TN', 'Tunisia', 'Africa', 'TND'),
+('UG', 'Uganda', 'Africa', 'UGX'),
+('ZM', 'Zambia', 'Africa', 'ZMW'),
+('ZW', 'Zimbabwe', 'Africa', 'ZWL'),
+
+-- Middle East
 ('AE', 'United Arab Emirates', 'Middle East', 'AED'),
 ('BH', 'Bahrain', 'Middle East', 'BHD'),
 ('IR', 'Iran', 'Middle East', 'IRR'),
@@ -108,40 +228,13 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('KW', 'Kuwait', 'Middle East', 'KWD'),
 ('LB', 'Lebanon', 'Middle East', 'LBP'),
 ('OM', 'Oman', 'Middle East', 'OMR'),
+('PS', 'Palestine', 'Middle East', 'ILS'),
 ('QA', 'Qatar', 'Middle East', 'QAR'),
 ('SA', 'Saudi Arabia', 'Middle East', 'SAR'),
 ('TR', 'Turkey', 'Middle East', 'TRY'),
+('YE', 'Yemen', 'Middle East', 'YER'),
 
--- Additional Asian Countries
-('BD', 'Bangladesh', 'Asia-Pacific', 'BDT'),
-('BT', 'Bhutan', 'Asia-Pacific', 'BTN'),
-('BN', 'Brunei', 'Asia-Pacific', 'BND'),
-('KH', 'Cambodia', 'Asia-Pacific', 'KHR'),
-('FJ', 'Fiji', 'Asia-Pacific', 'FJD'),
-('LA', 'Laos', 'Asia-Pacific', 'LAK'),
-('MV', 'Maldives', 'Asia-Pacific', 'MVR'),
-('MN', 'Mongolia', 'Asia-Pacific', 'MNT'),
-('MM', 'Myanmar', 'Asia-Pacific', 'MMK'),
-('NP', 'Nepal', 'Asia-Pacific', 'NPR'),
-('PK', 'Pakistan', 'Asia-Pacific', 'PKR'),
-('PG', 'Papua New Guinea', 'Asia-Pacific', 'PGK'),
-('LK', 'Sri Lanka', 'Asia-Pacific', 'LKR'),
 
--- Caribbean & Central America
-('BS', 'Bahamas', 'Caribbean', 'BSD'),
-('BB', 'Barbados', 'Caribbean', 'BBD'),
-('BZ', 'Belize', 'Central America', 'BZD'),
-('CR', 'Costa Rica', 'Central America', 'CRC'),
-('CU', 'Cuba', 'Caribbean', 'CUP'),
-('DO', 'Dominican Republic', 'Caribbean', 'DOP'),
-('SV', 'El Salvador', 'Central America', 'USD'),
-('GT', 'Guatemala', 'Central America', 'GTQ'),
-('HT', 'Haiti', 'Caribbean', 'HTG'),
-('HN', 'Honduras', 'Central America', 'HNL'),
-('JM', 'Jamaica', 'Caribbean', 'JMD'),
-('NI', 'Nicaragua', 'Central America', 'NIO'),
-('PA', 'Panama', 'Central America', 'PAB'),
-('TT', 'Trinidad and Tobago', 'Caribbean', 'TTD');
 
 -- Display inserted countries count
 -- SELECT COUNT(*) as total_countries FROM country;
@@ -338,7 +431,192 @@ INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, pa
 ((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85287200', 'LED TVs - Budget segment', 852872, 10, 5, 5),
 ((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.84714100', 'Tablets - Education sector', 847141, 10, 5, 5),
 ((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85423100', 'Mobile processors - Entry level', 854231, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85411000', 'Basic diodes - Consumer electronics', 854110, 10, 5, 5);
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85411000', 'Basic diodes - Consumer electronics', 854110, 10, 5, 5),
+
+-- South Korea National Tariff Lines (Technology Leader)
+((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854231.00', 'Mobile chipsets - Samsung Exynos', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854232.00', 'Memory chips - Samsung/SK Hynix', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.851713.00', 'Smartphones - Samsung Galaxy', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.852872.00', 'OLED displays - Samsung/LG', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854170.00', 'LED components - Samsung LED', 854170, 10, 1, 1),
+
+-- Taiwan National Tariff Lines (Semiconductor Hub)
+((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.854231.00', 'Processors - TSMC manufactured', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.854232.00', 'Memory - DDR modules', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.847141.00', 'Laptops - Acer/Asus', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.847149.00', 'Motherboards - Asus/MSI', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.852852.00', 'Computer monitors - ViewSonic', 852852, 10, 2, 2),
+
+-- Vietnam National Tariff Lines (Manufacturing Hub)
+((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.851713.00', 'Smartphones - Samsung assembly', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.847141.00', 'Laptops - Dell/HP assembly', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.847160.00', 'Keyboards - Logitech assembly', 847160, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.852872.00', 'LED TVs - Samsung assembly', 852872, 10, 3, 3),
+
+-- Indonesia National Tariff Lines (Growing Market)
+((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.851713.00', 'Smartphones - Local assembly', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.852872.00', 'LED TVs - Local assembly', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.847141.00', 'Tablets - Budget segment', 847141, 10, 4, 4),
+
+-- Philippines National Tariff Lines (Electronics Assembly)
+((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.854231.00', 'Microprocessors - Assembly operations', 854231, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.851713.00', 'Smartphones - Local brands', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.847160.00', 'Computer peripherals', 847160, 10, 5, 5),
+
+-- Australia National Tariff Lines (Developed Market)
+((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8517.13.00', 'Smartphones - Premium segment', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8471.41.00', 'Laptops - Business/Consumer', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8528.72.00', 'LED TVs - High-end', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8542.31.00', 'Processors - Gaming/Workstation', 854231, 10, 1, 1),
+
+-- Hong Kong National Tariff Lines (Trade Hub)
+((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.851713.00', 'Smartphones - Re-export hub', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.854231.00', 'Processors - Trading hub', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.854232.00', 'Memory chips - Distribution', 854232, 10, 2, 2),
+
+-- Canada National Tariff Lines (NAFTA Partner)
+((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8517.13.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8471.41.01', 'Laptops - BlackBerry legacy', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8542.31.00', 'Processors - Data centers', 854231, 10, 3, 3),
+
+-- Mexico National Tariff Lines (NAFTA Manufacturing)
+((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.851713.00', 'Smartphones - Maquiladora assembly', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.847141.00', 'Laptops - Assembly operations', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.852872.00', 'LED TVs - Manufacturing', 852872, 10, 4, 4),
+
+-- Brazil National Tariff Lines (Major South American Market)
+((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.85171300', 'Smartphones - Domestic market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.84714100', 'Tablets - Education/Consumer', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.85287200', 'LED TVs - Local assembly', 852872, 10, 5, 5),
+
+-- United Kingdom National Tariff Lines (Post-Brexit)
+((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8517.13.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8471.49.00', 'Computers - Financial services', 847149, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8542.31.00', 'Processors - ARM Holdings', 854231, 10, 1, 1),
+
+-- France National Tariff Lines (EU Major Market)
+((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.85171300', 'Smartphones - Consumer electronics', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.84714100', 'Laptops - Enterprise market', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.85423100', 'Processors - Automotive/IoT', 854231, 10, 2, 2),
+
+-- Italy National Tariff Lines (EU Market)
+((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.85171300', 'Smartphones - Fashion-tech', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.84714900', 'Industrial computers', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.85411000', 'Power semiconductors', 854110, 10, 3, 3),
+
+-- Netherlands National Tariff Lines (EU Distribution Hub)
+((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.85171300', 'Smartphones - European distribution', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.85423100', 'Processors - Data center market', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.84714100', 'Laptops - Philips ecosystem', 847141, 10, 4, 4),
+
+-- Russia National Tariff Lines (Large Market)
+((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.851713.00', 'Smartphones - Domestic demand', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.847141.00', 'Laptops - Enterprise/Consumer', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.852872.00', 'LED TVs - Local assembly', 852872, 10, 5, 5),
+
+-- Middle Eastern Countries National Tariff Lines
+-- Turkey National Tariff Lines (Regional Electronics Hub)
+((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85171300', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.84714100', 'Laptops - Business sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85287200', 'LED TVs - Domestic assembly', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85423100', 'Processors - Industrial applications', 854231, 10, 1, 1),
+
+-- UAE National Tariff Lines (Trade Hub)
+((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.851713.00', 'Smartphones - Premium segment', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.854231.00', 'Processors - Data centers', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.847141.00', 'Laptops - Enterprise market', 847141, 10, 2, 2),
+
+-- Saudi Arabia National Tariff Lines (Vision 2030)
+((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.851713.00', 'Smartphones - Consumer electronics', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.852872.00', 'LED TVs - Entertainment sector', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.847149.00', 'Computers - Government digitization', 847149, 10, 3, 3),
+
+-- Israel National Tariff Lines (Tech Innovation Hub)
+((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.854231.00', 'Processors - R&D sector', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.851713.00', 'Smartphones - Tech development', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.847149.00', 'Workstations - Defense tech', 847149, 10, 4, 4),
+
+-- Additional Asian Countries National Tariff Lines
+-- Bangladesh National Tariff Lines (Textile Electronics)
+((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.851713.00', 'Smartphones - Budget segment', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.847160.00', 'Computer peripherals - Manufacturing', 847160, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.852872.00', 'LED TVs - Consumer market', 852872, 10, 5, 5),
+
+-- Pakistan National Tariff Lines (Growing Market)
+((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.851713.00', 'Smartphones - Local assembly', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.847141.00', 'Laptops - Education sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.854110.00', 'Diodes - Basic electronics', 854110, 10, 1, 1),
+
+-- Sri Lanka National Tariff Lines (Electronics Assembly)
+((SELECT country_id FROM country WHERE country_code = 'LK'), 'LK.851713.00', 'Smartphones - Assembly operations', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'LK'), 'LK.847160.00', 'Keyboards - Export manufacturing', 847160, 10, 2, 2),
+
+-- Additional European Countries National Tariff Lines
+-- Ukraine National Tariff Lines (IT Services)
+((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.847149.00', 'Computers - IT sector', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.854231.00', 'Processors - Software development', 854231, 10, 3, 3),
+
+-- Belarus National Tariff Lines (EAEU Member)
+((SELECT country_id FROM country WHERE country_code = 'BY'), 'BY.847141.00', 'Laptops - Regional assembly', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'BY'), 'BY.852872.00', 'LED TVs - Consumer electronics', 852872, 10, 4, 4),
+
+-- Poland National Tariff Lines (EU Manufacturing Hub)
+((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.851713.00', 'Smartphones - EU market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.847141.00', 'Laptops - Regional manufacturing', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.854231.00', 'Processors - Automotive sector', 854231, 10, 5, 5),
+
+-- African Countries National Tariff Lines
+-- South Africa National Tariff Lines (Regional Leader)
+((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.851713.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.847141.00', 'Laptops - Business sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.852872.00', 'LED TVs - Entertainment', 852872, 10, 1, 1),
+
+-- Nigeria National Tariff Lines (West African Hub)
+((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.851713.00', 'Smartphones - Mobile communications', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.847160.00', 'Computer accessories', 847160, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.852872.00', 'LED TVs - Consumer demand', 852872, 10, 2, 2),
+
+-- Egypt National Tariff Lines (North African Hub)
+((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.851713.00', 'Smartphones - Regional assembly', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.847141.00', 'Laptops - Education/Business', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.854110.00', 'Diodes - Electronics assembly', 854110, 10, 3, 3),
+
+-- Kenya National Tariff Lines (East African Hub)
+((SELECT country_id FROM country WHERE country_code = 'KE'), 'KE.851713.00', 'Smartphones - Mobile banking ecosystem', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'KE'), 'KE.847141.00', 'Tablets - Education sector', 847141, 10, 4, 4),
+
+-- Ghana National Tariff Lines (West African Market)
+((SELECT country_id FROM country WHERE country_code = 'GH'), 'GH.851713.00', 'Smartphones - Consumer electronics', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'GH'), 'GH.852872.00', 'LED TVs - Entertainment sector', 852872, 10, 5, 5),
+
+-- Caribbean & Central American Countries National Tariff Lines
+-- Costa Rica National Tariff Lines (Intel Operations)
+((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.854231.00', 'Processors - Intel manufacturing', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.847141.00', 'Laptops - Assembly operations', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.851713.00', 'Smartphones - Central American market', 851713, 10, 1, 1),
+
+-- Dominican Republic National Tariff Lines (Free Trade Zones)
+((SELECT country_id FROM country WHERE country_code = 'DO'), 'DO.847160.00', 'Computer peripherals - Export manufacturing', 847160, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'DO'), 'DO.851713.00', 'Smartphones - Caribbean market', 851713, 10, 2, 2),
+
+-- Jamaica National Tariff Lines (Caribbean Hub)
+((SELECT country_id FROM country WHERE country_code = 'JM'), 'JM.851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'JM'), 'JM.847141.00', 'Laptops - Tourism/Business', 847141, 10, 3, 3),
+
+-- Panama National Tariff Lines (Regional Trade Hub)
+((SELECT country_id FROM country WHERE country_code = 'PA'), 'PA.851713.00', 'Smartphones - Regional distribution', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'PA'), 'PA.854231.00', 'Processors - Logistics sector', 854231, 10, 4, 4),
+
+-- Oceania Countries National Tariff Lines
+-- New Zealand National Tariff Lines (CPTPP Member)
+((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.851713.00', 'Smartphones - Consumer market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.847141.00', 'Laptops - Business/Education', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.852852.00', 'Computer monitors - Professional', 852852, 10, 5, 5),
+
+-- Fiji National Tariff Lines (Pacific Hub)
+((SELECT country_id FROM country WHERE country_code = 'FJ'), 'FJ.851713.00', 'Smartphones - Pacific island market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'FJ'), 'FJ.847141.00', 'Laptops - Tourism sector', 847141, 10, 1, 1);
 
 -- =====================================================
 -- TARIFF RATE DATA
@@ -515,7 +793,269 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, e
 (15.0000, 'MFN', 'ad valorem', '2023-06-01', '2023-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
- 854232, NOW(), NOW());
+ 854232, NOW(), NOW()),
+
+-- South Korea tariff rates (Technology powerhouse)
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ (SELECT country_id FROM country WHERE country_code = 'TW'), 
+ 854231, NOW(), NOW()),
+
+(8.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 854232, NOW(), NOW()),
+
+-- Taiwan tariff rates (Semiconductor hub)
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'TW'), 
+ (SELECT country_id FROM country WHERE country_code = 'JP'), 
+ 854231, NOW(), NOW()),
+
+(10.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'TW'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'TW'), 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 852872, NOW(), NOW()),
+
+-- Vietnam tariff rates (Manufacturing hub)
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'VN'), 
+ (SELECT country_id FROM country WHERE country_code = 'SG'), 
+ 851713, NOW(), NOW()),
+
+(20.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'VN'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847141, NOW(), NOW()),
+
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'VN'), 
+ (SELECT country_id FROM country WHERE country_code = 'TH'), 
+ 852872, NOW(), NOW()),
+
+-- Indonesia tariff rates (Protected market)
+(17.5000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'ID'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'ID'), 
+ (SELECT country_id FROM country WHERE country_code = 'MY'), 
+ 852872, NOW(), NOW()),
+
+(25.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'ID'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847141, NOW(), NOW()),
+
+-- Philippines tariff rates (Electronics assembly)
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'PH'), 
+ (SELECT country_id FROM country WHERE country_code = 'SG'), 
+ 854231, NOW(), NOW()),
+
+(30.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'PH'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+-- Australia tariff rates (Developed market)
+(5.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'AU'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'AU'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847141, NOW(), NOW()),
+
+(0.0000, 'CPTPP', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'AU'), 
+ (SELECT country_id FROM country WHERE country_code = 'JP'), 
+ 854231, NOW(), NOW()),
+
+-- Hong Kong tariff rates (Free port)
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'HK'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'HK'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 854231, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'HK'), 
+ (SELECT country_id FROM country WHERE country_code = 'JP'), 
+ 854232, NOW(), NOW()),
+
+-- Canada tariff rates (NAFTA partner)
+(0.0000, 'NAFTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'CA'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'NAFTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'CA'), 
+ (SELECT country_id FROM country WHERE country_code = 'MX'), 
+ 847141, NOW(), NOW()),
+
+(6.1000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'CA'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 854231, NOW(), NOW()),
+
+-- Mexico tariff rates (NAFTA manufacturing)
+(0.0000, 'NAFTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'MX'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 851713, NOW(), NOW()),
+
+(15.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'MX'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 847141, NOW(), NOW()),
+
+(0.0000, 'NAFTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'MX'), 
+ (SELECT country_id FROM country WHERE country_code = 'CA'), 
+ 852872, NOW(), NOW()),
+
+-- Brazil tariff rates (Protected market)
+(60.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'BR'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(35.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'BR'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847141, NOW(), NOW()),
+
+(16.0000, 'MERCOSUR', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'BR'), 
+ (SELECT country_id FROM country WHERE country_code = 'AR'), 
+ 852872, NOW(), NOW()),
+
+-- United Kingdom tariff rates (Post-Brexit)
+(12.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'GB'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'GB'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847149, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'GB'), 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 854231, NOW(), NOW()),
+
+-- France tariff rates (EU common external tariff)
+(0.0000, 'EU', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'FR'), 
+ (SELECT country_id FROM country WHERE country_code = 'DE'), 
+ 851713, NOW(), NOW()),
+
+(14.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'FR'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 847141, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'FR'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 854231, NOW(), NOW()),
+
+-- Italy tariff rates (EU member)
+(0.0000, 'EU', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'IT'), 
+ (SELECT country_id FROM country WHERE country_code = 'DE'), 
+ 851713, NOW(), NOW()),
+
+(14.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'IT'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 847149, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'IT'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 854110, NOW(), NOW()),
+
+-- Netherlands tariff rates (EU distribution hub)
+(0.0000, 'EU', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'NL'), 
+ (SELECT country_id FROM country WHERE country_code = 'DE'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'NL'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 854231, NOW(), NOW()),
+
+(14.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'NL'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 847141, NOW(), NOW()),
+
+-- Russia tariff rates (Import substitution policy)
+(15.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'RU'), 
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
+
+(20.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
+ (SELECT country_id FROM country WHERE country_code = 'RU'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847141, NOW(), NOW()),
+
+(0.0000, 'EAEU', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'RU'), 
+ (SELECT country_id FROM country WHERE country_code = 'BY'), 
+ 852872, NOW(), NOW()),
+
+-- Additional cross-regional electronics trade
+(0.0000, 'CPTPP', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'NZ'), 
+ (SELECT country_id FROM country WHERE country_code = 'JP'), 
+ 851713, NOW(), NOW()),
+
+(25.0000, 'GSP', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'BD'), 
+ (SELECT country_id FROM country WHERE country_code = 'US'), 
+ 847160, NOW(), NOW()),
+
+(0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'CL'), 
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 854231, NOW(), NOW()),
+
+-- ASEAN intra-regional trade
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'MY'), 
+ (SELECT country_id FROM country WHERE country_code = 'VN'), 
+ 851713, NOW(), NOW()),
+
+(0.0000, 'ASEAN', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+ (SELECT country_id FROM country WHERE country_code = 'TH'), 
+ (SELECT country_id FROM country WHERE country_code = 'ID'), 
+ 847141, NOW(), NOW());
 
 -- Display summary counts
 -- SELECT COUNT(*) as total_users FROM users;
