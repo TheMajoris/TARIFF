@@ -3,16 +3,18 @@
 -- =====================================================
 
 -- Clear existing data (in reverse order of dependencies)
-DELETE FROM tariff_rate;
+DELETE FROM tariff_rates;
 DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
 DELETE FROM country;
+DELETE FROM users;
 
 -- Reset sequences (PostgreSQL)
+ALTER SEQUENCE IF EXISTS users_user_id_seq RESTART WITH 1;
 ALTER SEQUENCE IF EXISTS country_country_id_seq RESTART WITH 1;
 ALTER SEQUENCE IF EXISTS product_categories_id_seq RESTART WITH 1;
 ALTER SEQUENCE IF EXISTS national_tariff_lines_id_seq RESTART WITH 1;
-ALTER SEQUENCE IF EXISTS tariff_rate_id_seq RESTART WITH 1;
+ALTER SEQUENCE IF EXISTS tariff_rates_id_seq RESTART WITH 1;
 
 -- =====================================================
 -- COUNTRY DATA
@@ -259,12 +261,12 @@ INSERT INTO product_categories (hs_code, category_name, description, tariff_base
 -- USER DATA
 -- =====================================================
 
-INSERT INTO users (username, email, password, role, full_name, created_at) VALUES
-('admin', 'admin@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'ADMIN', 'System Administrator', NOW()),
-('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'ADMIN', 'John Doe', NOW()),
-('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Jane Smith', NOW()),
-('bob.wilson', 'bob.wilson@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Bob Wilson', NOW()),
-('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Alice Brown', NOW());
+INSERT INTO users (username, email, password_hash, is_admin, first_name, last_name, enabled, created_at) VALUES
+('admin', 'admin@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', true, 'System', 'Administrator', true, NOW()),
+('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', true, 'John', 'Doe', true, NOW()),
+('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Jane', 'Smith', true, NOW()),
+('bob.wilson', 'bob.wilson@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Bob', 'Wilson', true, NOW()),
+('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Alice', 'Brown', true, NOW());
 
 -- Note: Password is 'password123' for all users (hashed with BCrypt)
 
@@ -325,11 +327,11 @@ INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, pa
 ((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85285200', 'Industrial displays', 852852, 10, 3, 3),
 
 -- Japan National Tariff Lines (Precision Electronics)
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854231.000', 'Microcontrollers - Automotive', 854231, 11, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854110.000', 'Precision diodes', 854110, 11, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.852872.000', 'OLED displays - Premium', 852872, 11, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.851713.000', 'Smartphones - Sony Xperia', 851713, 11, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.847141.000', 'Portable gaming devices', 847141, 11, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854231.000', 'Microcontrollers - Automotive', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854110.000', 'Precision diodes', 854110, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.852872.000', 'OLED displays - Premium', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.851713.000', 'Smartphones - Sony Xperia', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.847141.000', 'Portable gaming devices', 847141, 10, 4, 4),
 
 -- India National Tariff Lines (Growing Market)
 ((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85171300', 'Smartphones - Domestic brands', 851713, 10, 5, 5),
@@ -345,175 +347,175 @@ INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, pa
 INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, expiry_date, preferential_tariff, 
                          importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
 
--- Singapore importing from various countries
+-- Singapore importing electronics from various countries
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 010111, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
 
 (5.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 020110, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 (0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
- 151110, NOW(), NOW()),
+ 847141, NOW(), NOW()),
 
 (2.5000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'TH'), 
- 400121, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
--- Malaysia importing from various countries
+-- Malaysia importing electronics from various countries
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 010111, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'JP'), 
+ 854232, NOW(), NOW()),
 
 (15.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 020110, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 (0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
- 180100, NOW(), NOW()),
+ 851713, NOW(), NOW()),
 
 (10.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
- 390110, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
--- Thailand importing from various countries
+-- Thailand importing electronics from various countries
 (20.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'TH'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 020110, NOW(), NOW()),
+ 847160, NOW(), NOW()),
 
 (0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'TH'), 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
- 151110, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
 (5.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'TH'), 
  (SELECT country_id FROM country WHERE country_code = 'IN'), 
- 520100, NOW(), NOW()),
+ 851713, NOW(), NOW()),
 
--- China importing from various countries
+-- China importing electronics from various countries
 (8.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 020110, NOW(), NOW()),
+ 854170, NOW(), NOW()),
 
 (25.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 870110, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 720110, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 854232, NOW(), NOW()),
 
--- United States importing from various countries
+-- United States importing electronics from various countries
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  (SELECT country_id FROM country WHERE country_code = 'CA'), 
- 010111, NOW(), NOW()),
+ 847141, NOW(), NOW()),
 
 (26.4000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 020110, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
 
 (0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  (SELECT country_id FROM country WHERE country_code = 'MX'), 
- 080111, NOW(), NOW()),
+ 854110, NOW(), NOW()),
 
 (4.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
- 870110, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
--- European Union (Germany) importing from various countries
+-- European Union (Germany) importing electronics from various countries
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 010111, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 (12.8000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
- (SELECT country_id FROM country WHERE country_code = 'AR'), 
- 020110, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
 
 (10.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 870110, NOW(), NOW()),
+ 847149, NOW(), NOW()),
 
--- Japan importing from various countries
+-- Japan importing electronics from various countries
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 010111, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 854232, NOW(), NOW()),
 
 (38.5000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 020110, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 (0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 020110, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'TW'), 
+ 852872, NOW(), NOW()),
 
--- India importing from various countries
+-- India importing electronics from various countries
 (30.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'IN'), 
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- 010111, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'CN'), 
+ 851713, NOW(), NOW()),
 
 (0.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'IN'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 520100, NOW(), NOW()),
+ 854110, NOW(), NOW()),
 
 (7.5000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'IN'), 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
- 870110, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
--- Cross-regional trade examples
-(0.0000, 'FTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
+-- Cross-regional electronics trade examples
+(0.0000, 'NAFTA', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'CA'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
- 870110, NOW(), NOW()),
+ 847141, NOW(), NOW()),
 
 (5.0000, 'MFN', 'ad valorem', '2024-01-01', '2024-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'BR'), 
- (SELECT country_id FROM country WHERE country_code = 'AR'), 
- 020110, NOW(), NOW()),
+ (SELECT country_id FROM country WHERE country_code = 'KR'), 
+ 851713, NOW(), NOW()),
 
 (0.0000, 'EU', 'ad valorem', '2024-01-01', '2024-12-31', true, 
  (SELECT country_id FROM country WHERE country_code = 'FR'), 
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
- 870110, NOW(), NOW()),
+ 854231, NOW(), NOW()),
 
 -- Some expired rates for historical data
 (12.0000, 'MFN', 'ad valorem', '2023-01-01', '2023-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
- 870110, NOW(), NOW()),
+ 852872, NOW(), NOW()),
 
 (15.0000, 'MFN', 'ad valorem', '2023-06-01', '2023-12-31', false, 
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
- 390110, NOW(), NOW());
+ 854232, NOW(), NOW());
 
 -- Display summary counts
 -- SELECT COUNT(*) as total_users FROM users;
