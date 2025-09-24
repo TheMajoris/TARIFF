@@ -22,7 +22,7 @@
 						bind:value={productSearch}
 						class="input input-bordered w-full text-sm mb-2"
 						on:focus={() => (showProductDropdown = true)}
-						required
+						
 					/>
 					{#if showProductDropdown && filteredProducts.length > 0}
 						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
@@ -42,6 +42,23 @@
 						{/each}
 						</ul>
 					{/if}
+				</div>
+
+				<!-- HS Code Input -->
+				<div class="form-control">
+					<label class="label text-sm font-medium">HS Code</label>
+					<input
+						type="text"
+						placeholder="Enter HS Code (e.g., 8501.10.10)"
+						bind:value={hsCode}
+						class="input input-bordered w-full text-sm"
+						required
+					/>
+					<label class="label">
+						<span class="label-text-alt text-xs text-gray-500">
+							Harmonized System Code for product classification
+						</span>
+					</label>
 				</div>
 
 				<!-- Exporting From -->
@@ -169,6 +186,7 @@
 	import { onMount } from "svelte";
 
 	let product = '';
+	let hsCode = '';
 	let exportFrom = '';
 	let importTo = '';
 	let calculationDate = new Date().toISOString().split("T")[0]; // Set the Calculation Date
@@ -219,9 +237,16 @@
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
 	async function calculateCost() {
-		if (product && exportFrom && importTo && calculationDate && goodsValue) {
+		if (product && hsCode && exportFrom && importTo && calculationDate && goodsValue) {
+			// Validate HS Code format (basic validation)
+			if (!/^\d{4}\.\d{2}\.\d{2}$/.test(hsCode)) {
+				alert("Please enter a valid HS Code format (e.g., 8501.10.10)");
+				return;
+			}
+			
 			calculationResult = await calculateTariffCost({
 				product,
+				hsCode,
 				exportFrom,
 				importTo,
 				calculationDate,
