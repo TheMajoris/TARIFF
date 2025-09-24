@@ -4,8 +4,6 @@ on:
     paths:
       - core/**
   push:
-    branches:
-      - SCRUM-22-fix-github-unit-test
     paths:
       - core/**
   workflow_dispatch:  # Allows manual triggering
