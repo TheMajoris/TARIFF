@@ -145,146 +145,112 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 -- SELECT COUNT(*) as total_countries FROM country;
 
 -- =====================================================
--- PRODUCT CATEGORIES DATA (HS CODES)
+-- ELECTRONICS PRODUCT CATEGORIES DATA (HS CODES)
 -- =====================================================
 
 INSERT INTO product_categories (hs_code, category_name, description, tariff_base_rate, is_active) VALUES
--- Section I: Live Animals; Animal Products (01-05)
-(010111, 'Live Horses - Pure-bred breeding animals', 'Live horses for breeding purposes, pure-bred animals', 0.0, true),
-(010119, 'Live Horses - Other', 'Live horses other than pure-bred breeding animals', 5.2, true),
-(010121, 'Live Bovine Animals - Pure-bred breeding', 'Live cattle for breeding purposes, pure-bred animals', 0.0, true),
-(010129, 'Live Bovine Animals - Other', 'Live cattle other than pure-bred breeding animals', 6.8, true),
-(010221, 'Live Swine - Pure-bred breeding', 'Live pigs for breeding purposes, pure-bred animals', 0.0, true),
-(010229, 'Live Swine - Other', 'Live pigs other than pure-bred breeding animals', 4.1, true),
-(010311, 'Live Swine - Weighing less than 50 kg', 'Live pigs weighing less than 50 kg', 4.1, true),
-(020110, 'Beef and Veal - Carcasses and half-carcasses', 'Fresh or chilled beef and veal carcasses', 12.8, true),
-(020120, 'Beef and Veal - Other cuts with bone in', 'Fresh or chilled beef cuts with bone', 12.8, true),
-(020130, 'Beef and Veal - Boneless', 'Fresh or chilled boneless beef and veal', 12.8, true),
+-- Semiconductors and Electronic Components (HS 85)
+(850110, 'Electric Motors ≤ 37.5W', 'Electric motors of an output not exceeding 37.5 W', 2.7, true),
+(850120, 'Universal AC/DC Motors > 37.5W', 'Universal AC/DC motors of an output exceeding 37.5 W', 2.7, true),
+(850131, 'DC Motors > 37.5W ≤ 750W', 'DC motors of an output exceeding 37.5 W but not exceeding 750 W', 2.7, true),
+(850132, 'DC Motors > 750W ≤ 75kW', 'DC motors of an output exceeding 750 W but not exceeding 75 kW', 2.7, true),
+(850140, 'AC Motors > 37.5W', 'AC motors, single-phase, of an output exceeding 37.5 W', 2.7, true),
+(850211, 'Diesel Generating Sets ≤ 75kVA', 'Generating sets with compression-ignition internal combustion piston engines, ≤ 75kVA', 0.0, true),
+(850212, 'Diesel Generating Sets 75-375kVA', 'Generating sets with compression-ignition internal combustion piston engines, 75-375kVA', 0.0, true),
+(850213, 'Diesel Generating Sets > 375kVA', 'Generating sets with compression-ignition internal combustion piston engines, > 375kVA', 0.0, true),
+(850231, 'Wind-powered Generating Sets', 'Wind-powered generating sets', 0.0, true),
+(850239, 'Other Generating Sets', 'Other generating sets', 0.0, true),
+(850300, 'Electric Motor Parts', 'Parts suitable for use solely or principally with electric motors and generators', 0.0, true),
+(850410, 'Ballasts for Discharge Lamps', 'Ballasts for discharge lamps or tubes', 0.0, true),
+(850421, 'Liquid Dielectric Transformers ≤ 650kVA', 'Liquid dielectric transformers having a power handling capacity not exceeding 650 kVA', 0.0, true),
+(850422, 'Liquid Dielectric Transformers 650kVA-10MVA', 'Liquid dielectric transformers having a power handling capacity exceeding 650 kVA but not exceeding 10,000 kVA', 0.0, true),
+(850423, 'Liquid Dielectric Transformers > 10MVA', 'Liquid dielectric transformers having a power handling capacity exceeding 10,000 kVA', 0.0, true),
+(850431, 'Dry-type Transformers ≤ 1kVA', 'Transformers having a power handling capacity not exceeding 1 kVA', 0.0, true),
+(850432, 'Dry-type Transformers 1-16kVA', 'Transformers having a power handling capacity exceeding 1 kVA but not exceeding 16 kVA', 0.0, true),
+(850433, 'Dry-type Transformers 16-500kVA', 'Transformers having a power handling capacity exceeding 16 kVA but not exceeding 500 kVA', 0.0, true),
+(850434, 'Dry-type Transformers > 500kVA', 'Transformers having a power handling capacity exceeding 500 kVA', 0.0, true),
+(850440, 'Static Converters', 'Static converters', 0.0, true),
+(850450, 'Inductors', 'Other inductors', 0.0, true),
+(850490, 'Transformer Parts', 'Parts of transformers, static converters and inductors', 0.0, true),
 
--- Section II: Vegetable Products (06-14)
-(060110, 'Bulbs, tubers - Dormant', 'Bulbs, tubers, tuberous roots in dormant state', 8.5, true),
-(060120, 'Bulbs, tubers - In growth or flower', 'Bulbs, tubers in growth or in flower; chicory plants', 8.5, true),
-(070110, 'Potatoes - Seed', 'Seed potatoes for planting', 2.1, true),
-(070190, 'Potatoes - Other', 'Fresh or chilled potatoes, other than seed', 4.8, true),
-(080111, 'Coconuts - Desiccated', 'Desiccated coconuts', 5.4, true),
-(080119, 'Coconuts - Other', 'Fresh coconuts, other than desiccated', 5.4, true),
-(080211, 'Almonds - In shell', 'Fresh or dried almonds in shell', 3.2, true),
-(080212, 'Almonds - Shelled', 'Fresh or dried shelled almonds', 3.2, true),
-(090111, 'Coffee - Not roasted, not decaffeinated', 'Coffee, not roasted, not decaffeinated', 0.0, true),
-(090112, 'Coffee - Not roasted, decaffeinated', 'Coffee, not roasted, decaffeinated', 0.0, true),
+-- Semiconductors (HS 8541-8542)
+(854110, 'Diodes', 'Diodes, other than photosensitive or light-emitting diodes', 0.0, true),
+(854121, 'Transistors ≤ 1W', 'Transistors, other than photosensitive transistors, with a dissipation rate of less than 1 W', 0.0, true),
+(854129, 'Transistors > 1W', 'Transistors, other than photosensitive transistors, with a dissipation rate of 1 W or more', 0.0, true),
+(854130, 'Thyristors', 'Thyristors, diacs and triacs, other than photosensitive devices', 0.0, true),
+(854140, 'Photosensitive Semiconductors', 'Photosensitive semiconductor devices, including photovoltaic cells', 0.0, true),
+(854150, 'Semiconductor Devices NES', 'Other semiconductor devices', 0.0, true),
+(854160, 'Mounted Piezoelectric Crystals', 'Mounted piezoelectric crystals', 0.0, true),
+(854170, 'LED Diodes', 'Light-emitting diodes (LED)', 0.0, true),
+(854190, 'Semiconductor Device Parts', 'Parts of semiconductor devices and electronic integrated circuits', 0.0, true),
 
--- Section III: Animal or Vegetable Fats and Oils (15)
-(150710, 'Soya-bean oil - Crude', 'Crude soya-bean oil, whether or not degummed', 9.6, true),
-(150790, 'Soya-bean oil - Other', 'Refined soya-bean oil and fractions', 9.6, true),
-(151110, 'Palm oil - Crude', 'Crude palm oil', 0.0, true),
-(151190, 'Palm oil - Other', 'Refined palm oil and fractions', 5.1, true),
-(151211, 'Sunflower-seed oil - Crude', 'Crude sunflower-seed oil', 9.6, true),
-(151219, 'Sunflower-seed oil - Other', 'Refined sunflower-seed oil and fractions', 9.6, true),
+-- Integrated Circuits (HS 8542)
+(854211, 'Memory Circuits - Cards/Modules', 'Cards incorporating an electronic integrated circuit (smart cards)', 0.0, true),
+(854213, 'Metal Oxide Semiconductors', 'Metal oxide semiconductors (MOS technology)', 0.0, true),
+(854214, 'Digital Monolithic ICs', 'Digital monolithic integrated circuits', 0.0, true),
+(854219, 'Other Monolithic ICs', 'Other monolithic integrated circuits', 0.0, true),
+(854221, 'Hybrid ICs - Thick/Thin Film', 'Hybrid integrated circuits for thick or thin film technology', 0.0, true),
+(854229, 'Other Hybrid ICs', 'Other hybrid integrated circuits', 0.0, true),
+(854231, 'Processors and Controllers', 'Processors and controllers, whether or not combined with memories, converters, logic circuits, amplifiers, clock and timing circuits', 0.0, true),
+(854232, 'Memories', 'Memories', 0.0, true),
+(854233, 'Amplifiers', 'Amplifiers', 0.0, true),
+(854239, 'Other Electronic ICs', 'Other electronic integrated circuits', 0.0, true),
+(854290, 'IC Parts', 'Parts of electronic integrated circuits and microassemblies', 0.0, true),
 
--- Section IV: Prepared Foodstuffs (16-24)
-(160100, 'Sausages and similar products', 'Sausages and similar products of meat, meat offal or blood', 15.4, true),
-(170111, 'Cane sugar - Raw', 'Raw cane sugar, not containing added flavouring', 0.0, true),
-(170112, 'Beet sugar - Raw', 'Raw beet sugar, not containing added flavouring', 0.0, true),
-(170191, 'Refined cane sugar', 'Refined cane sugar, containing added flavouring', 0.0, true),
-(180100, 'Cocoa beans', 'Cocoa beans, whole or broken, raw or roasted', 0.0, true),
-(180200, 'Cocoa shells, husks, skins', 'Cocoa shells, husks, skins and other cocoa waste', 0.0, true),
+-- Electronic Equipment (HS 8517-8528)
+(851711, 'Line Telephone Sets', 'Line telephone sets with cordless handsets', 0.0, true),
+(851712, 'Cordless Telephones', 'Telephones for cellular networks or for other wireless networks', 0.0, true),
+(851713, 'Smartphones', 'Smartphones', 0.0, true),
+(851718, 'Other Telephone Sets', 'Other telephone sets and apparatus for transmission or reception of voice, images or other data', 0.0, true),
+(851761, 'Base Stations', 'Base stations for wireless telecommunications', 0.0, true),
+(851762, 'Machines for Reception/Conversion', 'Machines for the reception, conversion and transmission or regeneration of voice, images or other data', 0.0, true),
+(851769, 'Other Telecom Equipment', 'Other apparatus for transmission or reception of voice, images or other data', 0.0, true),
+(851770, 'Telecom Parts', 'Parts of telephone sets and other apparatus for transmission or reception of voice, images or other data', 0.0, true),
 
--- Section V: Mineral Products (25-27)
-(250100, 'Salt - Suitable for human consumption', 'Salt suitable for human consumption', 0.0, true),
-(250200, 'Unroasted iron pyrites', 'Unroasted iron pyrites', 0.0, true),
-(260111, 'Iron ores - Non-agglomerated', 'Iron ores and concentrates, non-agglomerated', 0.0, true),
-(260112, 'Iron ores - Agglomerated', 'Iron ores and concentrates, agglomerated', 0.0, true),
-(270111, 'Coal - Anthracite', 'Anthracite coal, whether or not pulverised', 0.0, true),
-(270112, 'Coal - Bituminous', 'Bituminous coal, whether or not pulverised', 0.0, true),
+-- Computing Equipment (HS 8471)
+(847110, 'Analog/Hybrid Computers', 'Analogue or hybrid automatic data processing machines', 0.0, true),
+(847141, 'Digital Computers ≤ 10kg', 'Comprising in the same housing at least a central processing unit and an input and output unit, whether or not combined, weighing not more than 10 kg', 0.0, true),
+(847149, 'Other Digital Processing Units', 'Other digital automatic data processing machines presented in the form of systems', 0.0, true),
+(847150, 'Processing Units', 'Processing units, whether or not containing in the same housing one or two of the following types of unit: storage units, input units, output units', 0.0, true),
+(847160, 'Input/Output Units', 'Input or output units, whether or not containing storage units in the same housing', 0.0, true),
+(847170, 'Storage Units', 'Storage units', 0.0, true),
+(847180, 'Other ADP Units', 'Other units of automatic data processing machines', 0.0, true),
+(847190, 'ADP Machine Parts', 'Parts and accessories of automatic data processing machines and units thereof', 0.0, true),
 
--- Section VI: Products of Chemical Industries (28-38)
-(280461, 'Silicon - Containing by weight ≥99.99% silicon', 'Silicon containing by weight not less than 99.99% of silicon', 3.7, true),
-(280469, 'Silicon - Other', 'Silicon containing by weight less than 99.99% of silicon', 5.5, true),
-(290110, 'Saturated acyclic hydrocarbons', 'Saturated acyclic hydrocarbons', 5.5, true),
-(290121, 'Ethylene', 'Ethylene', 5.5, true),
-(290122, 'Propene (propylene)', 'Propene (propylene)', 5.5, true),
+-- Electronic Displays (HS 8528)
+(852851, 'Monitors - CRT', 'Monitors capable of directly connecting to and designed for use with an automatic data processing machine, using cathode-ray tube technology', 6.4, true),
+(852852, 'Monitors - LCD/LED', 'Monitors capable of directly connecting to and designed for use with an automatic data processing machine, using liquid crystal display (LCD) technology', 6.4, true),
+(852859, 'Other Monitors', 'Other monitors capable of directly connecting to and designed for use with an automatic data processing machine', 6.4, true),
+(852861, 'Projectors - CRT', 'Projectors capable of directly connecting to and designed for use with an automatic data processing machine, using cathode-ray tube technology', 6.4, true),
+(852862, 'Projectors - LCD', 'Projectors capable of directly connecting to and designed for use with an automatic data processing machine, using liquid crystal display (LCD) technology', 6.4, true),
+(852869, 'Other Projectors', 'Other projectors capable of directly connecting to and designed for use with an automatic data processing machine', 6.4, true),
+(852871, 'TV Receivers - CRT', 'Reception apparatus for television, whether or not incorporating radio-broadcast receivers or sound or video recording or reproducing apparatus, using cathode-ray tube technology', 6.4, true),
+(852872, 'TV Receivers - LCD/LED/OLED', 'Reception apparatus for television, color, with a flat panel screen, using liquid crystal display (LCD), light-emitting diode (LED) or organic light-emitting diode (OLED) technology', 6.4, true),
+(852873, 'TV Receivers - Other Color', 'Other color reception apparatus for television', 6.4, true),
 
--- Section VII: Plastics and Rubber (39-40)
-(390110, 'Polyethylene - Specific gravity < 0.94', 'Polyethylene having a specific gravity of less than 0.94', 6.5, true),
-(390120, 'Polyethylene - Specific gravity ≥ 0.94', 'Polyethylene having a specific gravity of 0.94 or more', 6.5, true),
-(390210, 'Polypropylene', 'Polypropylene in primary forms', 6.5, true),
-(400110, 'Natural rubber latex', 'Natural rubber latex, whether or not pre-vulcanised', 0.0, true),
-(400121, 'Natural rubber - Smoked sheets', 'Natural rubber in the form of smoked sheets', 0.0, true),
+-- Audio/Video Equipment (HS 8519-8522)
+(851910, 'Coin/Token-operated Sound Equipment', 'Coin- or disc-operated record-players', 0.0, true),
+(851920, 'Sound Recording/Reproducing Apparatus', 'Apparatus operated by coins, banknotes, bank cards, tokens or by other means of payment', 0.0, true),
+(851930, 'Turntables', 'Turntables (record-decks)', 0.0, true),
+(851940, 'Transcribing Machines', 'Transcribing machines and other sound reproducing apparatus', 0.0, true),
+(851950, 'Telephone Answering Machines', 'Telephone answering machines', 0.0, true),
 
--- Section VIII: Raw Hides, Skins, Leather (41-43)
-(410110, 'Raw bovine hides - Whole', 'Raw hides and skins of bovine animals, whole', 0.0, true),
-(410120, 'Raw bovine hides - Other', 'Raw hides and skins of bovine animals, other than whole', 0.0, true),
-(420211, 'Trunks, suitcases - With outer surface of leather', 'Trunks and suitcases with outer surface of leather', 3.7, true),
-(420212, 'Trunks, suitcases - With outer surface of plastics', 'Trunks and suitcases with outer surface of plastics', 3.7, true),
+-- Electronic Components and Parts
+(853110, 'Burglar/Fire Alarms', 'Burglar or fire alarms and similar apparatus', 0.0, true),
+(853120, 'Indicator Panels', 'Indicator panels incorporating liquid crystal devices (LCD) or light-emitting diodes (LED)', 0.0, true),
+(853180, 'Other Electric Sound/Visual Signaling', 'Other electric sound or visual signalling apparatus', 0.0, true),
+(853190, 'Signaling Apparatus Parts', 'Parts of electric sound or visual signalling apparatus', 0.0, true),
 
--- Section IX: Wood and Wood Products (44-46)
-(440110, 'Fuel wood - In logs, billets, twigs', 'Fuel wood, in logs, in billets, in twigs, in faggots', 0.0, true),
-(440121, 'Wood chips - Coniferous', 'Wood chips or particles of coniferous wood', 0.0, true),
-(440122, 'Wood chips - Non-coniferous', 'Wood chips or particles of non-coniferous wood', 0.0, true),
-(441011, 'Particle board - Of wood', 'Particle board and similar board of wood', 0.0, true),
-
--- Section X: Pulp of Wood, Paper (47-49)
-(470100, 'Mechanical wood pulp', 'Mechanical wood pulp', 0.0, true),
-(470200, 'Chemical wood pulp - Dissolving grades', 'Chemical wood pulp, dissolving grades', 0.0, true),
-(480100, 'Newsprint', 'Newsprint, in rolls or sheets', 0.0, true),
-(480211, 'Uncoated paper - Weighing < 40 g/m²', 'Uncoated paper for writing, printing, weighing less than 40 g/m²', 0.0, true),
-
--- Section XI: Textiles (50-63)
-(500100, 'Silkworm cocoons', 'Silkworm cocoons suitable for reeling', 0.0, true),
-(510111, 'Wool - Greasy, not carded or combed', 'Greasy wool, not carded or combed, including fleece-washed wool', 0.0, true),
-(520100, 'Cotton - Not carded or combed', 'Cotton, not carded or combed', 0.0, true),
-(610110, 'Men\'s overcoats - Knitted or crocheted', 'Men\'s or boys\' overcoats, knitted or crocheted', 12.0, true),
-
--- Section XII: Footwear, Headgear (64-67)
-(640110, 'Waterproof footwear - Covering the knee', 'Waterproof footwear with outer soles and uppers of rubber or plastics, covering the knee', 8.5, true),
-(640191, 'Waterproof footwear - Covering the ankle', 'Waterproof footwear covering the ankle but not covering the knee', 8.5, true),
-(650100, 'Hat-forms, hat bodies', 'Hat-forms, hat bodies and hoods of felt', 2.7, true),
-
--- Section XIII: Stone, Plaster, Ceramic, Glass (68-70)
-(680100, 'Natural stone - Roughly trimmed', 'Natural stone (except slate) roughly trimmed or merely cut', 0.0, true),
-(690100, 'Bricks, blocks - Of siliceous fossil meals', 'Bricks, blocks, tiles and other ceramic goods of siliceous fossil meals', 0.0, true),
-(700100, 'Cullet and other waste glass', 'Cullet and other waste and scrap of glass', 0.0, true),
-
--- Section XIV: Pearls, Precious Stones, Metals (71)
-(710110, 'Natural pearls', 'Natural pearls, whether or not worked or graded', 0.0, true),
-(710210, 'Diamonds - Unsorted', 'Diamonds, unsorted', 0.0, true),
-(710391, 'Rubies - Unworked or simply sawn', 'Rubies, sapphires and emeralds, unworked or simply sawn or roughly shaped', 0.0, true),
-
--- Section XV: Base Metals (72-83)
-(720110, 'Pig iron - Non-alloy', 'Non-alloy pig iron containing by weight 0.5% or less of phosphorus', 0.0, true),
-(720150, 'Pig iron - Alloy', 'Alloy pig iron; spiegeleisen', 0.0, true),
-(730110, 'Sheet piling - Of iron or steel', 'Sheet piling of iron or steel', 0.0, true),
-(740100, 'Copper mattes', 'Copper mattes; cement copper (precipitated copper)', 0.0, true),
-
--- Section XVI: Machinery, Mechanical Appliances (84-85)
-(840111, 'Nuclear reactors', 'Nuclear reactors', 0.0, true),
-(840211, 'Watertube boilers - Steam producing', 'Watertube boilers with a steam production exceeding 45 t per hour', 0.0, true),
-(841011, 'Hydraulic turbines - Of a power ≤1,000 kW', 'Hydraulic turbines and water wheels, of a power not exceeding 1,000 kW', 0.0, true),
-(850110, 'Motors - Of an output ≤37.5 W', 'Motors of an output not exceeding 37.5 W', 2.7, true),
-
--- Section XVII: Vehicles, Aircraft, Vessels (86-89)
-(860110, 'Railway locomotives - Powered from external source', 'Railway locomotives powered from an external source of electricity', 0.0, true),
-(870110, 'Tractors - Road tractors for semi-trailers', 'Road tractors for semi-trailers', 10.0, true),
-(870120, 'Tractors - Other', 'Motor vehicles for the transport of ten or more persons', 10.0, true),
-(880100, 'Balloons and dirigibles', 'Balloons and dirigibles; gliders, hang gliders', 0.0, true),
-
--- Section XVIII: Optical, Photographic, Medical Instruments (90-92)
-(900110, 'Optical fibres - Individual', 'Optical fibres, optical fibre bundles and cables', 0.0, true),
-(901011, 'Photographic equipment - For colour photography', 'Apparatus and equipment for photographic laboratories, for colour photography', 0.0, true),
-(920110, 'Pianos - Upright pianos', 'Upright pianos', 3.7, true),
-
--- Section XIX: Arms and Ammunition (93)
-(930100, 'Military weapons - Other than revolvers', 'Military weapons, other than revolvers, pistols', 0.0, true),
-(930200, 'Revolvers and pistols', 'Revolvers and pistols, other than those of heading 93.03 or 93.04', 0.0, true),
-
--- Section XX: Miscellaneous Manufactured Articles (94-96)
-(940110, 'Seats - Aircraft seats', 'Seats of a kind used in aircraft', 0.0, true),
-(940130, 'Seats - Swivel seats with variable height adjustment', 'Swivel seats with variable height adjustment', 0.0, true),
-(950110, 'Wheeled toys - Designed to be ridden by children', 'Wheeled toys designed to be ridden by children', 0.0, true),
-
--- Section XXI: Works of Art (97)
-(970100, 'Paintings, drawings - Original', 'Paintings, drawings and pastels, executed entirely by hand', 0.0, true),
-(970200, 'Original engravings, prints', 'Original engravings, prints and lithographs', 0.0, true);
+-- Electronic Capacitors (HS 8532)
+(853210, 'Fixed Capacitors - Tantalum', 'Fixed capacitors designed for use in 50/60 Hz circuits and having a reactive power handling capacity of not less than 0.5 kvar (power capacitors)', 0.0, true),
+(853221, 'Fixed Capacitors - Tantalum', 'Tantalum capacitors', 0.0, true),
+(853222, 'Fixed Capacitors - Aluminum Electrolytic', 'Aluminium electrolytic capacitors', 0.0, true),
+(853223, 'Fixed Capacitors - Ceramic Dielectric', 'Capacitors with ceramic dielectric, single layer', 0.0, true),
+(853224, 'Fixed Capacitors - Ceramic Multilayer', 'Capacitors with ceramic dielectric, multilayer', 0.0, true),
+(853225, 'Fixed Capacitors - Paper/Plastic', 'Capacitors with dielectric of paper or plastics', 0.0, true),
+(853229, 'Other Fixed Capacitors', 'Other fixed capacitors', 0.0, true),
+(853230, 'Variable/Adjustable Capacitors', 'Variable or adjustable (pre-set) capacitors', 0.0, true),
+(853290, 'Capacitor Parts', 'Parts of capacitors', 0.0, true);
 
 -- Display inserted product categories count
 -- SELECT COUNT(*) as total_product_categories FROM product_categories;
@@ -295,72 +261,82 @@ INSERT INTO product_categories (hs_code, category_name, description, tariff_base
 
 INSERT INTO users (username, email, password, role, full_name, created_at) VALUES
 ('admin', 'admin@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'ADMIN', 'System Administrator', NOW()),
-('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'MANAGER', 'John Doe', NOW()),
-('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'MANAGER', 'Jane Smith', NOW()),
+('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'ADMIN', 'John Doe', NOW()),
+('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Jane Smith', NOW()),
 ('bob.wilson', 'bob.wilson@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Bob Wilson', NOW()),
 ('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', 'USER', 'Alice Brown', NOW());
 
 -- Note: Password is 'password123' for all users (hashed with BCrypt)
 
 -- =====================================================
--- NATIONAL TARIFF LINES DATA
+-- ELECTRONICS NATIONAL TARIFF LINES DATA
 -- =====================================================
 
 INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, parent_hs_code, level, created_by, updated_by) VALUES
--- Singapore National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.01011110', 'Pure-bred breeding horses - Male', 010111, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.01011120', 'Pure-bred breeding horses - Female', 010111, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.02011000', 'Fresh or chilled beef carcasses', 020110, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.07011000', 'Seed potatoes for planting', 070110, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.08011100', 'Desiccated coconuts', 080111, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.15071000', 'Crude soya-bean oil', 150710, 8, 1, 1),
+-- Singapore National Tariff Lines (Electronics Hub)
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171210', 'Smartphones - 5G capable', 851712, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171220', 'Smartphones - 4G/LTE', 851712, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171300', 'Smartphones - Premium tier', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85411010', 'Semiconductor diodes - Silicon', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85411020', 'Semiconductor diodes - Gallium arsenide', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85423100', 'Microprocessors - ARM based', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85423200', 'Memory chips - DDR4/DDR5 RAM', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85285200', 'LCD monitors - 4K resolution', 852852, 10, 1, 1),
 
--- Malaysia National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.010111.10', 'Pure-bred breeding stallions', 010111, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.010111.20', 'Pure-bred breeding mares', 010111, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.151110.00', 'Crude palm oil', 151110, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.151190.10', 'Refined palm oil', 151190, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.180100.00', 'Cocoa beans, whole or broken', 180100, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.400110.00', 'Natural rubber latex', 400110, 8, 2, 2),
+-- Malaysia National Tariff Lines (Manufacturing Hub)
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854231.10', 'Microprocessors - Intel x86', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854231.20', 'Microprocessors - AMD processors', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854232.10', 'Flash memory - NAND chips', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854232.20', 'DRAM memory - Server grade', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847141.00', 'Laptops - Consumer grade', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847149.10', 'Desktop computers - Gaming', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847149.20', 'Desktop computers - Business', 847149, 10, 2, 2),
 
--- Thailand National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.070190.10', 'Fresh potatoes for consumption', 070190, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.080119.00', 'Fresh coconuts', 080119, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.170111.00', 'Raw cane sugar', 170111, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.400121.00', 'Smoked rubber sheets', 400121, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.520100.00', 'Cotton, not carded', 520100, 8, 3, 3),
+-- Thailand National Tariff Lines (Assembly Operations)
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.10', 'LED TVs - 32-43 inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.20', 'LED TVs - 55-65 inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.30', 'LED TVs - 75+ inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.851712.00', 'Mobile phones - Feature phones', 851712, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.851713.00', 'Smartphones - Budget tier', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.847160.00', 'Keyboards and mouse - Wireless', 847160, 10, 3, 3),
 
--- China National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.720110.00', 'Non-alloy pig iron', 720110, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.840111.00', 'Nuclear reactors', 840111, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.870110.10', 'Road tractors, new', 870110, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.870110.90', 'Road tractors, used', 870110, 8, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.390110.00', 'Low density polyethylene', 390110, 8, 1, 1),
+-- China National Tariff Lines (Major Electronics Producer)
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85423100', 'Processors - Mobile chipsets', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85423200', 'Memory - Consumer DRAM', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85171300', 'Smartphones - Mid-range', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85285200', 'Computer monitors - Gaming', 852852, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85411000', 'Power diodes - High voltage', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85417000', 'LED chips - White light', 854170, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.84714100', 'Tablets - Android based', 847141, 10, 1, 1),
 
--- United States National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.0101.11.10', 'Thoroughbred horses for racing', 010111, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.0201.10.05', 'High quality beef carcasses', 020110, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.0801.11.00', 'Desiccated coconuts', 080111, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8701.10.10', 'Road tractors, diesel', 870110, 8, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8701.10.50', 'Road tractors, other', 870110, 8, 2, 2),
+-- United States National Tariff Lines (High-tech Focus)
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8542.31.00', 'Microprocessors - Server CPUs', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8542.32.00', 'Memory - ECC server RAM', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8517.13.00', 'Smartphones - iPhone series', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8471.41.01', 'Laptops - MacBook series', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8471.49.01', 'Workstations - High-end', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8528.52.10', 'Professional monitors - 4K+', 852852, 10, 2, 2),
 
 -- European Union (Germany) National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.01011110', 'Pure-bred breeding horses, male', 010111, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.02011000', 'Beef carcasses, fresh', 020110, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.87011010', 'Truck tractors, new', 870110, 8, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.84021100', 'Steam boilers, large', 840211, 8, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85423100', 'Automotive processors', 854231, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85411000', 'Industrial diodes', 854110, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85171300', 'Smartphones - Enterprise', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.84714900', 'Industrial computers', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85285200', 'Industrial displays', 852852, 10, 3, 3),
 
--- Japan National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.010111.000', 'Pure-bred breeding horses', 010111, 9, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.020110.000', 'Beef carcasses and half-carcasses', 020110, 9, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.870110.000', 'Road tractors for semi-trailers', 870110, 9, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.390110.000', 'Polyethylene, low density', 390110, 9, 4, 4),
+-- Japan National Tariff Lines (Precision Electronics)
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854231.000', 'Microcontrollers - Automotive', 854231, 11, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854110.000', 'Precision diodes', 854110, 11, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.852872.000', 'OLED displays - Premium', 852872, 11, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.851713.000', 'Smartphones - Sony Xperia', 851713, 11, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.847141.000', 'Portable gaming devices', 847141, 11, 4, 4),
 
--- India National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.01011100', 'Live horses, pure-bred breeding', 010111, 8, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.52010000', 'Cotton, not carded or combed', 520100, 8, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.72011000', 'Pig iron, non-alloy', 720110, 8, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.87011000', 'Tractors, road', 870110, 8, 5, 5);
+-- India National Tariff Lines (Growing Market)
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85171300', 'Smartphones - Domestic brands', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85287200', 'LED TVs - Budget segment', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.84714100', 'Tablets - Education sector', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85423100', 'Mobile processors - Entry level', 854231, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85411000', 'Basic diodes - Consumer electronics', 854110, 10, 5, 5);
 
 -- =====================================================
 -- TARIFF RATE DATA
