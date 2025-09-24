@@ -60,15 +60,24 @@ public class TariffRateController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    // using the params from request DTO, create final price n return response as DTO
+    // using the params from request DTO, create final price n return response as
+    // DTO
     @PostMapping("/calculate")
-    public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(@RequestBody TariffCalculatorRequestDto requestBodyDTO) {
+    public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
+            @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
+        BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
+                requestBodyDTO.importingCountryId(),
+                requestBodyDTO.exportingCountryId(),
+                requestBodyDTO.hsCode(),
+                requestBodyDTO.initialPrice(),
+                requestBodyDTO.date()); 
         BigDecimal finalPrice = tariffRateService.getFinalPrice(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
-                requestBodyDTO.initialPrice()
-        );
-        return ResponseEntity.ok(new TariffCalculatorResponseDto(finalPrice));
+                requestBodyDTO.initialPrice(),
+                requestBodyDTO.date());
+        BigDecimal tariffCost = tariffRateService.getTariffCost(finalPrice, requestBodyDTO.initialPrice());
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate, tariffCost, finalPrice));
     }
 }

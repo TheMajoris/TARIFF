@@ -1,0 +1,11 @@
+[33mcommit 11af0cfab29c55a48749f95b732f485f1427934f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mSCRUM-12-Tariff-calculator-service[m[33m, [m[1;31morigin/SCRUM-12-Tariff-calculator-service[m[33m)[m
+Author: kbngo22 <nkb22122003@gmail.com>
+Date:   Sun Sep 21 23:26:30 2025 +0800
+
+    Updated to TariffCalculatorResponseDto to match frontend and related methods to provide TariffCost and TariffRate
+
+ .../com/cs203/core/controller/TariffRateController.java | 17 [32m++++++++++++[m[31m-----[m
+ .../core/dto/responses/TariffCalculatorResponseDto.java |  4 [32m++[m[31m--[m
+ .../java/com/cs203/core/service/TariffRateService.java  |  5 [32m+++++[m
+ .../cs203/core/service/impl/TariffRateServiceImpl.java  | 17 [32m+++++++++++++++[m[31m--[m
+ 4 files changed, 34 insertions(+), 9 deletions(-)
