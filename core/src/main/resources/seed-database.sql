@@ -362,14 +362,14 @@ ON CONFLICT (hs_code) DO NOTHING;
 -- =====================================================
 
 INSERT INTO users (username, email, password_hash, is_admin, first_name, last_name, enabled, created_at) VALUES
-('admin', 'admin@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', true, 'System', 'Administrator', true, NOW()),
-('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', true, 'John', 'Doe', true, NOW()),
-('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Jane', 'Smith', true, NOW()),
-('bob.wilson', 'bob.wilson@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Bob', 'Wilson', true, NOW()),
-('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Alice', 'Brown', true, NOW())
+('admin', 'admin@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'System', 'Administrator', true, NOW()),
+('john.doe', 'john.doe@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'John', 'Doe', true, NOW()),
+('jane.smith', 'jane.smith@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Jane', 'Smith', true, NOW()),
+('bob.wilson', 'bob.wilson@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Bob', 'Wilson', true, NOW()),
+('alice.brown', 'alice.brown@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Alice', 'Brown', true, NOW())
 ON CONFLICT (username) DO NOTHING;
 
--- Note: Password is 'password123' for all users (hashed with BCrypt)
+-- Note: Password is 'password123' for all users (hashed with BCrypt 8 rounds)
 
 -- =====================================================
 -- ELECTRONICS NATIONAL TARIFF LINES DATA
