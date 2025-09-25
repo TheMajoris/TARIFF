@@ -17,9 +17,9 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
+          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
         ports:
           - 5432:5432
         options: >-
@@ -59,10 +59,10 @@ jobs:
         working-directory: core
         env:
           SPRING_APP_NAME: core
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'jdbc:postgresql://localhost:5432/tariff_db' }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
           JPA_DDL_AUTO: create-drop
           JPA_SHOW_SQL: true
           CORS_ORIGIN: http://localhost:5173
