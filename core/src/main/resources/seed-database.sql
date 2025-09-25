@@ -236,7 +236,8 @@ INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 ('SB', 'Solomon Islands', 'Oceania', 'SBD'),
 ('TO', 'Tonga', 'Oceania', 'TOP'),
 ('TV', 'Tuvalu', 'Oceania', 'AUD'),
-('VU', 'Vanuatu', 'Oceania', 'VUV');
+('VU', 'Vanuatu', 'Oceania', 'VUV')
+ON CONFLICT (country_code) DO NOTHING;
 
 
 
@@ -349,7 +350,8 @@ INSERT INTO product_categories (hs_code, category_name, description, tariff_base
 (853225, 'Fixed Capacitors - Paper/Plastic', 'Capacitors with dielectric of paper or plastics', 0.0, true),
 (853229, 'Other Fixed Capacitors', 'Other fixed capacitors', 0.0, true),
 (853230, 'Variable/Adjustable Capacitors', 'Variable or adjustable (pre-set) capacitors', 0.0, true),
-(853290, 'Capacitor Parts', 'Parts of capacitors', 0.0, true);
+(853290, 'Capacitor Parts', 'Parts of capacitors', 0.0, true)
+ON CONFLICT (hs_code) DO NOTHING;
 
 -- Display inserted product categories count
 -- SELECT COUNT(*) as total_product_categories FROM product_categories;
@@ -363,7 +365,8 @@ INSERT INTO users (username, email, password_hash, is_admin, first_name, last_na
 ('john.doe', 'john.doe@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', true, 'John', 'Doe', true, NOW()),
 ('jane.smith', 'jane.smith@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Jane', 'Smith', true, NOW()),
 ('bob.wilson', 'bob.wilson@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Bob', 'Wilson', true, NOW()),
-('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Alice', 'Brown', true, NOW());
+('alice.brown', 'alice.brown@cs203.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9tqNIr6UIOjKm4i', false, 'Alice', 'Brown', true, NOW())
+ON CONFLICT (username) DO NOTHING;
 
 -- Note: Password is 'password123' for all users (hashed with BCrypt)
 
