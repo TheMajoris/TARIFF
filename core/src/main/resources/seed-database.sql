@@ -1,20 +1,24 @@
 -- =====================================================
 -- Database Seed Script for CS203 Tariff Management System
 -- =====================================================
+-- This script completely drops and recreates all tables and data every time it runs
 
--- Clear existing data (in reverse order of dependencies)
-DELETE FROM tariff_rates;
-DELETE FROM national_tariff_lines;
-DELETE FROM product_categories;
-DELETE FROM country;
-DELETE FROM users;
+-- Drop all tables in the correct order (reverse dependency order)
+DROP TABLE IF EXISTS tariff_rates CASCADE;
+DROP TABLE IF EXISTS national_tariff_lines CASCADE;
+DROP TABLE IF EXISTS product_categories CASCADE;
+DROP TABLE IF EXISTS country CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
--- Reset indexes (PostgreSQL)
-ALTER SEQUENCE IF EXISTS users_user_id_seq RESTART WITH 1;
-ALTER SEQUENCE IF EXISTS country_country_id_seq RESTART WITH 1;
-ALTER SEQUENCE IF EXISTS product_categories_id_seq RESTART WITH 1;
-ALTER SEQUENCE IF EXISTS national_tariff_lines_id_seq RESTART WITH 1;
-ALTER SEQUENCE IF EXISTS tariff_rates_id_seq RESTART WITH 1;
+-- Drop sequences if they exist
+DROP SEQUENCE IF EXISTS users_user_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS country_country_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS product_categories_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS national_tariff_lines_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS tariff_rates_id_seq CASCADE;
+
+-- Note: Table recreation will be handled by Hibernate/JPA
+-- The application will recreate the schema based on your entity definitions
 
 -- =====================================================
 -- COUNTRY DATA (UN M49 Standard Regional Classification)
