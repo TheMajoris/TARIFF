@@ -1,13 +1,16 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { loginUser } from '$lib/api/users';
+	import { page } from '$app/stores';
+
 
 	let email = '';
 	let password = '';
-	let rememberMe = false;
 	let isLoading = false;
 	let error = '';
 	let success = '';
+	
+	$: error = $page.url.searchParams.get('reason') === "session_expired" ? "Your session expired. Please log in again." : "";
 
 	// Function that will use regex to validate the email
 	function validateEmail() {
@@ -23,15 +26,14 @@
 						email,
 						password
 					});
-					console.log(result)
 
 					// Store into localstorage
-					localStorage.setItem('fullName', result.message.fullName );
+					localStorage.setItem('fullName', result.message.fullName);
 					localStorage.setItem('jwt', result.message.jwt);
 					localStorage.setItem('role', result.message.role);
 					localStorage.setItem('userId', result.message.userId);
 
-					error = ''
+					error = '';
 					success = 'Login successful! Redirecting to dashboard...';
 
 					// Redirect to login page after 2 seconds
@@ -126,14 +128,6 @@
 						placeholder="Enter your password"
 						required
 					/>
-				</div>
-
-				<!-- Remember Me -->
-				<div class="form-control">
-					<label class="label text-sm font-medium">
-						<input type="checkbox" bind:checked={rememberMe} class="checkbox" />
-						Remember me
-					</label>
 				</div>
 
 				<!-- Submit -->
