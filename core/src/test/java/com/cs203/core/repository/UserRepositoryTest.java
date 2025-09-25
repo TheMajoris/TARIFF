@@ -315,7 +315,6 @@ public class UserRepositoryTest {
         newUser.setLastName("User");
         newUser.setEnabled(true);
 
-
         UserEntity savedUser = userRepository.save(newUser);
 
         assertNotNull(savedUser.getId());

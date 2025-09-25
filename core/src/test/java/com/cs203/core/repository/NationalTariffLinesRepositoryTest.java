@@ -178,8 +178,7 @@ class NationalTariffLinesRepositoryTest {
                 .containsExactlyInAnyOrder("8501.10.10", "8501.10.00", "8501.10.15");
 
         // Verify all have electronics as parent
-        electronicsTariffs.forEach(tariff ->
-                assertEquals(850110, tariff.getParentHsCode().getCategoryCode()));
+        electronicsTariffs.forEach(tariff -> assertEquals(850110, tariff.getParentHsCode().getCategoryCode()));
     }
 
     @Test

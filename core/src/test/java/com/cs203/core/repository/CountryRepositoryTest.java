@@ -16,15 +16,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest    
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
-    "spring.datasource.url=jdbc:postgresql://localhost:5432/tariff_db",
-    "spring.datasource.username=admin",
-    "spring.datasource.password=admin123",
-    "spring.jpa.hibernate.ddl-auto=create-drop",
-    "spring.jpa.show-sql=false",
-    "spring.sql.init.mode=never"
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/tariff_db",
+        "spring.datasource.username=admin",
+        "spring.datasource.password=admin123",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.jpa.show-sql=false",
+        "spring.sql.init.mode=never"
 })
 
 public class CountryRepositoryTest {
@@ -58,7 +58,7 @@ public class CountryRepositoryTest {
     @Test
     void testFindByCountryCode_Found() {
         Optional<CountryEntity> result = countryRepository.findByCountryCode("US");
-        
+
         assertTrue(result.isPresent());
         assertEquals("US", result.get().getCountryCode());
         assertEquals("United States", result.get().getCountryName());
@@ -67,14 +67,14 @@ public class CountryRepositoryTest {
     @Test
     void testFindByCountryCode_NotFound() {
         Optional<CountryEntity> result = countryRepository.findByCountryCode("XX");
-        
+
         assertFalse(result.isPresent());
     }
 
     @Test
     void testFindByCountryName_Found() {
         Optional<CountryEntity> result = countryRepository.findByCountryName("Singapore");
-        
+
         assertTrue(result.isPresent());
         assertEquals("SG", result.get().getCountryCode());
         assertEquals("Singapore", result.get().getCountryName());
@@ -83,31 +83,31 @@ public class CountryRepositoryTest {
     @Test
     void testFindByCountryName_NotFound() {
         Optional<CountryEntity> result = countryRepository.findByCountryName("Unknown Country");
-        
+
         assertFalse(result.isPresent());
     }
 
     @Test
     void testFindByRegion() {
         List<CountryEntity> northAmericanCountries = countryRepository.findByRegion("North America");
-        
+
         assertEquals(2, northAmericanCountries.size());
         assertThat(northAmericanCountries)
-            .extracting(CountryEntity::getCountryCode)
-            .containsExactlyInAnyOrder("US", "CA");
+                .extracting(CountryEntity::getCountryCode)
+                .containsExactlyInAnyOrder("US", "CA");
     }
 
     @Test
     void testFindByRegion_EmptyResult() {
         List<CountryEntity> result = countryRepository.findByRegion("Antarctica");
-        
+
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testFindByCurrencyCode() {
         List<CountryEntity> usdCountries = countryRepository.findByCurrencyCode("USD");
-        
+
         assertEquals(1, usdCountries.size());
         assertEquals("US", usdCountries.get(0).getCountryCode());
     }
@@ -127,7 +127,7 @@ public class CountryRepositoryTest {
     @Test
     void testFindAllRegions() {
         List<String> regions = countryRepository.findAllRegions();
-        
+
         assertEquals(3, regions.size());
         assertThat(regions).containsExactly("Asia", "Europe", "North America");
     }
@@ -135,7 +135,7 @@ public class CountryRepositoryTest {
     @Test
     void testFindAllCurrencyCodes() {
         List<String> currencyCodes = countryRepository.findAllCurrencyCodes();
-        
+
         assertEquals(4, currencyCodes.size());
         assertThat(currencyCodes).containsExactly("CAD", "GBP", "SGD", "USD");
     }
@@ -144,17 +144,17 @@ public class CountryRepositoryTest {
     void testFindByCurrencyCodeIn() {
         List<String> currencies = Arrays.asList("USD", "SGD", "EUR");
         List<CountryEntity> countries = countryRepository.findByCurrencyCodeIn(currencies);
-        
+
         assertEquals(2, countries.size());
         assertThat(countries)
-            .extracting(CountryEntity::getCurrencyCode)
-            .containsExactlyInAnyOrder("USD", "SGD");
+                .extracting(CountryEntity::getCurrencyCode)
+                .containsExactlyInAnyOrder("USD", "SGD");
     }
 
     @Test
     void testSearchCountries_ByCountryCode() {
         List<CountryEntity> results = countryRepository.searchCountries("us");
-        
+
         assertEquals(1, results.size());
         assertEquals("US", results.get(0).getCountryCode());
     }
@@ -162,7 +162,7 @@ public class CountryRepositoryTest {
     @Test
     void testSearchCountries_ByCountryName() {
         List<CountryEntity> results = countryRepository.searchCountries("singapore");
-        
+
         assertEquals(1, results.size());
         assertEquals("SG", results.get(0).getCountryCode());
     }
@@ -170,7 +170,7 @@ public class CountryRepositoryTest {
     @Test
     void testSearchCountries_ByRegion() {
         List<CountryEntity> results = countryRepository.searchCountries("asia");
-        
+
         assertEquals(1, results.size());
         assertEquals("SG", results.get(0).getCountryCode());
     }
@@ -178,7 +178,7 @@ public class CountryRepositoryTest {
     @Test
     void testSearchCountries_ByCurrencyCode() {
         List<CountryEntity> results = countryRepository.searchCountries("usd");
-        
+
         assertEquals(1, results.size());
         assertEquals("US", results.get(0).getCountryCode());
     }
@@ -186,57 +186,57 @@ public class CountryRepositoryTest {
     @Test
     void testSearchCountries_NoMatch() {
         List<CountryEntity> results = countryRepository.searchCountries("xyz123");
-        
+
         assertTrue(results.isEmpty());
     }
 
     @Test
     void testCountByRegion() {
         long count = countryRepository.countByRegion("North America");
-        
+
         assertEquals(2, count);
     }
 
     @Test
     void testCountByRegion_ZeroResults() {
         long count = countryRepository.countByRegion("Antarctica");
-        
+
         assertEquals(0, count);
     }
 
     @Test
     void testCountByCurrencyCode() {
         long count = countryRepository.countByCurrencyCode("USD");
-        
+
         assertEquals(1, count);
     }
 
     @Test
     void testFindAllByOrderByCountryNameAsc() {
         List<CountryEntity> countries = countryRepository.findAllByOrderByCountryNameAsc();
-        
+
         assertEquals(4, countries.size());
         assertThat(countries)
-            .extracting(CountryEntity::getCountryName)
-            .containsExactly("Canada", "Singapore", "United Kingdom", "United States");
+                .extracting(CountryEntity::getCountryName)
+                .containsExactly("Canada", "Singapore", "United Kingdom", "United States");
     }
 
     @Test
     void testFindAllByOrderByRegionAscCountryNameAsc() {
         List<CountryEntity> countries = countryRepository.findAllByOrderByRegionAscCountryNameAsc();
-        
+
         assertEquals(4, countries.size());
-        
+
         // Should be ordered by region first, then by country name within region
         assertThat(countries.get(0).getRegion()).isEqualTo("Asia");
         assertThat(countries.get(0).getCountryName()).isEqualTo("Singapore");
-        
+
         assertThat(countries.get(1).getRegion()).isEqualTo("Europe");
         assertThat(countries.get(1).getCountryName()).isEqualTo("United Kingdom");
-        
+
         assertThat(countries.get(2).getRegion()).isEqualTo("North America");
         assertThat(countries.get(2).getCountryName()).isEqualTo("Canada");
-        
+
         assertThat(countries.get(3).getRegion()).isEqualTo("North America");
         assertThat(countries.get(3).getCountryName()).isEqualTo("United States");
     }
@@ -244,15 +244,15 @@ public class CountryRepositoryTest {
     @Test
     void testSaveCountry() {
         CountryEntity newCountry = new CountryEntity("FR", "France", "Europe", "EUR");
-        
+
         CountryEntity saved = countryRepository.save(newCountry);
-        
+
         assertNotNull(saved.getId());
         assertEquals("FR", saved.getCountryCode());
         assertEquals("France", saved.getCountryName());
         assertEquals("Europe", saved.getRegion());
         assertEquals("EUR", saved.getCurrencyCode());
-        
+
         // Verify it exists in database
         assertTrue(countryRepository.existsByCountryCode("FR"));
     }
@@ -260,9 +260,9 @@ public class CountryRepositoryTest {
     @Test
     void testDeleteCountry() {
         Long countryId = usCountry.getId();
-        
+
         countryRepository.deleteById(countryId);
-        
+
         assertFalse(countryRepository.existsByCountryCode("US"));
         Optional<CountryEntity> deleted = countryRepository.findById(countryId);
         assertFalse(deleted.isPresent());
@@ -272,9 +272,9 @@ public class CountryRepositoryTest {
     void testUpdateCountry() {
         usCountry.setRegion("Americas");
         CountryEntity updated = countryRepository.save(usCountry);
-        
+
         assertEquals("Americas", updated.getRegion());
-        
+
         // Verify the change persisted
         Optional<CountryEntity> found = countryRepository.findByCountryCode("US");
         assertTrue(found.isPresent());
@@ -286,9 +286,9 @@ public class CountryRepositoryTest {
         // Add a country with null region
         CountryEntity countryWithNullRegion = new CountryEntity("XX", "Unknown", null, "XXX");
         entityManager.persistAndFlush(countryWithNullRegion);
-        
+
         List<String> regions = countryRepository.findAllRegions();
-        
+
         // Should not include null regions
         assertThat(regions).doesNotContain((String) null);
         assertEquals(3, regions.size()); // Only non-null regions
@@ -299,9 +299,9 @@ public class CountryRepositoryTest {
         // Add a country with null currency
         CountryEntity countryWithNullCurrency = new CountryEntity("YY", "Test Country", "Test Region", null);
         entityManager.persistAndFlush(countryWithNullCurrency);
-        
+
         List<String> currencies = countryRepository.findAllCurrencyCodes();
-        
+
         // Should not include null currencies
         assertThat(currencies).doesNotContain((String) null);
         assertEquals(4, currencies.size()); // Only non-null currencies
