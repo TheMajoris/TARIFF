@@ -42,7 +42,7 @@ public class TariffRateController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<TariffRateDto> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
         return new ResponseEntity<>(tariffRateService.createTariffRate(createTariffRateDto), HttpStatus.CREATED);
     }
