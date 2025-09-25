@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
     "spring.datasource.username=admin",
     "spring.datasource.password=admin123",
     "spring.jpa.hibernate.ddl-auto=create-drop",
-    "spring.jpa.show-sql=true"
+    "spring.jpa.show-sql=false",
+    "spring.sql.init.mode=never"
 })
 
 public class CountryRepositoryTest {

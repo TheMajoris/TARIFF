@@ -1,8 +1,9 @@
 -- =====================================================
 -- Database Seed Script for CS203 Tariff Management System
 -- =====================================================
--- This script populates the database with seed data
--- Table creation/dropping is handled by Hibernate (JPA_DDL_AUTO=create-drop)
+-- This script populates the database with seed data for production/development
+-- Schema creation is handled by Hibernate (JPA_DDL_AUTO=create-drop)
+-- This script is disabled in test environment via application-test.properties
 
 -- Clear any existing data (just in case)
 DELETE FROM tariff_rates;
@@ -1064,7 +1065,17 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, e
  (SELECT country_id FROM country WHERE country_code = 'ID'), 
  847141, NOW(), NOW());
 
--- Display summary counts
--- SELECT COUNT(*) as total_users FROM users;
--- SELECT COUNT(*) as total_national_tariff_lines FROM national_tariff_lines;
--- SELECT COUNT(*) as total_tariff_rates FROM tariff_rates;
+-- =====================================================
+-- SEED SCRIPT COMPLETION VERIFICATION
+-- =====================================================
+-- Display summary counts to verify successful data insertion
+-- Uncomment the following lines for debugging if needed:
+-- SELECT 'Countries:' as table_name, COUNT(*) as count FROM country
+-- UNION ALL
+-- SELECT 'Product Categories:', COUNT(*) FROM product_categories
+-- UNION ALL  
+-- SELECT 'Users:', COUNT(*) FROM users
+-- UNION ALL
+-- SELECT 'National Tariff Lines:', COUNT(*) FROM national_tariff_lines
+-- UNION ALL
+-- SELECT 'Tariff Rates:', COUNT(*) FROM tariff_rates;
