@@ -47,10 +47,10 @@
 					isLoading = false;
 				}
 			} else {
-				alert('The email is not in a valid format.');
+				error = 'The email is not in a valid format.';
 			}
 		} else {
-			alert('Please fill in all fields before logging in.');
+			error = 'Please fill in all fields before logging in.';
 		}
 	}
 </script>
