@@ -17,9 +17,9 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
-          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME || 'admin' }}
-          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -41,6 +41,24 @@ jobs:
       - name: Make gradlew executable
         working-directory: core
         run: chmod +x ./gradlew
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Clean database
+        env:
+          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        run: |
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h localhost -p 5432 -U ${{ secrets.DATABASE_USERNAME }}; do
+            sleep 1
+          done
+          # Drop and recreate database to ensure clean state
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "DROP DATABASE IF EXISTS tariff_db;"
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "CREATE DATABASE tariff_db;"
+          echo "Database recreated successfully"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
