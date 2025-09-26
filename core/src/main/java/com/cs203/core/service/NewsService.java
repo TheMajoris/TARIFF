@@ -1,0 +1,14 @@
+package com.cs203.core.service;
+
+import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
+
+public interface NewsService {
+    // runs the scraper to get latest news
+    void scrapeNews();
+
+    // fetch all latest news
+    NewsArticlesResponseDTO fetchLatestNews();
+
+    // fetch latest news by country
+    NewsArticlesResponseDTO fetchLatestNewsByCountry(String country);
+}
