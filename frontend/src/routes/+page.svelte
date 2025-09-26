@@ -63,7 +63,7 @@
 
 				<!-- Exporting From -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Export From</label>
+					<label class="label text-sm font-medium">Exporting From</label>
 					<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
 						<option disabled value="">Select country</option>
 						{#each countries as country}
