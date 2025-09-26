@@ -1,5 +1,12 @@
 package com.cs203.core.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -7,24 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
-import com.cs203.core.dto.TariffRateDto;
 import com.cs203.core.dto.ProductCategoriesDto;
-import com.cs203.core.entity.TariffRateEntity;
+import com.cs203.core.dto.TariffRateDto;
 import com.cs203.core.entity.CountryEntity;
 import com.cs203.core.entity.ProductCategoriesEntity;
-import com.cs203.core.repository.TariffRateRepository;
-import com.cs203.core.service.TariffRateService;
+import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.repository.CountryRepository;
 import com.cs203.core.repository.ProductCategoriesRepository;
+import com.cs203.core.repository.TariffRateRepository;
+import com.cs203.core.service.TariffRateService;
 
 import jakarta.persistence.EntityNotFoundException;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -129,7 +129,9 @@ public class TariffRateServiceImpl implements TariffRateService {
             BigDecimal initialPrice, LocalDate date) {
         // get List of rates based on input and attributed data in repo
         BigDecimal tariffRate = getLowestActiveTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice, date);
-        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRate));
+        // Convert percentage to decimal (divide by 100)
+        BigDecimal tariffRateDecimal = tariffRate.divide(new BigDecimal("100"));
+        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRateDecimal));
         return finalPrice;
     }
 
