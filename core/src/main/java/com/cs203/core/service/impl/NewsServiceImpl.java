@@ -38,7 +38,7 @@ public class NewsServiceImpl implements NewsService {
     public void scrapeNews() {
         ChatResponse response = chatModel.call(
                 new Prompt(
-                        "You are a helpful assistant. You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
+                        "You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
                                 "Output ONLY a valid JSON array. \n" +
                                 "Each element must have exactly these fields: \n" +
                                 "  - headline (string)\n" +
