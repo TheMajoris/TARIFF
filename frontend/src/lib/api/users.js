@@ -2,7 +2,7 @@
 export async function registerUser(userData) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Registering user at:', `${API_BASE_URL}/users`);
+    // console.log('Registering user at:', `${API_BASE_URL}/users`);
     
     const res = await fetch(`${API_BASE_URL}/users`, {
       method: "POST",
@@ -26,7 +26,7 @@ export async function registerUser(userData) {
     }
     
     const result = await res.json();
-    console.log('Registration result:', result);
+    // console.log('Registration result:', result);
     
     return result;
     

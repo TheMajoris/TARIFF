@@ -21,5 +21,6 @@ public class CreateProductCategoriesDto {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
+    private Boolean isActive;
     // Does not have tariff base rate because there is no way atm to populate it
 }

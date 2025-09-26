@@ -33,7 +33,7 @@ export async function calculateTariffCost({ product, exportFrom, importTo, calcu
 export async function getAllTariff() {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Getting all tariffs at:', `${API_BASE_URL}/tariff-rate`);
+    // console.log('Getting all tariffs at:', `${API_BASE_URL}/tariff-rate`);
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate`, {
       method: "GET",
@@ -49,7 +49,7 @@ export async function getAllTariff() {
     }
 
     const result = await res.json();
-    console.log('Getting all tariffs result:', result);
+    // console.log('Getting all tariffs result:', result);
 
     return result;
 
@@ -76,7 +76,7 @@ export async function getAllTariff() {
 export async function createTariff(payload) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate`);
+    // console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate`);
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate`, {
       method: "POST",
@@ -94,7 +94,7 @@ export async function createTariff(payload) {
     }
 
     const result = await res.json();
-    console.log('Creating tariff result:', result);
+    // console.log('Creating tariff result:', result);
     return result;
   } catch (err) {
     console.error("createTariff error:", err);
@@ -120,7 +120,7 @@ export async function createTariff(payload) {
 export async function editTariff(payload) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate/` + payload.id);
+    // console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate/` + payload.id);
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate/` + payload.id, {
       method: "PUT",
@@ -138,7 +138,7 @@ export async function editTariff(payload) {
     }
 
     const result = await res.json();
-    console.log('Updating tariff result:', result);
+    // console.log('Updating tariff result:', result);
     return result;
   } catch (err) {
     console.error("updateTariff error:", err);
@@ -153,7 +153,7 @@ export async function editTariff(payload) {
 export async function deleteSpecificTariff(id) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Deleting tariff at:', `${API_BASE_URL}/tariff-rate/` + id);
+    // console.log('Deleting tariff at:', `${API_BASE_URL}/tariff-rate/` + id);
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate/` + id, {
       method: "DELETE",
@@ -169,7 +169,7 @@ export async function deleteSpecificTariff(id) {
     }
 
     const result = await res.json();
-    console.log('Deleting tariff result:', result);
+    // console.log('Deleting tariff result:', result);
 
     return result;
 

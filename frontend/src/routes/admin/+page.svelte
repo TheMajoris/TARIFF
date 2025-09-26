@@ -12,7 +12,6 @@
 		description: string;
 		id: number;
 		isActive: boolean;
-		tariffBaseRate: number | null;
 	};
 
 	type TariffRecord = {
@@ -46,8 +45,7 @@
 				categoryName: '',
 				description: '',
 				id: 0,
-				isActive: false,
-				tariffBaseRate: 0
+				isActive: false
 			},
 			rateUnit: '',
 			tariffRate: 0,
@@ -80,34 +78,74 @@
 
 	// Function to validate & submit tariff
 	function submitTariff() {
-		// Check for blank values
-		console.log(selectedTariff);
+		if (TariffValidation()) {
+			if (CategoryValidation()) {
+				if (create) {
+					createTariffMethod();
+				} else if (edit) {
+					editTariffMethod();
+				}
+			}
+		}
+	}
+
+	// Function to validate Tariff
+	function TariffValidation() {
 		if (
-			selectedTariff.id !== undefined &&
-			selectedTariff.importingCountryCode !== undefined &&
-			selectedTariff.exportingCountryCode !== undefined &&
-			selectedTariff.productCategory &&
-			selectedTariff.productCategory.categoryCode !== undefined &&
-			selectedTariff.productCategory.categoryName !== undefined &&
-			selectedTariff.productCategory.description !== undefined &&
-			selectedTariff.productCategory.isActive !== undefined &&
-			selectedTariff.productCategory.tariffBaseRate !== undefined &&
-			selectedTariff.productCategory.id !== undefined &&
-			selectedTariff.tariffRate !== undefined &&
-			selectedTariff.rateUnit !== undefined &&
-			selectedTariff.tariffType !== undefined &&
-			selectedTariff.effectiveDate !== undefined &&
-			selectedTariff.expiryDate !== undefined &&
-			selectedTariff.preferentialTariff !== undefined
+			selectedTariff.tariffRate != null &&
+			selectedTariff.tariffRate >= 0 &&
+			selectedTariff.tariffRate <= 999.9999
 		) {
-			if (create) {
-				createTariffMethod();
-			} else if (edit) {
-				editTariffMethod();
+			if (selectedTariff.tariffType != '' && selectedTariff.tariffType.length <= 50) {
+				if (selectedTariff.rateUnit.length <= 20) {
+					if (selectedTariff.effectiveDate != null) {
+						if (selectedTariff.importingCountryCode != null) {
+							if (selectedTariff.exportingCountryCode != null) {
+								if (selectedTariff.productCategory != null) {
+									return true;
+								} else {
+									error = 'Product Category cannot be null';
+								}
+							} else {
+								error = 'Exporting Country Code cannot be null';
+							}
+						} else {
+							error = 'Importing Country Code cannot be null';
+						}
+					} else {
+						error = 'Effective Date cannot be null';
+					}
+				} else {
+					error = 'Rate Unit can only be up to 20 characters';
+				}
+			} else {
+				error = 'Tarrif Type can only be up to 50 characters';
 			}
 		} else {
-			alert('Please fill in all fields.');
+			error = 'Tariff Type can only be from 0 to 999.9999';
 		}
+
+		return false;
+	}
+
+	// Function to validate Category
+	function CategoryValidation() {
+
+		if(selectedTariff.productCategory.categoryCode != null && selectedTariff.productCategory.categoryCode >= 10 && selectedTariff.productCategory.categoryCode <= 999999){
+			if(selectedTariff.productCategory.categoryName != "" && selectedTariff.productCategory.categoryName.length <= 100){
+				if(selectedTariff.productCategory.description.length <= 500){
+					return true;
+				}else{
+					error = 'Category Description can only have up to 500 characters'
+				}
+			}else{
+				error = 'Category Name can only have up to 500 characters';
+			}
+		}else{
+			error = 'Category Code can only be from 10 to 999999';
+		}
+
+		return false;
 	}
 
 	// Function to create tariff
@@ -124,14 +162,15 @@
 			productCategory: {
 				categoryCode: selectedTariff.productCategory.categoryCode,
 				categoryName: selectedTariff.productCategory.categoryName,
-				description: selectedTariff.productCategory.description
+				description: selectedTariff.productCategory.description,
+				isActive: selectedTariff.productCategory.isActive
 			}
 		};
 
 		try {
 			const result = await createTariff(payload);
 
-			success = result.message;
+			success = "Created Tariff id: " + result.id;
 			close();
 			fetchTariffs();
 			error = '';
@@ -157,7 +196,8 @@
 				id: selectedTariff.productCategory.id,
 				categoryCode: selectedTariff.productCategory.categoryCode,
 				categoryName: selectedTariff.productCategory.categoryName,
-				description: selectedTariff.productCategory.description
+				description: selectedTariff.productCategory.description,
+				isActive: selectedTariff.productCategory.isActive
 			}
 		};
 
@@ -494,17 +534,6 @@
 								<option value={false}>No</option>
 							</select>
 						</div>
-						<div>
-							<label class="label" for="product_category_base_rate">
-								<span class="label-text font-semibold">Product Category Base Rate</span>
-							</label>
-							<input
-								type="number"
-								id="product_category_base_rate"
-								bind:value={selectedTariff.productCategory.tariffBaseRate}
-								class="input input-bordered w-full"
-							/>
-						</div>
 					</div>
 
 					<div>
@@ -541,8 +570,8 @@
 								bind:value={selectedTariff.rateUnit}
 								class="select select-bordered w-full"
 							>
-								<option selected>ad valorem</option>
-								<option>$</option>
+								<option></option>
+								<option>ad valorem</option>
 							</select>
 						</div>
 					</div>
@@ -681,12 +710,6 @@
 								<span class="label-text font-semibold">Product Category Active</span>
 							</label>
 							<p class="w-full">{selectedTariff.productCategory.isActive ? 'Yes' : 'No'}</p>
-						</div>
-						<div>
-							<label class="label" for="product_category_base_rate">
-								<span class="label-text font-semibold">Product Category Base Rate</span>
-							</label>
-							<p class="w-full">{selectedTariff.productCategory.tariffBaseRate}</p>
 						</div>
 					</div>
 
