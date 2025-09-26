@@ -13,16 +13,13 @@ class ProductCategoriesEntityTest {
     @DisplayName("Should create valid ProductCategoriesEntity")
     void shouldCreateValidProductCategoriesEntity() {
         ProductCategoriesEntity category = new ProductCategoriesEntity(
-            850110, 
-            "Electric Motors", 
-            "Electric motors of an output not exceeding 37.5 W", 
-            5.5
-        );
+                850110,
+                "Electric Motors",
+                "Electric motors of an output not exceeding 37.5 W");
 
         assertEquals(850110, category.getCategoryCode());
         assertEquals("Electric Motors", category.getCategoryName());
         assertEquals("Electric motors of an output not exceeding 37.5 W", category.getDescription());
-        assertEquals(5.5, category.getTariffBaseRate());
         assertTrue(category.getIsActive()); // Default value
     }
 
@@ -30,11 +27,9 @@ class ProductCategoriesEntityTest {
     @DisplayName("Should allow setting active status")
     void shouldAllowSettingActiveStatus() {
         ProductCategoriesEntity category = new ProductCategoriesEntity(
-            850120, 
-            "Electric Generators", 
-            "AC generators", 
-            7.0
-        );
+                850120,
+                "Electric Generators",
+                "AC generators");
         category.setIsActive(false);
         assertEquals(false, category.getIsActive());
     }

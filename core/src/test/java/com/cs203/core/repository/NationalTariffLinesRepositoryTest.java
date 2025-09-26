@@ -54,10 +54,10 @@ class NationalTariffLinesRepositoryTest {
         singaporeCountry = new CountryEntity("SG", "Singapore", "Asia", "SGD");
 
         // Create product categories
-        electronics = new ProductCategoriesEntity(850110, "Electronic Equipment", "Consumer electronics", 5.5);
+        electronics = new ProductCategoriesEntity(850110, "Electronic Equipment", "Consumer electronics");
         electronics.setIsActive(true);
 
-        textiles = new ProductCategoriesEntity(620300, "Textile Products", "Clothing materials", 12.0);
+        textiles = new ProductCategoriesEntity(620300, "Textile Products", "Clothing materials");
         textiles.setIsActive(true);
 
         // Create user
