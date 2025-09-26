@@ -119,7 +119,7 @@
 					error = 'Rate Unit can only be up to 20 characters';
 				}
 			} else {
-				error = 'Tarrif Type can only be up to 50 characters';
+				error = 'Tarrif Type must not be blank and can only be up to 50 characters';
 			}
 		} else {
 			error = 'Tariff Type can only be from 0 to 999.9999';
@@ -130,18 +130,24 @@
 
 	// Function to validate Category
 	function CategoryValidation() {
-
-		if(selectedTariff.productCategory.categoryCode != null && selectedTariff.productCategory.categoryCode >= 10 && selectedTariff.productCategory.categoryCode <= 999999){
-			if(selectedTariff.productCategory.categoryName != "" && selectedTariff.productCategory.categoryName.length <= 100){
-				if(selectedTariff.productCategory.description.length <= 500){
+		if (
+			selectedTariff.productCategory.categoryCode != null &&
+			selectedTariff.productCategory.categoryCode >= 10 &&
+			selectedTariff.productCategory.categoryCode <= 999999
+		) {
+			if (
+				selectedTariff.productCategory.categoryName != '' &&
+				selectedTariff.productCategory.categoryName.length <= 100
+			) {
+				if (selectedTariff.productCategory.description.length <= 500) {
 					return true;
-				}else{
-					error = 'Category Description can only have up to 500 characters'
+				} else {
+					error = 'Category Description can only have up to 500 characters';
 				}
-			}else{
+			} else {
 				error = 'Category Name can only have up to 500 characters';
 			}
-		}else{
+		} else {
 			error = 'Category Code can only be from 10 to 999999';
 		}
 
@@ -170,7 +176,7 @@
 		try {
 			const result = await createTariff(payload);
 
-			success = "Created Tariff id: " + result.id;
+			success = 'Created Tariff id: ' + result.id;
 			close();
 			fetchTariffs();
 			error = '';
@@ -486,6 +492,19 @@
 					</div>
 
 					<div>
+						<label class="label" for="product_category_id">
+							<span class="label-text font-semibold">Product Category ID</span>
+						</label>
+						<input
+							type="text"
+							id="product_category_id"
+							bind:value={selectedTariff.productCategory.id}
+							class="input input-bordered w-full"
+							disabled
+						/>
+					</div>
+
+					<div>
 						<label class="label" for="product_category_code">
 							<span class="label-text font-semibold">Product Category Code</span>
 						</label>
@@ -494,6 +513,7 @@
 							id="product_category_code"
 							bind:value={selectedTariff.productCategory.categoryCode}
 							class="input input-bordered w-full"
+							disabled={edit}
 						/>
 					</div>
 
@@ -534,19 +554,6 @@
 								<option value={false}>No</option>
 							</select>
 						</div>
-					</div>
-
-					<div>
-						<label class="label" for="product_category_id">
-							<span class="label-text font-semibold">Product Category ID</span>
-						</label>
-						<input
-							type="text"
-							id="product_category_id"
-							bind:value={selectedTariff.productCategory.id}
-							class="input input-bordered w-full"
-							disabled
-						/>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
@@ -684,6 +691,13 @@
 					</div>
 
 					<div>
+						<label class="label" for="product_category_id">
+							<span class="label-text font-semibold">Product Category ID</span>
+						</label>
+						<p class="w-full">{selectedTariff.productCategory.id}</p>
+					</div>
+
+					<div>
 						<label class="label" for="product_category_code">
 							<span class="label-text font-semibold">Product Category Code</span>
 						</label>
@@ -711,13 +725,6 @@
 							</label>
 							<p class="w-full">{selectedTariff.productCategory.isActive ? 'Yes' : 'No'}</p>
 						</div>
-					</div>
-
-					<div>
-						<label class="label" for="product_category_id">
-							<span class="label-text font-semibold">Product Category ID</span>
-						</label>
-						<p class="w-full">{selectedTariff.productCategory.id}</p>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">

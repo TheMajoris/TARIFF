@@ -22,6 +22,7 @@ public class ProductCategoriesDto {
 
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
-
+    
+    @NotNull(message = "isActive has to be set")
     private Boolean isActive;
 }
