@@ -15,14 +15,14 @@
 			<form class="space-y-4" on:submit|preventDefault={calculateCost}>
 				<!-- Product with Search -->
 				<div class="form-control relative">
-					<label class="label text-sm font-medium">Product</label>
+					<label class="label text-sm font-medium hidden">Product</label>
 					<input
 						type="text"
 						placeholder="Search product..."
 						bind:value={productSearch}
 						class="input input-bordered w-full text-sm mb-2"
 						on:focus={() => (showProductDropdown = true)}
-						
+						hidden
 					/>
 					{#if showProductDropdown && filteredProducts.length > 0}
 						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
