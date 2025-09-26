@@ -43,17 +43,17 @@ class ProductCategoriesRepositoryTest {
     @BeforeEach
     void setUp() {
         // Create test data
-        electronics = new ProductCategoriesEntity(850110, "Electronic Equipment", "Consumer electronics and components",
-                5.5);
+        electronics = new ProductCategoriesEntity(850110, "Electronic Equipment",
+                "Consumer electronics and components");
         electronics.setIsActive(true);
 
-        textiles = new ProductCategoriesEntity(620300, "Textile Products", "Clothing and fabric materials", 12.0);
+        textiles = new ProductCategoriesEntity(620300, "Textile Products", "Clothing and fabric materials");
         textiles.setIsActive(true);
 
-        machinery = new ProductCategoriesEntity(847010, "Industrial Machinery", "Heavy machinery and equipment", 0.0);
+        machinery = new ProductCategoriesEntity(847010, "Industrial Machinery", "Heavy machinery and equipment");
         machinery.setIsActive(true);
 
-        inactiveCategory = new ProductCategoriesEntity(999999, "Obsolete Category", "No longer in use", 15.0);
+        inactiveCategory = new ProductCategoriesEntity(999999, "Obsolete Category", "No longer in use");
         inactiveCategory.setIsActive(false);
 
         // Persist test data
@@ -71,7 +71,6 @@ class ProductCategoriesRepositoryTest {
         assertTrue(result.isPresent());
         assertEquals(850110, result.get().getCategoryCode());
         assertEquals("Electronic Equipment", result.get().getCategoryName());
-        assertEquals(5.5, result.get().getTariffBaseRate());
     }
 
     @Test
@@ -157,40 +156,6 @@ class ProductCategoriesRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find categories by tariff rate range")
-    void shouldFindCategoriesByTariffRateRange() {
-        List<ProductCategoriesEntity> midRangeCategories = productCategoriesRepository
-                .findByTariffBaseRateBetween(1.0, 10.0);
-
-        assertEquals(1, midRangeCategories.size());
-        assertEquals("Electronic Equipment", midRangeCategories.get(0).getCategoryName());
-        assertEquals(5.5, midRangeCategories.get(0).getTariffBaseRate());
-    }
-
-    @Test
-    @DisplayName("Should find categories with tariff rate greater than specified value")
-    void shouldFindCategoriesWithTariffRateGreaterThan() {
-        List<ProductCategoriesEntity> highTariffCategories = productCategoriesRepository
-                .findByTariffBaseRateGreaterThan(10.0);
-
-        assertEquals(2, highTariffCategories.size());
-        assertThat(highTariffCategories)
-                .extracting(ProductCategoriesEntity::getCategoryName)
-                .containsExactlyInAnyOrder("Textile Products", "Obsolete Category");
-    }
-
-    @Test
-    @DisplayName("Should find categories with tariff rate less than specified value")
-    void shouldFindCategoriesWithTariffRateLessThan() {
-        List<ProductCategoriesEntity> lowTariffCategories = productCategoriesRepository
-                .findByTariffBaseRateLessThan(1.0);
-
-        assertEquals(1, lowTariffCategories.size());
-        assertEquals("Industrial Machinery", lowTariffCategories.get(0).getCategoryName());
-        assertEquals(0.0, lowTariffCategories.get(0).getTariffBaseRate());
-    }
-
-    @Test
     @DisplayName("Should find active categories ordered by name")
     void shouldFindActiveCategoriesOrderedByName() {
         List<ProductCategoriesEntity> orderedCategories = productCategoriesRepository
@@ -200,18 +165,6 @@ class ProductCategoriesRepositoryTest {
         assertEquals("Electronic Equipment", orderedCategories.get(0).getCategoryName());
         assertEquals("Industrial Machinery", orderedCategories.get(1).getCategoryName());
         assertEquals("Textile Products", orderedCategories.get(2).getCategoryName());
-    }
-
-    @Test
-    @DisplayName("Should find active categories ordered by tariff rate")
-    void shouldFindActiveCategoriesOrderedByTariffRate() {
-        List<ProductCategoriesEntity> orderedCategories = productCategoriesRepository
-                .findByIsActiveTrueOrderByTariffBaseRateAsc();
-
-        assertEquals(3, orderedCategories.size());
-        assertEquals("Industrial Machinery", orderedCategories.get(0).getCategoryName()); // 0.0
-        assertEquals("Electronic Equipment", orderedCategories.get(1).getCategoryName()); // 5.5
-        assertEquals("Textile Products", orderedCategories.get(2).getCategoryName()); // 12.0
     }
 
     @Test
@@ -244,23 +197,9 @@ class ProductCategoriesRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all categories ordered by tariff rate")
-    void shouldFindAllCategoriesOrderedByTariffRate() {
-        List<ProductCategoriesEntity> orderedCategories = productCategoriesRepository
-                .findAllByOrderByTariffBaseRateAsc();
-
-        assertEquals(4, orderedCategories.size());
-        assertEquals("Industrial Machinery", orderedCategories.get(0).getCategoryName()); // 0.0
-        assertEquals("Electronic Equipment", orderedCategories.get(1).getCategoryName()); // 5.5
-        assertEquals("Textile Products", orderedCategories.get(2).getCategoryName()); // 12.0
-        assertEquals("Obsolete Category", orderedCategories.get(3).getCategoryName()); // 15.0
-    }
-
-    @Test
     @DisplayName("Should save and find new category")
     void shouldSaveAndFindNewCategory() {
-        ProductCategoriesEntity newCategory = new ProductCategoriesEntity(123456, "Test Category", "Test description",
-                7.5);
+        ProductCategoriesEntity newCategory = new ProductCategoriesEntity(123456, "Test Category", "Test description");
         newCategory.setIsActive(true);
 
         ProductCategoriesEntity savedCategory = productCategoriesRepository.save(newCategory);
@@ -270,7 +209,6 @@ class ProductCategoriesRepositoryTest {
         Optional<ProductCategoriesEntity> foundCategory = productCategoriesRepository.findByCategoryCode(123456);
         assertTrue(foundCategory.isPresent());
         assertEquals("Test Category", foundCategory.get().getCategoryName());
-        assertEquals(7.5, foundCategory.get().getTariffBaseRate());
     }
 
     @Test
@@ -290,17 +228,17 @@ class ProductCategoriesRepositoryTest {
     void shouldUpdateCategory() {
         ProductCategoriesEntity categoryToUpdate = productCategoriesRepository.findByCategoryCode(850110).get();
         categoryToUpdate.setCategoryName("Updated Electronics");
-        categoryToUpdate.setTariffBaseRate(6.0);
+        categoryToUpdate.setDescription("Updated description");
 
         ProductCategoriesEntity updatedCategory = productCategoriesRepository.save(categoryToUpdate);
 
         assertEquals("Updated Electronics", updatedCategory.getCategoryName());
-        assertEquals(6.0, updatedCategory.getTariffBaseRate());
+        assertEquals("Updated description", updatedCategory.getDescription());
 
         // Verify the change persisted
         ProductCategoriesEntity reloadedCategory = productCategoriesRepository.findByCategoryCode(850110).get();
         assertEquals("Updated Electronics", reloadedCategory.getCategoryName());
-        assertEquals(6.0, reloadedCategory.getTariffBaseRate());
+        assertEquals("Updated description", reloadedCategory.getDescription());
     }
 
     @Test
@@ -323,12 +261,4 @@ class ProductCategoriesRepositoryTest {
         assertTrue(result.isEmpty());
     }
 
-    @Test
-    @DisplayName("Should handle empty results for tariff rate range")
-    void shouldHandleEmptyResultsForTariffRateRange() {
-        List<ProductCategoriesEntity> result = productCategoriesRepository
-                .findByTariffBaseRateBetween(100.0, 200.0);
-
-        assertTrue(result.isEmpty());
-    }
 }
