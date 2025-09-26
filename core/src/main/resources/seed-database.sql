@@ -12,6 +12,7 @@ DELETE FROM product_categories;
 DELETE FROM country;
 DELETE FROM users;
 DELETE FROM news;
+DELETE FROM news_tags;
 
 -- =====================================================
 -- COUNTRY DATA (UN M49 Standard Regional Classification)
