@@ -129,6 +129,12 @@ public class TariffRateServiceImpl implements TariffRateService {
             BigDecimal initialPrice, LocalDate date) {
         // get List of rates based on input and attributed data in repo
         BigDecimal tariffRate = getLowestActiveTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice, date);
+        
+        // If no tariff data found (tariffRate = -1), return initial price
+        if (tariffRate.compareTo(new BigDecimal("-1")) == 0) {
+            return initialPrice;
+        }
+        
         // Convert percentage to decimal (divide by 100)
         BigDecimal tariffRateDecimal = tariffRate.divide(new BigDecimal("100"));
         BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRateDecimal));
@@ -141,6 +147,13 @@ public class TariffRateServiceImpl implements TariffRateService {
         // get List of rates based on input and attributed data in repo
         Optional<TariffRateEntity> currentTariffRates = tariffRateRepository
                 .findCurrentTariffRate(importingCountryId, exportingCountryId, hsCode, date);
+        
+        // Check if any tariff data exists
+        if (!currentTariffRates.isPresent()) {
+            // Return -1 to indicate no data found (instead of 0 which could be a valid tariff rate)
+            return new BigDecimal("-1");
+        }
+        
         // get n set lowest rate
         BigDecimal tariffRate = currentTariffRates
                 .stream()

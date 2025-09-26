@@ -126,8 +126,8 @@ class TariffRateServiceTest {
     }
 
     @Test
-    @DisplayName("getLowestTariffRate with no rates returns zero")
-    void getLowestTariffRate_noRates_returnsZero() {
+    @DisplayName("getLowestTariffRate with no rates returns -1")
+    void getLowestTariffRate_noRates_returnsMinusOne() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
         TariffRateService service = new TariffRateServiceImpl();
 
@@ -145,7 +145,7 @@ class TariffRateServiceTest {
 
         BigDecimal result = service.getLowestActiveTariffRate(1L, 2L, 123, new BigDecimal("100.00"), date);
 
-        assertEquals(0, result.compareTo(BigDecimal.ZERO));
+        assertEquals(0, result.compareTo(new BigDecimal("-1")));
     }
 
     @Test
