@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "news")
 @NoArgsConstructor
@@ -25,6 +28,8 @@ public class NewsArticleEntity {
     @Column(nullable = false)
     String url;
 
-    @Column(nullable = true)
-    String tags;
+    @ElementCollection
+    @CollectionTable(name = "news_tags", joinColumns = @JoinColumn(name = "news_id"))
+    @Column(name = "tag", nullable = true)
+    List<String> tags = new ArrayList<>();
 }

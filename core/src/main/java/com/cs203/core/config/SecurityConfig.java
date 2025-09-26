@@ -37,19 +37,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
-                auth.requestMatchers(
-                                // "/api/v1/users", // commented out for easier testing
-                                "/api/v1/tariffs/edit"
-                        )
-                        .hasAuthority("SCOPE_ROLE_ADMIN")
-                        .requestMatchers(
-                                "/api/v1/users/logout",
-                                "/api/v1/users/reset-password"
-                        )
-                        .authenticated()
-                        .anyRequest()
-                        .permitAll()
+        http.authorizeHttpRequests(auth -> auth
+                // Admin-only
+                .requestMatchers(
+                        // "/api/v1/users", // commented out for easier testing
+                        "/api/v1/tariffs/edit"
+                ).hasAuthority("SCOPE_ROLE_ADMIN")
+                // Any authenticated user
+                .requestMatchers(
+                        "/api/v1/users/logout",
+                        "/api/v1/users/reset-password"
+                ).authenticated()
+                // Everything else
+                .anyRequest().permitAll()
         );
 
         http.sessionManagement(session ->
