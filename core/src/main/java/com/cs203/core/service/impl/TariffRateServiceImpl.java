@@ -145,8 +145,8 @@ public class TariffRateServiceImpl implements TariffRateService {
     public BigDecimal getLowestActiveTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
             BigDecimal initialPrice, LocalDate date) {
         
-        // API Endpoint for Country-specific tariffs is not ready yet, Use first 6 digits first
-        Integer sixDigitHsCode = hsCode / 100; // Convert 85171300 to 851713
+        // API Endpoint for Country-specific tariffs is not ready yet, Use first 6 digits only
+        Integer sixDigitHsCode = Integer.parseInt(String.valueOf(hsCode).substring(0, Math.min(6, String.valueOf(hsCode).length())));
         Optional<TariffRateEntity> currentTariffRates = tariffRateRepository
                 .findCurrentTariffRate(importingCountryId, exportingCountryId, sixDigitHsCode, date);
         
