@@ -2,6 +2,8 @@ package com.cs203.core.service;
 
 import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
 
+import java.util.List;
+
 public interface NewsService {
     // runs the scraper to get latest news
     void scrapeNews();
@@ -10,5 +12,5 @@ public interface NewsService {
     NewsArticlesResponseDTO fetchLatestNews();
 
     // fetch latest news by country
-    NewsArticlesResponseDTO fetchLatestNewsByCountry(String country);
+    NewsArticlesResponseDTO fetchLatestNewsByTags(List<String> tags);
 }

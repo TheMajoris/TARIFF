@@ -12,4 +12,6 @@ public interface NewsRepository extends JpaRepository<NewsArticleEntity, Long> {
     List<NewsArticleEntity> findNewsArticleEntitiesById(Long id);
 
     List<NewsArticleEntity> findNewsArticleEntitiesByHeadline(String headline);
+
+    List<NewsArticleEntity> findNewsArticleEntitiesByTags(List<String> tags);
 }

@@ -3,6 +3,7 @@ package com.cs203.core.service.impl;
 import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
 import com.cs203.core.entity.NewsArticleEntity;
 import com.cs203.core.repository.NewsRepository;
+import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.NewsService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,11 +28,13 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final ChatModel chatModel;
+    private final TariffRateRepository tariffRateRepository;
 
     @Autowired
-    public NewsServiceImpl(NewsRepository newsRepository, ChatModel chatModel) {
+    public NewsServiceImpl(NewsRepository newsRepository, ChatModel chatModel, TariffRateRepository tariffRateRepository) {
         this.newsRepository = newsRepository;
         this.chatModel = chatModel;
+        this.tariffRateRepository = tariffRateRepository;
     }
 
     @Override
@@ -104,11 +107,13 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsArticlesResponseDTO fetchLatestNews() {
-        return null;
+        List<NewsArticleEntity> news = newsRepository.findAll();
+        return new NewsArticlesResponseDTO(news);
     }
 
     @Override
-    public NewsArticlesResponseDTO fetchLatestNewsByCountry(String country) {
-        return null;
+    public NewsArticlesResponseDTO fetchLatestNewsByTags(List<String> tags) {
+        List<NewsArticleEntity> news = newsRepository.findNewsArticleEntitiesByTags(tags);
+        return new NewsArticlesResponseDTO(news);
     }
 }

@@ -11,6 +11,7 @@ DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
 DELETE FROM country;
 DELETE FROM users;
+DELETE FROM news;
 
 -- =====================================================
 -- COUNTRY DATA (UN M49 Standard Regional Classification)
@@ -1079,3 +1080,22 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, e
 -- SELECT 'National Tariff Lines:', COUNT(*) FROM national_tariff_lines
 -- UNION ALL
 -- SELECT 'Tariff Rates:', COUNT(*) FROM tariff_rates;
+
+-- =====================================================
+-- NEWS AI
+-- =====================================================
+INSERT INTO news (headline, summary, url) VALUES
+  ('US to impose tariffs on pharma imports, kitchen cabinets, furniture, heavy trucks', 'In a trio of posts on Truth Social on Thursday evening, President Trump said the US would impose a slew of tariffs starting Oct. 1. Trump said imported kitchen cabinets, bathroom vanities, pharmaceutical imports, and heavy trucks will be taxed in the latest move to try to force more manufacturing onto US soil.', 'https://finance.yahoo.com/news/live/trump-tariffs-live-updates-us-to-impose-tariffs-on-pharma-imports-kitchen-cabinets-furniture-heavy-trucks-175804095.html'),
+  ('Tariff inflation has been later and less than expected', 'Fed Chair Powell said Tuesday that businesses passing higher costs from tariffs on to consumers has been "later and less than we expected."', 'https://spectrumlocalnews.com/us/snplus/business/2025/09/23/federal-reserve-chair-jerome-powell-speech'),
+  ('South Korean president says US tariffs talks worrying FX market', 'South Korean President Lee Jae Myung said negotiations with the U.S. on tariffs have stirred concerns in the foreign exchange market but he was confident the two sides will reach a solution, a statement from Lees office said on Tuesday.', 'https://finance.yahoo.com/news/south-korean-president-says-us-032814927.html');
+
+INSERT INTO news_tags (news_id, tag) VALUES
+ (1, 'trade'),
+ (1, 'US'),
+ (1, 'China'),
+ (2, 'trade'),
+ (2, 'US'),
+ (2, 'inflation'),
+ (3, 'energy'),
+ (3, 'korea'),
+ (3, 'south korea');
