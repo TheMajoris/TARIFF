@@ -26,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
         "spring.datasource.username=admin",
         "spring.datasource.password=admin123",
         "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.jpa.show-sql=true"
+        "spring.jpa.show-sql=false",
+        "spring.sql.init.mode=never"
 })
 class NationalTariffLinesRepositoryTest {
 
@@ -177,8 +178,7 @@ class NationalTariffLinesRepositoryTest {
                 .containsExactlyInAnyOrder("8501.10.10", "8501.10.00", "8501.10.15");
 
         // Verify all have electronics as parent
-        electronicsTariffs.forEach(tariff ->
-                assertEquals(850110, tariff.getParentHsCode().getCategoryCode()));
+        electronicsTariffs.forEach(tariff -> assertEquals(850110, tariff.getParentHsCode().getCategoryCode()));
     }
 
     @Test

@@ -1,7 +1,19 @@
 package com.cs203.core.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.cs203.core.enums.UserRole;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -46,6 +58,10 @@ public class UserEntity {
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean enabled = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     // Getters and Setters
     public Long getId() {
@@ -110,6 +126,14 @@ public class UserEntity {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Transient
