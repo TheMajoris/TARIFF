@@ -397,6 +397,8 @@
 													on:click={() => {
 														selectedTariff = line;
 														view = true;
+														success = '';
+														error = '';
 													}}>View</button
 												>
 											</li>
@@ -406,6 +408,8 @@
 													on:click={() => {
 														selectedTariff = line;
 														edit = true;
+														success = '';
+														error = '';
 													}}>Edit</button
 												>
 											</li>
@@ -431,28 +435,17 @@
 {#if view || edit || create}
 	<div class="modal modal-open">
 		<!-- Background which will close the modal -->
-		<button class="modal-backdrop cursor-pointer" on:click={close}>close</button>
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={() => {
+				close();
+				success = '';
+				error = '';
+			}}>close</button
+		>
 
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-4 text-lg font-bold">{create ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
-			{#if error}
-				<div class="alert alert-error">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{error}</span>
-				</div>
-			{/if}
 			{#if edit || create}
 				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}>
 					<div>
@@ -662,8 +655,35 @@
 						</div>
 					</div>
 
+					{#if error}
+						<div class="alert alert-error">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-6 w-6 shrink-0 stroke-current"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+							<span>{error}</span>
+						</div>
+					{/if}
+
 					<div class="modal-action">
-						<button type="button" class="btn" on:click={close}>Close</button>
+						<button
+							type="button"
+							class="btn"
+							on:click={() => {
+								close();
+								success = '';
+								error = '';
+							}}>Close</button
+						>
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</div>
 				</form>
@@ -786,13 +806,14 @@
 							<p class="w-full">{selectedTariff.updatedAt}</p>
 						</div>
 					</div>
-
 					<div class="modal-action">
 						<button
 							type="button"
 							class="btn"
 							on:click={() => {
 								close();
+								success = '';
+								error = '';
 							}}>Close</button
 						>
 					</div>
