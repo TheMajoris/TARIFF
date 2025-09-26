@@ -59,23 +59,8 @@ export async function getAllTariff() {
   }
 }
 
-// Create tariff
 /**
  * Create a new tariff rate.
- *
- * Body must conform to CreateTariffRateDto with nested CreateProductCategoriesDto:
- * - tariffRate (number) required: decimal 0.0 - 999.9999
- * - tariffType (string) required: max 50 chars
- * - rateUnit (string) optional: max 20 chars
- * - effectiveDate (string, ISO yyyy-mm-dd) required
- * - expiryDate (string, ISO yyyy-mm-dd) optional
- * - preferentialTariff (boolean) optional
- * - importingCountryCode (string) required
- * - exportingCountryCode (string) required
- * - productCategory (object) required:
- *   - categoryCode (number) required: 2-6 digits (10..999999)
- *   - categoryName (string) required: max 100 chars
- *   - description (string) optional: max 500 chars
  *
  * @param {Object} payload
  * @param {number} payload.tariffRate
@@ -91,7 +76,7 @@ export async function getAllTariff() {
 export async function createTariff(payload) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
-    console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate/create`);
+    console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate`);
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate`, {
       method: "POST",
@@ -113,6 +98,50 @@ export async function createTariff(payload) {
     return result;
   } catch (err) {
     console.error("createTariff error:", err);
+    throw err; // Re-throw to let the calling code handle the error
+  }
+}
+
+/**
+ * Edit a new tariff rate.
+ *
+ * @param {Object} payload
+ * @param {number} payload.id
+ * @param {number} payload.tariffRate
+ * @param {string} payload.tariffType
+ * @param {string=} payload.rateUnit
+ * @param {string} payload.effectiveDate
+ * @param {string=} payload.expiryDate
+ * @param {boolean=} payload.preferentialTariff
+ * @param {string} payload.importingCountryCode
+ * @param {string} payload.exportingCountryCode
+ * @param {{id:number, categoryCode:number, categoryName:string, description?:string}} payload.productCategory
+ */
+export async function editTariff(payload) {
+  try {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+    console.log('Creating tariff at:', `${API_BASE_URL}/tariff-rate/` + payload.id);
+
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/` + payload.id, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || `Updating tariff failed: ${res.status} ${res.statusText}`);
+    }
+
+    const result = await res.json();
+    console.log('Updating tariff result:', result);
+    return result;
+  } catch (err) {
+    console.error("updateTariff error:", err);
     throw err; // Re-throw to let the calling code handle the error
   }
 }

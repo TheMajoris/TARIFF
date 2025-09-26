@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createTariff, deleteSpecificTariff, getAllTariff } from '$lib/api/tariff';
+	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
 	import { beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -136,14 +136,42 @@
 			fetchTariffs();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
-			console.error('Deleting tariff error:', err);
+			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
+			console.error('Creating tariff error:', err);
 		}
 	}
 
 	// Function to edit tariff
-	function editTariffMethod() {
-		alert('edit');
+	async function editTariffMethod() {
+		let payload = {
+			id: selectedTariff.id,
+			tariffRate: selectedTariff.tariffRate,
+			tariffType: selectedTariff.tariffType,
+			rateUnit: selectedTariff.rateUnit,
+			effectiveDate: selectedTariff.effectiveDate,
+			expiryDate: selectedTariff.expiryDate,
+			preferentialTariff: selectedTariff.preferentialTariff,
+			importingCountryCode: selectedTariff.importingCountryCode,
+			exportingCountryCode: selectedTariff.exportingCountryCode,
+			productCategory: {
+				id: selectedTariff.productCategory.id,
+				categoryCode: selectedTariff.productCategory.categoryCode,
+				categoryName: selectedTariff.productCategory.categoryName,
+				description: selectedTariff.productCategory.description
+			}
+		};
+
+		try {
+			const result = await editTariff(payload);
+
+			success = result.message;
+			close();
+			fetchTariffs();
+			error = '';
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
+			console.error('Editing tariff error:', err);
+		}
 	}
 
 	// Function to edit tariff
@@ -360,7 +388,24 @@
 
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-4 text-lg font-bold">{create ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
-
+			{#if error}
+				<div class="alert alert-error">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-6 shrink-0 stroke-current"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<span>{error}</span>
+				</div>
+			{/if}
 			{#if edit || create}
 				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}>
 					<div>
