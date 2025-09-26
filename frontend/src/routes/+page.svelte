@@ -252,17 +252,17 @@
 					</div>
 
 					<div class="flex justify-between text-sm mb-2">
-						<span>Tariff:</span>
-						<span class="text-green-600">+ ${calculationResult.tariff}</span>
+						<span>Tariff Rate:</span>
+						<span class="text-blue-600 font-medium">{(parseFloat(calculationResult.tariffRate) * 100).toFixed(1)}%</span>
 					</div>
 
 					<div class="flex justify-between text-sm mb-4">
-						<span>Customs Duty:</span>
-						<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
+						<span>Tariff Amount:</span>
+						<span class="text-red-600">+ ${calculationResult.tariff}</span>
 					</div>
 
 					<div class="flex justify-between border-t border-base-300 pt-3">
-						<span class="font-semibold">Total Import Cost:</span>
+						<span class="font-semibold">Total Cost:</span>
 						<span class="font-bold text-primary">${calculationResult.totalCost}</span>
 					</div>
 				</div>
@@ -382,7 +382,7 @@
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
 	async function calculateCost() {
-		if (product && hsCode && exportFrom && importTo && calculationDate && goodsValue) {
+		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
 			if (!/^\d{4}\.\d{2}\.\d{2}$/.test(hsCode)) {
 				alert("Please enter a valid HS Code format (e.g., 8501.10.10)");
@@ -390,7 +390,6 @@
 			}
 			
 			calculationResult = await calculateTariffCost({
-				product,
 				hsCode,
 				exportFrom,
 				importTo,
