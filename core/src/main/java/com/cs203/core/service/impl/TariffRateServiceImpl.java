@@ -192,7 +192,8 @@ public class TariffRateServiceImpl implements TariffRateService {
                 .orElse(new ProductCategoriesEntity(
                         dto.getProductCategory().getCategoryCode(),
                         dto.getProductCategory().getCategoryName(),
-                        dto.getProductCategory().getDescription()));
+                        dto.getProductCategory().getDescription(),
+                        dto.getProductCategory().getIsActive()));
 
         if (productCategory.getId() == null) {
             productCategory = productCategoriesRepository.save(productCategory);

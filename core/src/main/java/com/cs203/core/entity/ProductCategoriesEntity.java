@@ -43,10 +43,18 @@ public class ProductCategoriesEntity {
     public ProductCategoriesEntity() {
     }
 
+    public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description, Boolean isActive) {
+        this.categoryCode = categoryCode;
+        this.categoryName = categoryName;
+        this.description = description;
+        this.isActive = isActive;
+    }
+
     public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description) {
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
         this.description = description;
+        this.isActive = true;
     }
 
     // Getters and Setters
