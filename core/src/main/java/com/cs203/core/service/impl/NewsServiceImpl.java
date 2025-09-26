@@ -7,6 +7,7 @@ import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.NewsService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -37,8 +39,9 @@ public class NewsServiceImpl implements NewsService {
         this.tariffRateRepository = tariffRateRepository;
     }
 
-    @Override
-    public void scrapeNews() {
+    @PostConstruct
+    @Scheduled(cron = "0 0 0 * * ?")
+    protected void scrapeNews() {
         ChatResponse response = chatModel.call(
                 new Prompt(
                         "You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
@@ -81,7 +84,6 @@ public class NewsServiceImpl implements NewsService {
         String responseText = response.getResult().getOutput().getText();
         logger.info(responseText);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<NewsArticleEntity> newsArticleEntities = parseAIResponseJson(responseText);
         newsRepository.saveAll(newsArticleEntities);
 
