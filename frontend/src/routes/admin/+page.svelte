@@ -59,6 +59,7 @@
 			allTariff = result;
 		} catch (err) {
 			console.error('Getting all tariff error:', err);
+			error = err instanceof Error ? err.message : 'Viewing tariff failed. Please try again.';
 		}
 	}
 
