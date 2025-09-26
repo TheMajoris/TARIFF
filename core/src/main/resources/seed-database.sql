@@ -377,254 +377,254 @@ ON CONFLICT (username) DO NOTHING;
 
 INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, parent_hs_code, level, created_by, updated_by) VALUES
 -- Singapore National Tariff Lines (Electronics Hub)
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171210', 'Smartphones - 5G capable', 851712, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171220', 'Smartphones - 4G/LTE', 851712, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85171300', 'Smartphones - Premium tier', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85411010', 'Semiconductor diodes - Silicon', 854110, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85411020', 'Semiconductor diodes - Gallium arsenide', 854110, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85423100', 'Microprocessors - ARM based', 854231, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85423200', 'Memory chips - DDR4/DDR5 RAM', 854232, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'SG'), 'SG.85285200', 'LCD monitors - 4K resolution', 852852, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '851712.10', 'Smartphones - 5G capable', 851712, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '851712.20', 'Smartphones - 4G/LTE', 851712, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '851713.00', 'Smartphones - Premium tier', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854110.10', 'Semiconductor diodes - Silicon', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854110.20', 'Semiconductor diodes - Gallium arsenide', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854231.00', 'Microprocessors - ARM based', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854232.00', 'Memory chips - DDR4/DDR5 RAM', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '852852.00', 'LCD monitors - 4K resolution', 852852, 10, 1, 1),
 
 -- Malaysia National Tariff Lines (Manufacturing Hub)
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854231.10', 'Microprocessors - Intel x86', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854231.20', 'Microprocessors - AMD processors', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854232.10', 'Flash memory - NAND chips', 854232, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.854232.20', 'DRAM memory - Server grade', 854232, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847141.00', 'Laptops - Consumer grade', 847141, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847149.10', 'Desktop computers - Gaming', 847149, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'MY'), 'MY.847149.20', 'Desktop computers - Business', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '854231.10', 'Microprocessors - Intel x86', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '854231.20', 'Microprocessors - AMD processors', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '854232.10', 'Flash memory - NAND chips', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '854232.20', 'DRAM memory - Server grade', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '847141.00', 'Laptops - Consumer grade', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '847149.10', 'Desktop computers - Gaming', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '847149.20', 'Desktop computers - Business', 847149, 10, 2, 2),
 
 -- Thailand National Tariff Lines (Assembly Operations)
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.10', 'LED TVs - 32-43 inch', 852872, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.20', 'LED TVs - 55-65 inch', 852872, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.852872.30', 'LED TVs - 75+ inch', 852872, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.851712.00', 'Mobile phones - Feature phones', 851712, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.851713.00', 'Smartphones - Budget tier', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'TH'), 'TH.847160.00', 'Keyboards and mouse - Wireless', 847160, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '852872.10', 'LED TVs - 32-43 inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '852872.20', 'LED TVs - 55-65 inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '852872.30', 'LED TVs - 75+ inch', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '851712.00', 'Mobile phones - Feature phones', 851712, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '851713.00', 'Smartphones - Budget tier', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'TH'), '847160.00', 'Keyboards and mouse - Wireless', 847160, 10, 3, 3),
 
 -- China National Tariff Lines (Major Electronics Producer)
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85423100', 'Processors - Mobile chipsets', 854231, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85423200', 'Memory - Consumer DRAM', 854232, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85171300', 'Smartphones - Mid-range', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85285200', 'Computer monitors - Gaming', 852852, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85411000', 'Power diodes - High voltage', 854110, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.85417000', 'LED chips - White light', 854170, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CN'), 'CN.84714100', 'Tablets - Android based', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '854231.00', 'Processors - Mobile chipsets', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '854232.00', 'Memory - Consumer DRAM', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '851713.00', 'Smartphones - Mid-range', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '852852.00', 'Computer monitors - Gaming', 852852, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '854110.00', 'Power diodes - High voltage', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '854170.00', 'LED chips - White light', 854170, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '847141.00', 'Tablets - Android based', 847141, 10, 1, 1),
 
 -- United States National Tariff Lines (High-tech Focus)
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8542.31.00', 'Microprocessors - Server CPUs', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8542.32.00', 'Memory - ECC server RAM', 854232, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8517.13.00', 'Smartphones - iPhone series', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8471.41.01', 'Laptops - MacBook series', 847141, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8471.49.01', 'Workstations - High-end', 847149, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'US'), 'US.8528.52.10', 'Professional monitors - 4K+', 852852, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '854231.00', 'Microprocessors - Server CPUs', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '854232.00', 'Memory - ECC server RAM', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '851713.00', 'Smartphones - iPhone series', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '847141.01', 'Laptops - MacBook series', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '847149.01', 'Workstations - High-end', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'US'), '852852.10', 'Professional monitors - 4K+', 852852, 10, 2, 2),
 
 -- European Union (Germany) National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85423100', 'Automotive processors', 854231, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85411000', 'Industrial diodes', 854110, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85171300', 'Smartphones - Enterprise', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.84714900', 'Industrial computers', 847149, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'DE'), 'DE.85285200', 'Industrial displays', 852852, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), '854231.00', 'Automotive processors', 854231, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), '854110.00', 'Industrial diodes', 854110, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), '851713.00', 'Smartphones - Enterprise', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), '847149.00', 'Industrial computers', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'DE'), '852852.00', 'Industrial displays', 852852, 10, 3, 3),
 
 -- Japan National Tariff Lines (Precision Electronics)
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854231.000', 'Microcontrollers - Automotive', 854231, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.854110.000', 'Precision diodes', 854110, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.852872.000', 'OLED displays - Premium', 852872, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.851713.000', 'Smartphones - Sony Xperia', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'JP'), 'JP.847141.000', 'Portable gaming devices', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), '854231.000', 'Microcontrollers - Automotive', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), '854110.000', 'Precision diodes', 854110, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), '852872.000', 'OLED displays - Premium', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), '851713.000', 'Smartphones - Sony Xperia', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'JP'), '847141.000', 'Portable gaming devices', 847141, 10, 4, 4),
 
 -- India National Tariff Lines (Growing Market)
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85171300', 'Smartphones - Domestic brands', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85287200', 'LED TVs - Budget segment', 852872, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.84714100', 'Tablets - Education sector', 847141, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85423100', 'Mobile processors - Entry level', 854231, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'IN'), 'IN.85411000', 'Basic diodes - Consumer electronics', 854110, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), '851713.00', 'Smartphones - Domestic brands', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), '852872.00', 'LED TVs - Budget segment', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), '847141.00', 'Tablets - Education sector', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), '854231.00', 'Mobile processors - Entry level', 854231, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'IN'), '854110.00', 'Basic diodes - Consumer electronics', 854110, 10, 5, 5),
 
 -- South Korea National Tariff Lines (Technology Leader)
-((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854231.00', 'Mobile chipsets - Samsung Exynos', 854231, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854232.00', 'Memory chips - Samsung/SK Hynix', 854232, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.851713.00', 'Smartphones - Samsung Galaxy', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.852872.00', 'OLED displays - Samsung/LG', 852872, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'KR'), 'KR.854170.00', 'LED components - Samsung LED', 854170, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), '854231.00', 'Mobile chipsets - Samsung Exynos', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), '854232.00', 'Memory chips - Samsung/SK Hynix', 854232, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), '851713.00', 'Smartphones - Samsung Galaxy', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), '852872.00', 'OLED displays - Samsung/LG', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'KR'), '854170.00', 'LED components - Samsung LED', 854170, 10, 1, 1),
 
 -- Taiwan National Tariff Lines (Semiconductor Hub)
-((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.854231.00', 'Processors - TSMC manufactured', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.854232.00', 'Memory - DDR modules', 854232, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.847141.00', 'Laptops - Acer/Asus', 847141, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.847149.00', 'Motherboards - Asus/MSI', 847149, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'TW'), 'TW.852852.00', 'Computer monitors - ViewSonic', 852852, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), '854231.00', 'Processors - TSMC manufactured', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), '854232.00', 'Memory - DDR modules', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), '847141.00', 'Laptops - Acer/Asus', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), '847149.00', 'Motherboards - Asus/MSI', 847149, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'TW'), '852852.00', 'Computer monitors - ViewSonic', 852852, 10, 2, 2),
 
 -- Vietnam National Tariff Lines (Manufacturing Hub)
-((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.851713.00', 'Smartphones - Samsung assembly', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.847141.00', 'Laptops - Dell/HP assembly', 847141, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.847160.00', 'Keyboards - Logitech assembly', 847160, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'VN'), 'VN.852872.00', 'LED TVs - Samsung assembly', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), '851713.00', 'Smartphones - Samsung assembly', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), '847141.00', 'Laptops - Dell/HP assembly', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), '847160.00', 'Keyboards - Logitech assembly', 847160, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'VN'), '852872.00', 'LED TVs - Samsung assembly', 852872, 10, 3, 3),
 
 -- Indonesia National Tariff Lines (Growing Market)
-((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.851713.00', 'Smartphones - Local assembly', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.852872.00', 'LED TVs - Local assembly', 852872, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'ID'), 'ID.847141.00', 'Tablets - Budget segment', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'ID'), '851713.00', 'Smartphones - Local assembly', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'ID'), '852872.00', 'LED TVs - Local assembly', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'ID'), '847141.00', 'Tablets - Budget segment', 847141, 10, 4, 4),
 
 -- Philippines National Tariff Lines (Electronics Assembly)
-((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.854231.00', 'Microprocessors - Assembly operations', 854231, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.851713.00', 'Smartphones - Local brands', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'PH'), 'PH.847160.00', 'Computer peripherals', 847160, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PH'), '854231.00', 'Microprocessors - Assembly operations', 854231, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PH'), '851713.00', 'Smartphones - Local brands', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PH'), '847160.00', 'Computer peripherals', 847160, 10, 5, 5),
 
 -- Australia National Tariff Lines (Developed Market)
-((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8517.13.00', 'Smartphones - Premium segment', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8471.41.00', 'Laptops - Business/Consumer', 847141, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8528.72.00', 'LED TVs - High-end', 852872, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'AU'), 'AU.8542.31.00', 'Processors - Gaming/Workstation', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), '851713.00', 'Smartphones - Premium segment', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), '847141.00', 'Laptops - Business/Consumer', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), '852872.00', 'LED TVs - High-end', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'AU'), '854231.00', 'Processors - Gaming/Workstation', 854231, 10, 1, 1),
 
 -- Hong Kong National Tariff Lines (Trade Hub)
-((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.851713.00', 'Smartphones - Re-export hub', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.854231.00', 'Processors - Trading hub', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'HK'), 'HK.854232.00', 'Memory chips - Distribution', 854232, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'HK'), '851713.00', 'Smartphones - Re-export hub', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'HK'), '854231.00', 'Processors - Trading hub', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'HK'), '854232.00', 'Memory chips - Distribution', 854232, 10, 2, 2),
 
 -- Canada National Tariff Lines (NAFTA Partner)
-((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8517.13.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8471.41.01', 'Laptops - BlackBerry legacy', 847141, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'CA'), 'CA.8542.31.00', 'Processors - Data centers', 854231, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'CA'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'CA'), '847141.01', 'Laptops - BlackBerry legacy', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'CA'), '854231.00', 'Processors - Data centers', 854231, 10, 3, 3),
 
 -- Mexico National Tariff Lines (NAFTA Manufacturing)
-((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.851713.00', 'Smartphones - Maquiladora assembly', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.847141.00', 'Laptops - Assembly operations', 847141, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'MX'), 'MX.852872.00', 'LED TVs - Manufacturing', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'MX'), '851713.00', 'Smartphones - Maquiladora assembly', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'MX'), '847141.00', 'Laptops - Assembly operations', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'MX'), '852872.00', 'LED TVs - Manufacturing', 852872, 10, 4, 4),
 
 -- Brazil National Tariff Lines (Major South American Market)
-((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.85171300', 'Smartphones - Domestic market', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.84714100', 'Tablets - Education/Consumer', 847141, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'BR'), 'BR.85287200', 'LED TVs - Local assembly', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BR'), '851713.00', 'Smartphones - Domestic market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BR'), '847141.00', 'Tablets - Education/Consumer', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BR'), '852872.00', 'LED TVs - Local assembly', 852872, 10, 5, 5),
 
 -- United Kingdom National Tariff Lines (Post-Brexit)
-((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8517.13.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8471.49.00', 'Computers - Financial services', 847149, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'GB'), 'GB.8542.31.00', 'Processors - ARM Holdings', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'GB'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'GB'), '847149.00', 'Computers - Financial services', 847149, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'GB'), '854231.00', 'Processors - ARM Holdings', 854231, 10, 1, 1),
 
 -- France National Tariff Lines (EU Major Market)
-((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.85171300', 'Smartphones - Consumer electronics', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.84714100', 'Laptops - Enterprise market', 847141, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'FR'), 'FR.85423100', 'Processors - Automotive/IoT', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'FR'), '851713.00', 'Smartphones - Consumer electronics', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'FR'), '847141.00', 'Laptops - Enterprise market', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'FR'), '854231.00', 'Processors - Automotive/IoT', 854231, 10, 2, 2),
 
 -- Italy National Tariff Lines (EU Market)
-((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.85171300', 'Smartphones - Fashion-tech', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.84714900', 'Industrial computers', 847149, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'IT'), 'IT.85411000', 'Power semiconductors', 854110, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'IT'), '851713.00', 'Smartphones - Fashion-tech', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'IT'), '847149.00', 'Industrial computers', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'IT'), '854110.00', 'Power semiconductors', 854110, 10, 3, 3),
 
 -- Netherlands National Tariff Lines (EU Distribution Hub)
-((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.85171300', 'Smartphones - European distribution', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.85423100', 'Processors - Data center market', 854231, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'NL'), 'NL.84714100', 'Laptops - Philips ecosystem', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'NL'), '851713.00', 'Smartphones - European distribution', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'NL'), '854231.00', 'Processors - Data center market', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'NL'), '847141.00', 'Laptops - Philips ecosystem', 847141, 10, 4, 4),
 
 -- Russia National Tariff Lines (Large Market)
-((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.851713.00', 'Smartphones - Domestic demand', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.847141.00', 'Laptops - Enterprise/Consumer', 847141, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'RU'), 'RU.852872.00', 'LED TVs - Local assembly', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'RU'), '851713.00', 'Smartphones - Domestic demand', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'RU'), '847141.00', 'Laptops - Enterprise/Consumer', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'RU'), '852872.00', 'LED TVs - Local assembly', 852872, 10, 5, 5),
 
 -- Middle Eastern Countries National Tariff Lines
 -- Turkey National Tariff Lines (Regional Electronics Hub)
-((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85171300', 'Smartphones - Consumer market', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.84714100', 'Laptops - Business sector', 847141, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85287200', 'LED TVs - Domestic assembly', 852872, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'TR'), 'TR.85423100', 'Processors - Industrial applications', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), '847141.00', 'Laptops - Business sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), '852872.00', 'LED TVs - Domestic assembly', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'TR'), '854231.00', 'Processors - Industrial applications', 854231, 10, 1, 1),
 
 -- UAE National Tariff Lines (Trade Hub)
-((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.851713.00', 'Smartphones - Premium segment', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.854231.00', 'Processors - Data centers', 854231, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'AE'), 'AE.847141.00', 'Laptops - Enterprise market', 847141, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'AE'), '851713.00', 'Smartphones - Premium segment', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'AE'), '854231.00', 'Processors - Data centers', 854231, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'AE'), '847141.00', 'Laptops - Enterprise market', 847141, 10, 2, 2),
 
 -- Saudi Arabia National Tariff Lines (Vision 2030)
-((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.851713.00', 'Smartphones - Consumer electronics', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.852872.00', 'LED TVs - Entertainment sector', 852872, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'SA'), 'SA.847149.00', 'Computers - Government digitization', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'SA'), '851713.00', 'Smartphones - Consumer electronics', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'SA'), '852872.00', 'LED TVs - Entertainment sector', 852872, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'SA'), '847149.00', 'Computers - Government digitization', 847149, 10, 3, 3),
 
 -- Israel National Tariff Lines (Tech Innovation Hub)
-((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.854231.00', 'Processors - R&D sector', 854231, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.851713.00', 'Smartphones - Tech development', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'IL'), 'IL.847149.00', 'Workstations - Defense tech', 847149, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'IL'), '854231.00', 'Processors - R&D sector', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'IL'), '851713.00', 'Smartphones - Tech development', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'IL'), '847149.00', 'Workstations - Defense tech', 847149, 10, 4, 4),
 
 -- Additional Asian Countries National Tariff Lines
 -- Bangladesh National Tariff Lines (Textile Electronics)
-((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.851713.00', 'Smartphones - Budget segment', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.847160.00', 'Computer peripherals - Manufacturing', 847160, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'BD'), 'BD.852872.00', 'LED TVs - Consumer market', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BD'), '851713.00', 'Smartphones - Budget segment', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BD'), '847160.00', 'Computer peripherals - Manufacturing', 847160, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'BD'), '852872.00', 'LED TVs - Consumer market', 852872, 10, 5, 5),
 
 -- Pakistan National Tariff Lines (Growing Market)
-((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.851713.00', 'Smartphones - Local assembly', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.847141.00', 'Laptops - Education sector', 847141, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'PK'), 'PK.854110.00', 'Diodes - Basic electronics', 854110, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'PK'), '851713.00', 'Smartphones - Local assembly', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'PK'), '847141.00', 'Laptops - Education sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'PK'), '854110.00', 'Diodes - Basic electronics', 854110, 10, 1, 1),
 
 -- Sri Lanka National Tariff Lines (Electronics Assembly)
-((SELECT country_id FROM country WHERE country_code = 'LK'), 'LK.851713.00', 'Smartphones - Assembly operations', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'LK'), 'LK.847160.00', 'Keyboards - Export manufacturing', 847160, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'LK'), '851713.00', 'Smartphones - Assembly operations', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'LK'), '847160.00', 'Keyboards - Export manufacturing', 847160, 10, 2, 2),
 
 -- Additional European Countries National Tariff Lines
 -- Ukraine National Tariff Lines (IT Services)
-((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.847149.00', 'Computers - IT sector', 847149, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'UA'), 'UA.854231.00', 'Processors - Software development', 854231, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'UA'), '847149.00', 'Computers - IT sector', 847149, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'UA'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'UA'), '854231.00', 'Processors - Software development', 854231, 10, 3, 3),
 
 -- Belarus National Tariff Lines (EAEU Member)
-((SELECT country_id FROM country WHERE country_code = 'BY'), 'BY.847141.00', 'Laptops - Regional assembly', 847141, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'BY'), 'BY.852872.00', 'LED TVs - Consumer electronics', 852872, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'BY'), '847141.00', 'Laptops - Regional assembly', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'BY'), '852872.00', 'LED TVs - Consumer electronics', 852872, 10, 4, 4),
 
 -- Poland National Tariff Lines (EU Manufacturing Hub)
-((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.851713.00', 'Smartphones - EU market', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.847141.00', 'Laptops - Regional manufacturing', 847141, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'PL'), 'PL.854231.00', 'Processors - Automotive sector', 854231, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PL'), '851713.00', 'Smartphones - EU market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PL'), '847141.00', 'Laptops - Regional manufacturing', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'PL'), '854231.00', 'Processors - Automotive sector', 854231, 10, 5, 5),
 
 -- African Countries National Tariff Lines
 -- South Africa National Tariff Lines (Regional Leader)
-((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.851713.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.847141.00', 'Laptops - Business sector', 847141, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'ZA'), 'ZA.852872.00', 'LED TVs - Entertainment', 852872, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'ZA'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'ZA'), '847141.00', 'Laptops - Business sector', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'ZA'), '852872.00', 'LED TVs - Entertainment', 852872, 10, 1, 1),
 
 -- Nigeria National Tariff Lines (West African Hub)
-((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.851713.00', 'Smartphones - Mobile communications', 851713, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.847160.00', 'Computer accessories', 847160, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'NG'), 'NG.852872.00', 'LED TVs - Consumer demand', 852872, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'NG'), '851713.00', 'Smartphones - Mobile communications', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'NG'), '847160.00', 'Computer accessories', 847160, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'NG'), '852872.00', 'LED TVs - Consumer demand', 852872, 10, 2, 2),
 
 -- Egypt National Tariff Lines (North African Hub)
-((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.851713.00', 'Smartphones - Regional assembly', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.847141.00', 'Laptops - Education/Business', 847141, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'EG'), 'EG.854110.00', 'Diodes - Electronics assembly', 854110, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'EG'), '851713.00', 'Smartphones - Regional assembly', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'EG'), '847141.00', 'Laptops - Education/Business', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'EG'), '854110.00', 'Diodes - Electronics assembly', 854110, 10, 3, 3),
 
 -- Kenya National Tariff Lines (East African Hub)
-((SELECT country_id FROM country WHERE country_code = 'KE'), 'KE.851713.00', 'Smartphones - Mobile banking ecosystem', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'KE'), 'KE.847141.00', 'Tablets - Education sector', 847141, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'KE'), '851713.00', 'Smartphones - Mobile banking ecosystem', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'KE'), '847141.00', 'Tablets - Education sector', 847141, 10, 4, 4),
 
 -- Ghana National Tariff Lines (West African Market)
-((SELECT country_id FROM country WHERE country_code = 'GH'), 'GH.851713.00', 'Smartphones - Consumer electronics', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'GH'), 'GH.852872.00', 'LED TVs - Entertainment sector', 852872, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'GH'), '851713.00', 'Smartphones - Consumer electronics', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'GH'), '852872.00', 'LED TVs - Entertainment sector', 852872, 10, 5, 5),
 
 -- Caribbean & Central American Countries National Tariff Lines
 -- Costa Rica National Tariff Lines (Intel Operations)
-((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.854231.00', 'Processors - Intel manufacturing', 854231, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.847141.00', 'Laptops - Assembly operations', 847141, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'CR'), 'CR.851713.00', 'Smartphones - Central American market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CR'), '854231.00', 'Processors - Intel manufacturing', 854231, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CR'), '847141.00', 'Laptops - Assembly operations', 847141, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'CR'), '851713.00', 'Smartphones - Central American market', 851713, 10, 1, 1),
 
 -- Dominican Republic National Tariff Lines (Free Trade Zones)
-((SELECT country_id FROM country WHERE country_code = 'DO'), 'DO.847160.00', 'Computer peripherals - Export manufacturing', 847160, 10, 2, 2),
-((SELECT country_id FROM country WHERE country_code = 'DO'), 'DO.851713.00', 'Smartphones - Caribbean market', 851713, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'DO'), '847160.00', 'Computer peripherals - Export manufacturing', 847160, 10, 2, 2),
+((SELECT country_id FROM country WHERE country_code = 'DO'), '851713.00', 'Smartphones - Caribbean market', 851713, 10, 2, 2),
 
 -- Jamaica National Tariff Lines (Caribbean Hub)
-((SELECT country_id FROM country WHERE country_code = 'JM'), 'JM.851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
-((SELECT country_id FROM country WHERE country_code = 'JM'), 'JM.847141.00', 'Laptops - Tourism/Business', 847141, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'JM'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 3, 3),
+((SELECT country_id FROM country WHERE country_code = 'JM'), '847141.00', 'Laptops - Tourism/Business', 847141, 10, 3, 3),
 
 -- Panama National Tariff Lines (Regional Trade Hub)
-((SELECT country_id FROM country WHERE country_code = 'PA'), 'PA.851713.00', 'Smartphones - Regional distribution', 851713, 10, 4, 4),
-((SELECT country_id FROM country WHERE country_code = 'PA'), 'PA.854231.00', 'Processors - Logistics sector', 854231, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'PA'), '851713.00', 'Smartphones - Regional distribution', 851713, 10, 4, 4),
+((SELECT country_id FROM country WHERE country_code = 'PA'), '854231.00', 'Processors - Logistics sector', 854231, 10, 4, 4),
 
 -- Oceania Countries National Tariff Lines
 -- New Zealand National Tariff Lines (CPTPP Member)
-((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.851713.00', 'Smartphones - Consumer market', 851713, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.847141.00', 'Laptops - Business/Education', 847141, 10, 5, 5),
-((SELECT country_id FROM country WHERE country_code = 'NZ'), 'NZ.852852.00', 'Computer monitors - Professional', 852852, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'NZ'), '851713.00', 'Smartphones - Consumer market', 851713, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'NZ'), '847141.00', 'Laptops - Business/Education', 847141, 10, 5, 5),
+((SELECT country_id FROM country WHERE country_code = 'NZ'), '852852.00', 'Computer monitors - Professional', 852852, 10, 5, 5),
 
 -- Fiji National Tariff Lines (Pacific Hub)
-((SELECT country_id FROM country WHERE country_code = 'FJ'), 'FJ.851713.00', 'Smartphones - Pacific island market', 851713, 10, 1, 1),
-((SELECT country_id FROM country WHERE country_code = 'FJ'), 'FJ.847141.00', 'Laptops - Tourism sector', 847141, 10, 1, 1);
+((SELECT country_id FROM country WHERE country_code = 'FJ'), '851713.00', 'Smartphones - Pacific island market', 851713, 10, 1, 1),
+((SELECT country_id FROM country WHERE country_code = 'FJ'), '847141.00', 'Laptops - Tourism sector', 847141, 10, 1, 1);
 
 -- =====================================================
 -- TARIFF RATE DATA
