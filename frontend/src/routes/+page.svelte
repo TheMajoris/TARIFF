@@ -241,8 +241,19 @@
 					<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
 				</div>
 			</form>
+			
+			<!-- Error Alert -->
+			{#if showErrorAlert && calculationError}
+				<div class="alert alert-error mt-6">
+					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<span>{calculationError}</span>
+				</div>
+			{/if}
+			
 			<!-- Calculation Result -->
-			{#if calculationResult}
+			{#if calculationResult && !showErrorAlert}
 				<div class="card bg-base-100 shadow-md mt-6 p-6">
 					<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
 
@@ -253,12 +264,12 @@
 
 					<div class="flex justify-between text-sm mb-2">
 						<span>Tariff Rate:</span>
-						<span class="text-blue-600 font-medium">{(parseFloat(calculationResult.tariffRate) * 100).toFixed(1)}%</span>
+						<span class="text-blue-600 font-medium">{(parseFloat(calculationResult.tariffRate)).toFixed(1)}%</span>
 					</div>
 
 					<div class="flex justify-between text-sm mb-4">
 						<span>Tariff Amount:</span>
-						<span class="text-red-600">+ ${calculationResult.tariff}</span>
+						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
 					<div class="flex justify-between border-t border-base-300 pt-3">
@@ -381,23 +392,58 @@
 
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
+	let calculationError = null;
+	let showErrorAlert = false;
+	
 	async function calculateCost() {
+		// Clear previous results and errors
+		calculationResult = null;
+		calculationError = null;
+		showErrorAlert = false;
+		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
 			if (!/^\d{4}\.\d{2}\.\d{2}$/.test(hsCode)) {
-				alert("Please enter a valid HS Code format (e.g., 8501.10.10)");
+				calculationError = "Please enter a valid HS Code format (e.g., 8501.10.10)";
+				showErrorAlert = true;
 				return;
 			}
 			
-			calculationResult = await calculateTariffCost({
-				hsCode,
-				exportFrom,
-				importTo,
-				calculationDate,
-				goodsValue
-			});
+			try {
+				const result = await calculateTariffCost({
+					hsCode,
+					exportFrom,
+					importTo,
+					calculationDate,
+					goodsValue
+				});
+				
+				console.log('Calculation result:', result);
+				
+				if (result === null) {
+					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+					showErrorAlert = true;
+				} else {
+					// Check if this is a "no data" case (tariff rate is -1)
+					const tariffRate = parseFloat(result.tariffRate);
+					
+					if (tariffRate === -1) {
+						// No tariff data found in database
+						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+						showErrorAlert = true;
+					} else {
+						// Valid tariff data (including 0% tariff)
+						calculationResult = result;
+					}
+				}
+			} catch (error) {
+				console.error('Calculation error:', error);
+				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
+				showErrorAlert = true;
+			}
 		} else {
-			alert("Please fill in all fields before calculating.");
+			calculationError = "Please fill in all fields before calculating.";
+			showErrorAlert = true;
 		}
 	}
 	// End: Tariff Calculation Section 
