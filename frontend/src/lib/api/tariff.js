@@ -4,9 +4,7 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
     console.log('Calculating tariff cost:', { hsCode, exportFrom, importTo, calculationDate, goodsValue });
 
-    // Convert HS Code from string format (e.g., "8542.31.00") to integer format (e.g., 854231)
-    // Remove dots and take first 6 digits to match database format
-    const hsCodeInteger = parseInt(hsCode.replace(/\./g, '').substring(0, 6));
+    const hsCodeInteger = parseInt(hsCode.replace('.', ''));
     
     const requestBody = {
       importingCountryId: parseInt(importTo),
