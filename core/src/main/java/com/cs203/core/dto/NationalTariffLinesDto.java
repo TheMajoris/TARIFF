@@ -1,16 +1,13 @@
 package com.cs203.core.dto;
 
-import com.cs203.core.entity.CountryEntity;
+import com.cs203.core.entity.UserEntity;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class CreateNationalTariffLinesDto {
+public class NationalTariffLinesDto {
+
     private Long id;
 
     @NotNull(message = "Country is required")
@@ -23,10 +20,16 @@ public class CreateNationalTariffLinesDto {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
-    @NotNull(message = "Parent HS Code is required")
-    private Integer parentHsCode;
+    // Parent HS code reference
+    private ProductCategoriesDto parentHsCode;
 
+    private UserEntity createdBy;
+    private UserEntity updatedBy;
+    
     @Min(value = 1, message = "Level must be at least 1")
     @Max(value = 10, message = "Level cannot exceed 10")
     private Integer level;
 }
+
+
+
