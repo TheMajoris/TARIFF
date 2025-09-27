@@ -2,7 +2,6 @@ package com.cs203.core.service.impl;
 
 import java.util.Optional;
 
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,13 @@ import com.cs203.core.entity.ProductCategoriesEntity;
 import com.cs203.core.repository.CountryRepository;
 import com.cs203.core.repository.NationalTariffLinesRepository;
 import com.cs203.core.repository.ProductCategoriesRepository;
-import com.cs203.core.service.NationaltariffLinesService;
+import com.cs203.core.service.NationalTariffLinesService;
 
 import jakarta.persistence.EntityNotFoundException;
 
 //want to create, update and delete national tariff lines
 @Service
-public class NationalTariffLinesServiceImpl implements NationaltariffLinesService {
+public class NationalTariffLinesServiceImpl implements NationalTariffLinesService {
     @Autowired
     private NationalTariffLinesRepository nationalTariffLinesRepository;
 

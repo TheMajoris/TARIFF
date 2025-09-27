@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cs203.core.dto.CreateNationalTariffLinesDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.NationalTariffLinesDto;
-import com.cs203.core.service.NationaltariffLinesService;
+import com.cs203.core.service.NationalTariffLinesService;
 
 import jakarta.validation.Valid;
 
@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 public class NationalTariffLinesController {
     
     @Autowired
-    NationaltariffLinesService nationaltariffLinesService;
+    NationalTariffLinesService nationaltariffLinesService;
 
     @PostMapping
     public ResponseEntity<NationalTariffLinesDto> createNationalTariffLine(

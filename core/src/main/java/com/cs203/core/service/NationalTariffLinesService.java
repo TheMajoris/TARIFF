@@ -4,7 +4,7 @@ import com.cs203.core.dto.CreateNationalTariffLinesDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.NationalTariffLinesDto;
 
-public interface NationaltariffLinesService {
+public interface NationalTariffLinesService {
 
     public NationalTariffLinesDto createNationalTariffLines(CreateNationalTariffLinesDto createDto);
 
