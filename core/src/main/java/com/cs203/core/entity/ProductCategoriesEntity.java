@@ -15,7 +15,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "product_categories")
 public class ProductCategoriesEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -36,14 +36,12 @@ public class ProductCategoriesEntity {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
-    @Column(name = "tariff_base_rate")
-    private Double tariffBaseRate;
-
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
     // Constructors
-    public ProductCategoriesEntity() {}
+    public ProductCategoriesEntity() {
+    }
 
     public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description) {
         this.categoryCode = categoryCode;
@@ -51,29 +49,44 @@ public class ProductCategoriesEntity {
         this.description = description;
     }
 
-    public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description, Double tariffBaseRate) {
-        this.categoryCode = categoryCode;
-        this.categoryName = categoryName;
-        this.description = description;
-        this.tariffBaseRate = tariffBaseRate;
+    // Getters and Setters
+    public Long getId() {
+        return id;
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getCategoryCode() { return categoryCode; }
-    public void setCategoryCode(Integer categoryCode) { this.categoryCode = categoryCode; }
+    public Integer getCategoryCode() {
+        return categoryCode;
+    }
 
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public void setCategoryCode(Integer categoryCode) {
+        this.categoryCode = categoryCode;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getCategoryName() {
+        return categoryName;
+    }
 
-    public Double getTariffBaseRate() { return tariffBaseRate; }
-    public void setTariffBaseRate(Double tariffBaseRate) { this.tariffBaseRate = tariffBaseRate; }
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 }

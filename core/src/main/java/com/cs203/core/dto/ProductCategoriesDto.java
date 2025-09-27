@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class ProductCategoriesDto {
     private Long id;
-    
+
     @NotNull(message = "HS code is required")
     @Min(value = 10, message = "HS code must be at least 2 digits")
     @Max(value = 999999, message = "HS code cannot exceed 6 digits")
@@ -23,6 +23,5 @@ public class ProductCategoriesDto {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
-    private Double tariffBaseRate;
     private Boolean isActive;
 }

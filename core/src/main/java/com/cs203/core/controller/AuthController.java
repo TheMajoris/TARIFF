@@ -31,8 +31,8 @@ public class AuthController {
 
     @Autowired
     public AuthController(AuthService authService,
-                          CookieUtil cookieUtil,
-                          TokenService tokenService) {
+            CookieUtil cookieUtil,
+            TokenService tokenService) {
         this.authService = authService;
         this.cookieUtil = cookieUtil;
         this.tokenService = tokenService;
@@ -40,8 +40,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<GenericResponseDTO> login(
-            @RequestBody @Valid LoginRequestDTO loginRequestDTO
-    ) {
+            @RequestBody @Valid LoginRequestDTO loginRequestDTO) {
         GenericResponseDTO response = authService.login(loginRequestDTO);
         RefreshLoginResponseDTO userInfo = (RefreshLoginResponseDTO) response.message();
         String refreshToken = tokenService.createRefreshToken(loginRequestDTO.email());
@@ -60,10 +59,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<GenericResponseDTO> logout(
-            @CookieValue(value = "refreshToken", required = false) String refreshTokenId
-    ) {
+            @CookieValue(value = "refreshToken", required = false) String refreshTokenId) {
         List<ResponseCookie> refreshTokenCookies = cookieUtil.buildInvalidRefreshToken(refreshTokenId);
-        //Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // Jwt jwt = (Jwt)
+        // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String accessToken = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         ResponseCookie accessCookie = cookieUtil.buildInvalidAccessToken(accessToken);
 
@@ -79,11 +78,15 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<GenericResponseDTO> refresh(
-            @CookieValue(value = "refreshToken", required = false) String tokenId
-    ) {
+            @CookieValue(value = "refreshToken", required = false) String tokenId) {
+
+        // null because refresh token will auto delete from cookies when it expires
+        if (tokenId == null) {
+            throw new InvalidTokenException("Invalid refresh token, please log in again.");
+        }
+
         RefreshToken refreshToken = tokenService.validateRefreshToken(
-                UUID.fromString(tokenId)
-        );
+                UUID.fromString(tokenId));
         if (refreshToken == null) {
             throw new InvalidTokenException("Invalid refresh token, please log in again.");
         }
@@ -97,8 +100,7 @@ public class AuthController {
                 .body(
                         new GenericResponseDTO(true,
                                 authService.buildUserInformationResponse(userEntity),
-                                ZonedDateTime.now())
-                );
+                                ZonedDateTime.now()));
     }
 
     @GetMapping("/.well-known/jwks.json")
