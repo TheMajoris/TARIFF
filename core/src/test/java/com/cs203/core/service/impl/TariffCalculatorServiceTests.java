@@ -53,10 +53,10 @@ class TariffRateServiceTest {
         ProductCategoriesEntity cat = category(123);
 
         TariffRateEntity high = new TariffRateEntity(
-                importing, exporting, cat, new BigDecimal("0.20"), "ad-valorem", "percent",
+                importing, exporting, cat, new BigDecimal("20.00"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
         TariffRateEntity low = new TariffRateEntity(
-                importing, exporting, cat, new BigDecimal("0.10"), "ad-valorem", "percent",
+                importing, exporting, cat, new BigDecimal("10.00"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
 
         List<TariffRateEntity> rates = Arrays.asList(low, high);
@@ -110,10 +110,10 @@ class TariffRateServiceTest {
         ProductCategoriesEntity cat = category(123);
 
         TariffRateEntity high = new TariffRateEntity(
-                importing, exporting, cat, new BigDecimal("0.20"), "ad-valorem", "percent",
+                importing, exporting, cat, new BigDecimal("20.00"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
         TariffRateEntity low = new TariffRateEntity(
-                importing, exporting, cat, new BigDecimal("0.10"), "ad-valorem", "percent",
+                importing, exporting, cat, new BigDecimal("10.00"), "ad-valorem", "percent",
                 LocalDate.now(), null, false);
 
         List<TariffRateEntity> rates = Arrays.asList(low, high);
@@ -122,12 +122,12 @@ class TariffRateServiceTest {
 
         BigDecimal result = service.getLowestActiveTariffRate(1L, 2L, 123, new BigDecimal("100.00"), date);
 
-        assertEquals(0, result.compareTo(new BigDecimal("0.10")));
+        assertEquals(0, result.compareTo(new BigDecimal("10.00")));
     }
 
     @Test
-    @DisplayName("getLowestTariffRate with no rates returns zero")
-    void getLowestTariffRate_noRates_returnsZero() {
+    @DisplayName("getLowestTariffRate with no rates returns -1")
+    void getLowestTariffRate_noRates_returnsMinusOne() {
         TariffRateRepository repository = Mockito.mock(TariffRateRepository.class);
         TariffRateService service = new TariffRateServiceImpl();
 
@@ -145,7 +145,7 @@ class TariffRateServiceTest {
 
         BigDecimal result = service.getLowestActiveTariffRate(1L, 2L, 123, new BigDecimal("100.00"), date);
 
-        assertEquals(0, result.compareTo(BigDecimal.ZERO));
+        assertEquals(0, result.compareTo(new BigDecimal("-1")));
     }
 
     @Test
