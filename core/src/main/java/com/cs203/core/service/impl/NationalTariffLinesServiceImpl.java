@@ -83,7 +83,7 @@ public class NationalTariffLinesServiceImpl implements NationalTariffLinesServic
     // delete nationalTariffLines by id
     public GenericResponse<Void> deleteNationalTariffLines(Long nationalTariffLinesId) {
         if (!nationalTariffLinesRepository.existsById(nationalTariffLinesId)) {
-            return new GenericResponse<Void>(HttpStatus.NOT_FOUND, "Nationl Tariff Line not found with id: ", null);
+            return new GenericResponse<Void>(HttpStatus.NOT_FOUND, "National Tariff Line not found with id: " + nationalTariffLinesId, null);
         }
         // if found, delete it
         nationalTariffLinesRepository.deleteById(nationalTariffLinesId);

@@ -30,6 +30,3 @@ public class NationalTariffLinesDto {
     @Max(value = 10, message = "Level cannot exceed 10")
     private Integer level;
 }
-
-
-

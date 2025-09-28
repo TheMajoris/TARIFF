@@ -9,7 +9,7 @@ public interface NationalTariffLinesService {
     public NationalTariffLinesDto createNationalTariffLines(CreateNationalTariffLinesDto createDto);
 
     public GenericResponse<NationalTariffLinesDto> updateNationalTariffLines(NationalTariffLinesDto dto,
-            Long nationalTariffLinesId);
+    Long nationalTariffLinesId);
 
     public GenericResponse<Void> deleteNationalTariffLines(Long nationalTariffLinesId);
 
