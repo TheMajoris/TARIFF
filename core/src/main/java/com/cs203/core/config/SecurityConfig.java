@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,19 +38,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
-                auth.requestMatchers(
-                                // "/api/v1/users", // commented out for easier testing
-                                "/api/v1/tariffs/edit"
-                        )
-                        .hasAuthority("SCOPE_ROLE_ADMIN")
-                        .requestMatchers(
-                                "/api/v1/users/logout",
-                                "/api/v1/users/reset-password"
-                        )
-                        .authenticated()
-                        .anyRequest()
-                        .permitAll()
+        http.authorizeHttpRequests(auth -> auth
+                // tariff CUD stuff
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+
+                // tariff R stuff
+                .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
+
+                // auth stuff
+                .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
+
+                // everything else
+                .anyRequest().permitAll()
         );
 
         http.sessionManagement(session ->
