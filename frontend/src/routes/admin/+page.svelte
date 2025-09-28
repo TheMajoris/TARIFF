@@ -2,6 +2,7 @@
 	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
 	import { beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { fetchCountries } from '$lib/api/countries.js';
 
 	let success = '';
 	let error = '';
@@ -280,6 +281,31 @@
 						? String(valA).localeCompare(String(valB))
 						: String(valB).localeCompare(String(valA));
 				});
+
+	// Search state for countries
+	let exportFromSearch = '';
+	let importToSearch = '';
+	let showExportFromDropdown = false;
+	let showImportToDropdown = false;
+	let countries = [];
+	onMount(async () => {
+		console.log('Fetching countries...');
+		countries = await fetchCountries();
+		console.log('Countries loaded:', countries);
+	});
+
+	// Filter countries for search
+	$: filteredExportFromCountries = countries.filter(
+		(country) =>
+			country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
+			country.code.toLowerCase().includes(exportFromSearch.toLowerCase())
+	);
+
+	$: filteredImportToCountries = countries.filter(
+		(country) =>
+			country.name.toLowerCase().includes(importToSearch.toLowerCase()) ||
+			country.code.toLowerCase().includes(importToSearch.toLowerCase())
+	);
 </script>
 
 <div class="space-y-6 p-6">
@@ -323,6 +349,7 @@
 			<span>{success}</span>
 		</div>
 	{/if}
+
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1">
 		<!-- Tariffs Card -->
@@ -462,27 +489,169 @@
 					</div>
 
 					<div>
-						<label class="label" for="importing_country">
-							<span class="label-text font-semibold">Importing Country</span>
-						</label>
-						<input
-							type="text"
-							id="importing_country"
-							bind:value={selectedTariff.importingCountryCode}
-							class="input input-bordered w-full"
-						/>
+						<label class="label text-sm font-medium">Importing Country</label>
+						<div class="relative">
+							<div
+								class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm"
+								on:click={() => (showImportToDropdown = !showImportToDropdown)}
+								on:blur={(e) => {
+									if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+										setTimeout(() => (showImportToDropdown = false), 200);
+									}
+								}}
+								tabindex="0"
+							>
+								<span class="truncate">
+									{#if selectedTariff.importingCountryCode}
+										{(() => {
+											const selected = countries.find(
+												(c) => c.code == selectedTariff.importingCountryCode
+											);
+											return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+										})()}
+									{:else}
+										Select country
+									{/if}
+								</span>
+							</div>
+
+							{#if showImportToDropdown}
+								<div
+									class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
+									on:click={(e) => {
+										e.stopPropagation();
+										console.log(selectedTariff.importingCountryCode);
+									}}
+									on:mousedown={(e) => e.stopPropagation()}
+								>
+									<div class="border-base-300 border-b p-2">
+										<input
+											type="text"
+											placeholder="Type to search..."
+											bind:value={importToSearch}
+											class="input input-sm w-full"
+											on:input={() => (showImportToDropdown = true)}
+											on:keydown={(e) => e.stopPropagation()}
+											on:click={(e) => e.stopPropagation()}
+											on:mousedown={(e) => e.stopPropagation()}
+											autofocus
+										/>
+									</div>
+									<div class="max-h-60 overflow-y-auto">
+										{#each filteredImportToCountries as country}
+											<div
+												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.importingCountryCode ==
+												country.code
+													? 'bg-primary text-primary-content'
+													: ''}"
+												on:click={() => {
+													selectedTariff.importingCountryCode = country.code;
+													importToSearch = '';
+													showImportToDropdown = false;
+												}}
+											>
+												<span>({country.code}) {country.name}</span>
+												{#if selectedTariff.importingCountryCode == country.code}
+													<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+														<path
+															fill-rule="evenodd"
+															d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+															clip-rule="evenodd"
+														></path>
+													</svg>
+												{/if}
+											</div>
+										{/each}
+										{#if filteredImportToCountries.length === 0}
+											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
+										{/if}
+									</div>
+								</div>
+							{/if}
+						</div>
 					</div>
 
 					<div>
-						<label class="label" for="exporting_country">
-							<span class="label-text font-semibold">Exporting Country</span>
-						</label>
-						<input
-							type="text"
-							id="exporting_country"
-							bind:value={selectedTariff.exportingCountryCode}
-							class="input input-bordered w-full"
-						/>
+						<label class="label text-sm font-medium">Exporting Country</label>
+						<div class="relative">
+							<div
+								class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm"
+								on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
+								on:blur={(e) => {
+									if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+										setTimeout(() => (showExportFromDropdown = false), 200);
+									}
+								}}
+								tabindex="0"
+							>
+								<span class="truncate">
+									{#if selectedTariff.exportingCountryCode}
+										{(() => {
+											const selected = countries.find(
+												(c) => c.code == selectedTariff.exportingCountryCode
+											);
+											return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+										})()}
+									{:else}
+										Select country
+									{/if}
+								</span>
+							</div>
+
+							{#if showExportFromDropdown}
+								<div
+									class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
+									on:click={(e) => {
+										e.stopPropagation();
+										console.log(selectedTariff.exportingCountryCode);
+									}}
+									on:mousedown={(e) => e.stopPropagation()}
+								>
+									<div class="border-base-300 border-b p-2">
+										<input
+											type="text"
+											placeholder="Type to search..."
+											bind:value={exportFromSearch}
+											class="input input-sm w-full"
+											on:input={() => (showExportFromDropdown = true)}
+											on:keydown={(e) => e.stopPropagation()}
+											on:click={(e) => e.stopPropagation()}
+											on:mousedown={(e) => e.stopPropagation()}
+											autofocus
+										/>
+									</div>
+									<div class="max-h-60 overflow-y-auto">
+										{#each filteredExportFromCountries as country}
+											<div
+												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.exportingCountryCode ==
+												country.code
+													? 'bg-primary text-primary-content'
+													: ''}"
+												on:click={() => {
+													selectedTariff.exportingCountryCode = country.code;
+													exportFromSearch = '';
+													showExportFromDropdown = false;
+												}}
+											>
+												<span>({country.code}) {country.name}</span>
+												{#if selectedTariff.exportingCountryCode == country.code}
+													<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+														<path
+															fill-rule="evenodd"
+															d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+															clip-rule="evenodd"
+														></path>
+													</svg>
+												{/if}
+											</div>
+										{/each}
+										{#if filteredExportFromCountries.length === 0}
+											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
+										{/if}
+									</div>
+								</div>
+							{/if}
+						</div>
 					</div>
 
 					<div>

@@ -85,9 +85,6 @@
 									Select country
 								{/if}
 							</span>
-							<svg class="w-4 h-4 transition-transform {showExportFromDropdown ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
 						</div>
 						
 						{#if showExportFromDropdown}
@@ -159,9 +156,6 @@
 									Select country
 								{/if}
 							</span>
-							<svg class="w-4 h-4 transition-transform {showImportToDropdown ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-							</svg>
 						</div>
 						
 						{#if showImportToDropdown}
