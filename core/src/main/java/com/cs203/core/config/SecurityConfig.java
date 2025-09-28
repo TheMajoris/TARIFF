@@ -1,5 +1,6 @@
 package com.cs203.core.config;
 
+import com.cs203.core.resolver.CustomBearerTokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,23 +31,25 @@ public class SecurityConfig {
     private List<String> corsOrigins;
 
     private final UserDetailsService userDetailsService;
+    private final CustomBearerTokenResolver customBearerTokenResolver;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, CustomBearerTokenResolver customBearerTokenResolver) {
         this.userDetailsService = userDetailsService;
+        this.customBearerTokenResolver = customBearerTokenResolver;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
+                // tariff R stuff
+                .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
+
                 // tariff CUD stuff
                 .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
-
-                // tariff R stuff
-                .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
 
                 // auth stuff
                 .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
@@ -58,7 +61,8 @@ public class SecurityConfig {
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                .bearerTokenResolver(customBearerTokenResolver));
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(Customizer.withDefaults());
 

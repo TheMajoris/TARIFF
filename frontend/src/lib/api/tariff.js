@@ -18,6 +18,7 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
 
     const res = await fetch(`${API_BASE_URL}/tariff-rate/calculate`, {
       method: "POST",
+      credentials: "include",
       headers: { 
         "Content-Type": "application/json"
       },
