@@ -134,7 +134,7 @@
 	function CategoryValidation() {
 		if (
 			selectedTariff.productCategory.categoryCode != null &&
-			selectedTariff.productCategory.categoryCode >= 10 &&
+			selectedTariff.productCategory.categoryCode >= 100000 &&
 			selectedTariff.productCategory.categoryCode <= 999999
 		) {
 			if (
@@ -150,7 +150,7 @@
 				error = 'Category Name can only have up to 500 characters';
 			}
 		} else {
-			error = 'Category Code can only be from 10 to 999999';
+			error = 'Category Code can only be from 100000 to 999999';
 		}
 
 		return false;
