@@ -49,7 +49,7 @@
 					<label class="label text-sm font-medium">HS Code</label>
 					<input
 						type="text"
-						placeholder="Enter HS Code (e.g., 850110.10)"
+						placeholder="Enter HS Code (e.g., 850110)"
 						bind:value={hsCode}
 						class="input input-bordered w-full text-sm"
 						required
@@ -59,6 +59,78 @@
 							Harmonized System Code for product classification
 						</span>
 					</label>
+				</div>
+
+				<!-- Importing To -->
+				<div class="form-control mt-4">
+					<label class="label text-sm font-medium">Importing To</label>
+					<div class="relative">
+						<div 
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
+							on:click={() => (showImportToDropdown = !showImportToDropdown)}
+							on:blur={(e) => {
+								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+									setTimeout(() => (showImportToDropdown = false), 200);
+								}
+							}}
+							tabindex="0"
+						>
+							<span class="truncate">
+								{#if importTo}
+									{(() => {
+										const selected = countries.find(c => c.id == importTo);
+										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+									})()}
+								{:else}
+									Select country
+								{/if}
+							</span>
+						</div>
+						
+						{#if showImportToDropdown}
+							<div 
+								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+								on:click={(e) => e.stopPropagation()}
+								on:mousedown={(e) => e.stopPropagation()}
+							>
+								<div class="p-2 border-b border-base-300">
+									<input
+										type="text"
+										placeholder="Type to search..."
+										bind:value={importToSearch}
+										class="input input-sm w-full"
+										on:input={() => (showImportToDropdown = true)}
+										on:keydown={(e) => e.stopPropagation()}
+										on:click={(e) => e.stopPropagation()}
+										on:mousedown={(e) => e.stopPropagation()}
+										autofocus
+									/>
+								</div>
+								<div class="max-h-60 overflow-y-auto">
+									{#each filteredImportToCountries as country}
+										<div
+											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {importTo == country.id ? 'bg-primary text-primary-content' : ''}"
+											on:click={() => {
+												importTo = country.id;
+												importToSearch = '';
+												showImportToDropdown = false;
+											}}
+										>
+											<span>({country.code}) {country.name}</span>
+											{#if importTo == country.id}
+												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												</svg>
+											{/if}
+										</div>
+									{/each}
+									{#if filteredImportToCountries.length === 0}
+										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+					</div>
 				</div>
 
 				<!-- Exporting From -->
@@ -132,78 +204,7 @@
 						{/if}
 					</div>
 				</div>
-				<!-- Importing To -->
-				<div class="form-control mt-4">
-					<label class="label text-sm font-medium">Importing To</label>
-					<div class="relative">
-						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
-							on:click={() => (showImportToDropdown = !showImportToDropdown)}
-							on:blur={(e) => {
-								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
-									setTimeout(() => (showImportToDropdown = false), 200);
-								}
-							}}
-							tabindex="0"
-						>
-							<span class="truncate">
-								{#if importTo}
-									{(() => {
-										const selected = countries.find(c => c.id == importTo);
-										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
-									})()}
-								{:else}
-									Select country
-								{/if}
-							</span>
-						</div>
-						
-						{#if showImportToDropdown}
-							<div 
-								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
-								on:click={(e) => e.stopPropagation()}
-								on:mousedown={(e) => e.stopPropagation()}
-							>
-								<div class="p-2 border-b border-base-300">
-									<input
-										type="text"
-										placeholder="Type to search..."
-										bind:value={importToSearch}
-										class="input input-sm w-full"
-										on:input={() => (showImportToDropdown = true)}
-										on:keydown={(e) => e.stopPropagation()}
-										on:click={(e) => e.stopPropagation()}
-										on:mousedown={(e) => e.stopPropagation()}
-										autofocus
-									/>
-								</div>
-								<div class="max-h-60 overflow-y-auto">
-									{#each filteredImportToCountries as country}
-										<div
-											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {importTo == country.id ? 'bg-primary text-primary-content' : ''}"
-											on:click={() => {
-												importTo = country.id;
-												importToSearch = '';
-												showImportToDropdown = false;
-											}}
-										>
-											<span>({country.code}) {country.name}</span>
-											{#if importTo == country.id}
-												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-												</svg>
-											{/if}
-										</div>
-									{/each}
-									{#if filteredImportToCountries.length === 0}
-										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
-									{/if}
-								</div>
-							</div>
-						{/if}
-					</div>
-				</div>
-
+				
 				<!-- Calculation Date -->
 				<div class="form-control">
 					<label class="label text-sm font-medium">Calculation Date</label>
@@ -397,8 +398,8 @@
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
-			if (!/^\d{6}\.\d{2,4}$/.test(hsCode)) {
-				calculationError = "Please enter a valid HS Code format (e.g., 850110.10 / 850110.100 / 850110.1000)";
+			if (!/^\d{6}$/.test(hsCode)) {
+				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
 				showErrorAlert = true;
 				return;
 			}

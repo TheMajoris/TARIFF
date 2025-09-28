@@ -4,7 +4,7 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
     console.log('Calculating tariff cost:', { hsCode, exportFrom, importTo, calculationDate, goodsValue });
 
-    const hsCodeInteger = parseInt(hsCode.replace('.', ''));
+    const hsCodeInteger = parseInt(hsCode);
     
     const requestBody = {
       importingCountryId: parseInt(importTo),
