@@ -1,152 +1,238 @@
 <script lang="ts">
-	type Tariff = {
-		tariff_id: string;
-		importing_country: string;
-		exporting_country: string;
-		hs_code: string;
-		tariff_rate: string;
-		tariff_type: string;
-		rate_unit: string;
-		effective_date: string;
-		expiry_date: string;
-		preferential_tariff: string;
-		created_at: string;
-		updated_at: string;
+	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
+	import { beforeNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
+
+	let success = '';
+	let error = '';
+
+	type ProductCategory = {
+		categoryCode: number;
+		categoryName: string;
+		description: string;
+		id: number;
+		isActive: boolean;
 	};
 
-	let selectedTariff: Tariff = blankTariff();
+	type TariffRecord = {
+		id: number;
+		createdAt: string; // ISO date string
+		updatedAt: string; // ISO date string
+		effectiveDate: string; // ISO date string
+		expiryDate: string; // ISO date string
+		exportingCountryCode: string;
+		importingCountryCode: string;
+		preferentialTariff: boolean;
+		productCategory: ProductCategory;
+		rateUnit: string;
+		tariffRate: number;
+		tariffType: string;
+	};
+	let allTariff: TariffRecord[] = [];
+	let selectedTariff: TariffRecord = blankTariff();
 	function blankTariff() {
 		return {
-			tariff_id: '',
-			importing_country: '',
-			exporting_country: '',
-			hs_code: '',
-			tariff_rate: '',
-			tariff_type: '',
-			rate_unit: '',
-			effective_date: '',
-			expiry_date: '',
-			preferential_tariff: '',
-			created_at: '',
-			updated_at: ''
+			id: 0,
+			createdAt: '',
+			updatedAt: '',
+			effectiveDate: '',
+			expiryDate: '',
+			exportingCountryCode: '',
+			importingCountryCode: '',
+			preferentialTariff: false,
+			productCategory: {
+				categoryCode: 0,
+				categoryName: '',
+				description: '',
+				id: 0,
+				isActive: false
+			},
+			rateUnit: '',
+			tariffRate: 0,
+			tariffType: ''
 		};
 	}
+
+	async function fetchTariffs() {
+		try {
+			const result = await getAllTariff();
+			allTariff = result;
+		} catch (err) {
+			console.error('Getting all tariff error:', err);
+			error = err instanceof Error ? err.message : 'Viewing tariff failed. Please try again.';
+		}
+	}
+
+	// Update when any page -> admin
+	beforeNavigate(() => {
+		fetchTariffs();
+	});
+
+	// Update on page load/refresh
+	onMount(() => {
+		fetchTariffs();
+	});
 
 	let view = false;
 	let edit = false;
 	let create = false;
 
-	let tariff: Tariff[] = [
-		{
-			tariff_id: 'TAR001',
-			importing_country: 'United States',
-			exporting_country: 'China',
-			hs_code: '847130',
-			tariff_rate: '10',
-			tariff_type: 'Ad Valorem',
-			rate_unit: '%',
-			effective_date: '2023-01-01',
-			expiry_date: '2025-12-31',
-			preferential_tariff: 'No',
-			created_at: '2023-01-01T10:00:00Z',
-			updated_at: '2023-06-01T15:30:00Z'
-		},
-		{
-			tariff_id: 'TAR002',
-			importing_country: 'Germany',
-			exporting_country: 'Brazil',
-			hs_code: '020130',
-			tariff_rate: '5',
-			tariff_type: 'Ad Valorem',
-			rate_unit: '%',
-			effective_date: '2022-07-15',
-			expiry_date: '2026-07-14',
-			preferential_tariff: 'Yes',
-			created_at: '2022-07-15T08:00:00Z',
-			updated_at: '2024-01-20T11:45:00Z'
-		},
-		{
-			tariff_id: 'TAR003',
-			importing_country: 'India',
-			exporting_country: 'Australia',
-			hs_code: '100630',
-			tariff_rate: '15',
-			tariff_type: 'Specific',
-			rate_unit: 'USD/ton',
-			effective_date: '2021-04-01',
-			expiry_date: '2025-03-31',
-			preferential_tariff: 'No',
-			created_at: '2021-04-01T12:00:00Z',
-			updated_at: '2023-09-10T09:20:00Z'
-		},
-		{
-			tariff_id: 'TAR004',
-			importing_country: 'Japan',
-			exporting_country: 'United States',
-			hs_code: '870323',
-			tariff_rate: '7.5',
-			tariff_type: 'Ad Valorem',
-			rate_unit: '%',
-			effective_date: '2023-05-01',
-			expiry_date: '2027-04-30',
-			preferential_tariff: 'Yes',
-			created_at: '2023-05-01T14:10:00Z',
-			updated_at: '2024-02-18T17:40:00Z'
-		},
-		{
-			tariff_id: 'TAR005',
-			importing_country: 'Canada',
-			exporting_country: 'Mexico',
-			hs_code: '220421',
-			tariff_rate: '0',
-			tariff_type: 'Preferential',
-			rate_unit: '%',
-			effective_date: '2020-07-01',
-			expiry_date: '2030-06-30',
-			preferential_tariff: 'Yes',
-			created_at: '2020-07-01T09:30:00Z',
-			updated_at: '2023-11-22T10:50:00Z'
-		}
-	];
-
 	// Function to validate & submit tariff
 	function submitTariff() {
-		// Check for blank values
+		if (TariffValidation()) {
+			if (CategoryValidation()) {
+				if (create) {
+					createTariffMethod();
+				} else if (edit) {
+					editTariffMethod();
+				}
+			}
+		}
+	}
+
+	// Function to validate Tariff
+	function TariffValidation() {
 		if (
-			selectedTariff.tariff_id &&
-			selectedTariff.importing_country &&
-			selectedTariff.exporting_country &&
-			selectedTariff.hs_code &&
-			selectedTariff.tariff_rate &&
-			selectedTariff.tariff_type &&
-			selectedTariff.rate_unit &&
-			selectedTariff.effective_date &&
-			selectedTariff.expiry_date &&
-			selectedTariff.preferential_tariff
+			selectedTariff.tariffRate != null &&
+			selectedTariff.tariffRate >= 0 &&
+			selectedTariff.tariffRate <= 999.9999
 		) {
-			if (create) {
-				createTariff();
-			} else if (edit) {
-				editTariff();
+			if (selectedTariff.tariffType != '' && selectedTariff.tariffType.length <= 50) {
+				if (selectedTariff.rateUnit.length <= 20) {
+					if (selectedTariff.effectiveDate != null) {
+						if (selectedTariff.importingCountryCode != null) {
+							if (selectedTariff.exportingCountryCode != null) {
+								if (selectedTariff.productCategory != null) {
+									return true;
+								} else {
+									error = 'Product Category cannot be null';
+								}
+							} else {
+								error = 'Exporting Country Code cannot be null';
+							}
+						} else {
+							error = 'Importing Country Code cannot be null';
+						}
+					} else {
+						error = 'Effective Date cannot be null';
+					}
+				} else {
+					error = 'Rate Unit can only be up to 20 characters';
+				}
+			} else {
+				error = 'Tarrif Type must not be blank and can only be up to 50 characters';
 			}
 		} else {
-			alert('Please fill in all fields.');
+			error = 'Tariff Type can only be from 0 to 999.9999';
 		}
+
+		return false;
+	}
+
+	// Function to validate Category
+	function CategoryValidation() {
+		if (
+			selectedTariff.productCategory.categoryCode != null &&
+			selectedTariff.productCategory.categoryCode >= 10 &&
+			selectedTariff.productCategory.categoryCode <= 999999
+		) {
+			if (
+				selectedTariff.productCategory.categoryName != '' &&
+				selectedTariff.productCategory.categoryName.length <= 100
+			) {
+				if (selectedTariff.productCategory.description.length <= 500) {
+					return true;
+				} else {
+					error = 'Category Description can only have up to 500 characters';
+				}
+			} else {
+				error = 'Category Name can only have up to 500 characters';
+			}
+		} else {
+			error = 'Category Code can only be from 10 to 999999';
+		}
+
+		return false;
 	}
 
 	// Function to create tariff
-	function createTariff() {
-		alert('Create');
+	async function createTariffMethod() {
+		let payload = {
+			tariffRate: selectedTariff.tariffRate,
+			tariffType: selectedTariff.tariffType,
+			rateUnit: selectedTariff.rateUnit,
+			effectiveDate: selectedTariff.effectiveDate,
+			expiryDate: selectedTariff.expiryDate,
+			preferentialTariff: selectedTariff.preferentialTariff,
+			importingCountryCode: selectedTariff.importingCountryCode,
+			exportingCountryCode: selectedTariff.exportingCountryCode,
+			productCategory: {
+				categoryCode: selectedTariff.productCategory.categoryCode,
+				categoryName: selectedTariff.productCategory.categoryName,
+				description: selectedTariff.productCategory.description,
+				isActive: selectedTariff.productCategory.isActive
+			}
+		};
+
+		try {
+			const result = await createTariff(payload);
+
+			success = 'Created Tariff id: ' + result.id;
+			close();
+			fetchTariffs();
+			error = '';
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
+			console.error('Creating tariff error:', err);
+		}
 	}
 
 	// Function to edit tariff
-	function editTariff() {
-		alert('edit');
+	async function editTariffMethod() {
+		let payload = {
+			id: selectedTariff.id,
+			tariffRate: selectedTariff.tariffRate,
+			tariffType: selectedTariff.tariffType,
+			rateUnit: selectedTariff.rateUnit,
+			effectiveDate: selectedTariff.effectiveDate,
+			expiryDate: selectedTariff.expiryDate,
+			preferentialTariff: selectedTariff.preferentialTariff,
+			importingCountryCode: selectedTariff.importingCountryCode,
+			exportingCountryCode: selectedTariff.exportingCountryCode,
+			productCategory: {
+				id: selectedTariff.productCategory.id,
+				categoryCode: selectedTariff.productCategory.categoryCode,
+				categoryName: selectedTariff.productCategory.categoryName,
+				description: selectedTariff.productCategory.description,
+				isActive: selectedTariff.productCategory.isActive
+			}
+		};
+
+		try {
+			const result = await editTariff(payload);
+
+			success = result.message;
+			close();
+			fetchTariffs();
+			error = '';
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
+			console.error('Editing tariff error:', err);
+		}
 	}
 
 	// Function to edit tariff
-	function deleteTariff() {
-		alert('delete');
+	async function deleteTariffMethod(id: number) {
+		try {
+			const result = await deleteSpecificTariff(id);
+
+			success = result.message;
+			fetchTariffs();
+			error = '';
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
+			console.error('Deleting tariff error:', err);
+		}
 	}
 
 	// Function used to close the popup and reset the tariff value
@@ -157,12 +243,12 @@
 		selectedTariff = blankTariff();
 	}
 
-	// Restrict SortKey to only contain the header values
-	type SortKey = keyof Tariff;
-	let sortKey: SortKey;
+	// Restrict TariffKey to only contain header values (TariffRecord)
+	type TariffKey = keyof TariffRecord;
+	let sortKey: TariffKey | null = null;
 	let sortAsc = true;
 
-	function sortBy(key: SortKey) {
+	function sortBy(key: TariffKey) {
 		if (sortKey === key) {
 			sortAsc = !sortAsc;
 		} else {
@@ -170,14 +256,16 @@
 			sortAsc = true;
 		}
 	}
+
 	// Need to give a new array
 	$: sortedTariffs =
 		// If not sorted then use default data, else sort
 		sortKey === null
-			? tariff
-			: tariff.sort((a, b) => {
-					let valA = a[sortKey];
-					let valB = b[sortKey];
+			? allTariff
+			: [...allTariff].sort((a, b) => {
+					const key = sortKey as TariffKey;
+					let valA = a[key];
+					let valB = b[key];
 
 					const numA = Number(valA);
 					const numB = Number(valB);
@@ -198,6 +286,43 @@
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
 
+	{#if error}
+		<div class="alert alert-error">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6 shrink-0 stroke-current"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
+			</svg>
+			<span>{error}</span>
+		</div>
+	{/if}
+
+	{#if success}
+		<div class="alert alert-success">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6 shrink-0 stroke-current"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+				/>
+			</svg>
+			<span>{success}</span>
+		</div>
+	{/if}
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1">
 		<!-- Tariffs Card -->
@@ -210,32 +335,56 @@
 				<table class="table-zebra static table">
 					<thead class="bg-base-300 text-base font-semibold">
 						<tr>
-							<th on:click={() => sortBy('tariff_id')} class="cursor-pointer">Tariff ID {sortKey === "tariff_id" ? (sortAsc ? "▲" : "▼") : ""}</th>
-							<th on:click={() => sortBy('importing_country')} class="cursor-pointer"
-								>Importing Country {sortKey === "importing_country" ? (sortAsc ? "▲" : "▼") : ""}</th
+							<th on:click={() => sortBy('id')} class="cursor-pointer"
+								>Tariff Id {sortKey === 'id' ? (sortAsc ? '▲' : '▼') : ''}</th
 							>
-							<th on:click={() => sortBy('exporting_country')} class="cursor-pointer"
-								>Exporting Country {sortKey === "exporting_country" ? (sortAsc ? "▲" : "▼") : ""}</th
+							<th on:click={() => sortBy('importingCountryCode')} class="cursor-pointer"
+								>Importing Country {sortKey === 'importingCountryCode'
+									? sortAsc
+										? '▲'
+										: '▼'
+									: ''}</th
 							>
-							<th on:click={() => sortBy('hs_code')} class="cursor-pointer">HS Code {sortKey === "hs_code" ? (sortAsc ? "▲" : "▼") : ""}</th>
-							<th on:click={() => sortBy('tariff_rate')} class="cursor-pointer">Rate {sortKey === "tariff_rate" ? (sortAsc ? "▲" : "▼") : ""}</th>
-							<th on:click={() => sortBy('effective_date')} class="cursor-pointer"
-								>Effective Date {sortKey === "effective_date" ? (sortAsc ? "▲" : "▼") : ""}</th
+							<th on:click={() => sortBy('exportingCountryCode')} class="cursor-pointer"
+								>Exporting Country {sortKey === 'exportingCountryCode'
+									? sortAsc
+										? '▲'
+										: '▼'
+									: ''}</th
 							>
-							<th on:click={() => sortBy('expiry_date')} class="cursor-pointer">Expiry Date {sortKey === "expiry_date" ? (sortAsc ? "▲" : "▼") : ""}</th>
+							<th on:click={() => sortBy('preferentialTariff')} class="cursor-pointer"
+								>Preferential Tariff {sortKey === 'preferentialTariff'
+									? sortAsc
+										? '▲'
+										: '▼'
+									: ''}</th
+							>
+							<th on:click={() => sortBy('tariffType')} class="cursor-pointer"
+								>Tariff Type {sortKey === 'tariffType' ? (sortAsc ? '▲' : '▼') : ''}</th
+							>
+							<th on:click={() => sortBy('tariffRate')} class="cursor-pointer"
+								>Tariff Rate {sortKey === 'tariffRate' ? (sortAsc ? '▲' : '▼') : ''}</th
+							>
+							<th on:click={() => sortBy('effectiveDate')} class="cursor-pointer"
+								>Effective Date {sortKey === 'effectiveDate' ? (sortAsc ? '▲' : '▼') : ''}</th
+							>
+							<th on:click={() => sortBy('expiryDate')} class="cursor-pointer"
+								>Expiry Date {sortKey === 'expiryDate' ? (sortAsc ? '▲' : '▼') : ''}</th
+							>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						{#each sortedTariffs as line}
 							<tr>
-								<td>{line.tariff_id}</td>
-								<td>{line.importing_country}</td>
-								<td>{line.exporting_country}</td>
-								<td>{line.hs_code}</td>
-								<td>{line.tariff_rate}{line.rate_unit}</td>
-								<td>{line.effective_date}</td>
-								<td>{line.expiry_date}</td>
+								<td>{line.id}</td>
+								<td>{line.importingCountryCode}</td>
+								<td>{line.exportingCountryCode}</td>
+								<td>{line.preferentialTariff}</td>
+								<td>{line.tariffType}</td>
+								<td>{line.tariffRate} {line.rateUnit}</td>
+								<td>{line.effectiveDate}</td>
+								<td>{line.expiryDate}</td>
 								<td class="p-0">
 									<div class="dropdown dropdown-end static">
 										<button class=" btn btn-ghost btn-circle text-xl">⋮</button>
@@ -248,6 +397,8 @@
 													on:click={() => {
 														selectedTariff = line;
 														view = true;
+														success = '';
+														error = '';
 													}}>View</button
 												>
 											</li>
@@ -257,12 +408,15 @@
 													on:click={() => {
 														selectedTariff = line;
 														edit = true;
+														success = '';
+														error = '';
 													}}>Edit</button
 												>
 											</li>
 											<li>
-												<button class="text-error text-sm font-semibold" on:click={deleteTariff}
-													>Delete</button
+												<button
+													class="text-error text-sm font-semibold"
+													on:click={deleteTariffMethod(line.id)}>Delete</button
 												>
 											</li>
 										</ul>
@@ -281,11 +435,17 @@
 {#if view || edit || create}
 	<div class="modal modal-open">
 		<!-- Background which will close the modal -->
-		<button class="modal-backdrop cursor-pointer" on:click={close}>close</button>
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={() => {
+				close();
+				success = '';
+				error = '';
+			}}>close</button
+		>
 
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-4 text-lg font-bold">{create ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
-
 			{#if edit || create}
 				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}>
 					<div>
@@ -295,8 +455,9 @@
 						<input
 							type="text"
 							id="tariff_id"
-							bind:value={selectedTariff.tariff_id}
+							bind:value={selectedTariff.id}
 							class="input input-bordered w-full"
+							disabled
 						/>
 					</div>
 
@@ -307,7 +468,7 @@
 						<input
 							type="text"
 							id="importing_country"
-							bind:value={selectedTariff.importing_country}
+							bind:value={selectedTariff.importingCountryCode}
 							class="input input-bordered w-full"
 						/>
 					</div>
@@ -319,21 +480,74 @@
 						<input
 							type="text"
 							id="exporting_country"
-							bind:value={selectedTariff.exporting_country}
+							bind:value={selectedTariff.exportingCountryCode}
 							class="input input-bordered w-full"
 						/>
 					</div>
 
 					<div>
-						<label class="label" for="hs_code">
-							<span class="label-text font-semibold">HS Code</span>
+						<label class="label" for="product_category_id">
+							<span class="label-text font-semibold">Product Category ID</span>
 						</label>
 						<input
 							type="text"
-							id="hs_code"
-							bind:value={selectedTariff.hs_code}
+							id="product_category_id"
+							bind:value={selectedTariff.productCategory.id}
+							class="input input-bordered w-full"
+							disabled
+						/>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_code">
+							<span class="label-text font-semibold">Product Category Code</span>
+						</label>
+						<input
+							type="text"
+							id="product_category_code"
+							bind:value={selectedTariff.productCategory.categoryCode}
+							class="input input-bordered w-full"
+							disabled={edit}
+						/>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_name">
+							<span class="label-text font-semibold">Product Category Name</span>
+						</label>
+						<input
+							type="text"
+							id="product_category_name"
+							bind:value={selectedTariff.productCategory.categoryName}
 							class="input input-bordered w-full"
 						/>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_description">
+							<span class="label-text font-semibold">Product Category Description</span>
+						</label>
+						<textarea
+							id="product_category_description"
+							bind:value={selectedTariff.productCategory.description}
+							class="textarea textarea-bordered w-full"
+						></textarea>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="label" for="product_category_active">
+								<span class="label-text font-semibold">Product Category Active</span>
+							</label>
+							<select
+								id="product_category_active"
+								bind:value={selectedTariff.productCategory.isActive}
+								class="select select-bordered w-full"
+							>
+								<option value={true}>Yes</option>
+								<option value={false}>No</option>
+							</select>
+						</div>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
@@ -344,7 +558,7 @@
 							<input
 								type="number"
 								id="tariff_rate"
-								bind:value={selectedTariff.tariff_rate}
+								bind:value={selectedTariff.tariffRate}
 								class="input input-bordered w-full"
 							/>
 						</div>
@@ -354,11 +568,11 @@
 							</label>
 							<select
 								id="rate_unit"
-								bind:value={selectedTariff.rate_unit}
+								bind:value={selectedTariff.rateUnit}
 								class="select select-bordered w-full"
 							>
-								<option>%</option>
-								<option>$</option>
+								<option></option>
+								<option>ad valorem</option>
 							</select>
 						</div>
 					</div>
@@ -370,7 +584,7 @@
 						<input
 							type="text"
 							id="tariff_type"
-							bind:value={selectedTariff.tariff_type}
+							bind:value={selectedTariff.tariffType}
 							class="input input-bordered w-full"
 						/>
 					</div>
@@ -383,7 +597,7 @@
 							<input
 								type="date"
 								id="effective_date"
-								bind:value={selectedTariff.effective_date}
+								bind:value={selectedTariff.effectiveDate}
 								class="input input-bordered w-full"
 							/>
 						</div>
@@ -394,7 +608,7 @@
 							<input
 								type="date"
 								id="expiry_date"
-								bind:value={selectedTariff.expiry_date}
+								bind:value={selectedTariff.expiryDate}
 								class="input input-bordered w-full"
 							/>
 						</div>
@@ -406,11 +620,11 @@
 						</label>
 						<select
 							id="preferential_tariff"
-							bind:value={selectedTariff.preferential_tariff}
+							bind:value={selectedTariff.preferentialTariff}
 							class="select select-bordered w-full"
 						>
-							<option>Yes</option>
-							<option>No</option>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
 						</select>
 					</div>
 
@@ -422,7 +636,7 @@
 							<input
 								type="text"
 								id="created_at"
-								bind:value={selectedTariff.created_at}
+								bind:value={selectedTariff.createdAt}
 								class="input input-bordered w-full"
 								disabled
 							/>
@@ -434,106 +648,31 @@
 							<input
 								type="text"
 								id="updated_at"
-								bind:value={selectedTariff.updated_at}
+								bind:value={selectedTariff.updatedAt}
 								class="input input-bordered w-full"
 								disabled
 							/>
 						</div>
 					</div>
 
-					<div class="modal-action">
-						<button type="button" class="btn" on:click={close}>Close</button>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</form>
-			{:else}
-				<div class="grid grid-cols-1 gap-4">
-					<div>
-						<label class="label" for="tariff_id">
-							<span class="label-text font-semibold">Tariff ID</span>
-						</label>
-						<p class="w-full">{selectedTariff.tariff_id}</p>
-					</div>
-
-					<div>
-						<label class="label" for="importing_country">
-							<span class="label-text font-semibold">Importing Country</span>
-						</label>
-						<p class="w-full">{selectedTariff.importing_country}</p>
-					</div>
-
-					<div>
-						<label class="label" for="exporting_country">
-							<span class="label-text font-semibold">Exporting Country</span>
-						</label>
-						<p class="w-full">{selectedTariff.exporting_country}</p>
-					</div>
-
-					<div>
-						<label class="label" for="hs_code">
-							<span class="label-text font-semibold">HS Code</span>
-						</label>
-						<p class="w-full">{selectedTariff.hs_code}</p>
-					</div>
-
-					<div class="grid grid-cols-2 gap-4">
-						<div>
-							<label class="label" for="tariff_rate">
-								<span class="label-text font-semibold">Tariff Rate</span>
-							</label>
-							<p class="w-full">{selectedTariff.tariff_rate}</p>
+					{#if error}
+						<div class="alert alert-error">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-6 w-6 shrink-0 stroke-current"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+							<span>{error}</span>
 						</div>
-						<div>
-							<label class="label" for="rate_unit">
-								<span class="label-text font-semibold">Rate Unit</span>
-							</label>
-							<p class="w-full">{selectedTariff.rate_unit}</p>
-						</div>
-					</div>
-
-					<div>
-						<label class="label" for="tariff_type">
-							<span class="label-text font-semibold">Tariff Type</span>
-						</label>
-						<p class="w-full">{selectedTariff.tariff_type}</p>
-					</div>
-
-					<div class="grid grid-cols-2 gap-4">
-						<div>
-							<label class="label" for="effective_date">
-								<span class="label-text font-semibold">Effective Date</span>
-							</label>
-							<p class="w-full">{selectedTariff.effective_date}</p>
-						</div>
-						<div>
-							<label class="label" for="expiry_date">
-								<span class="label-text font-semibold">Expiry Date</span>
-							</label>
-							<p class="w-full">{selectedTariff.expiry_date}</p>
-						</div>
-					</div>
-
-					<div>
-						<label class="label" for="preferential_tariff">
-							<span class="label-text font-semibold">Preferential Tariff</span>
-						</label>
-						<p class="w-full">{selectedTariff.preferential_tariff}</p>
-					</div>
-
-					<div class="grid grid-cols-2 gap-4">
-						<div>
-							<label class="label" for="created_at">
-								<span class="label-text font-semibold">Created At</span>
-							</label>
-							<p class="w-full">{selectedTariff.created_at}</p>
-						</div>
-						<div>
-							<label class="label" for="updated_at">
-								<span class="label-text font-semibold">Updated At</span>
-							</label>
-							<p class="w-full">{selectedTariff.updated_at}</p>
-						</div>
-					</div>
+					{/if}
 
 					<div class="modal-action">
 						<button
@@ -541,6 +680,140 @@
 							class="btn"
 							on:click={() => {
 								close();
+								success = '';
+								error = '';
+							}}>Close</button
+						>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+			{:else}
+				<!-- view -->
+				<div class="grid grid-cols-1 gap-4">
+					<div>
+						<label class="label" for="tariff_id">
+							<span class="label-text font-semibold">Tariff ID</span>
+						</label>
+						<p class="w-full">{selectedTariff.id}</p>
+					</div>
+
+					<div>
+						<label class="label" for="importing_country">
+							<span class="label-text font-semibold">Importing Country</span>
+						</label>
+						<p class="w-full">{selectedTariff.importingCountryCode}</p>
+					</div>
+
+					<div>
+						<label class="label" for="exporting_country">
+							<span class="label-text font-semibold">Exporting Country</span>
+						</label>
+						<p class="w-full">{selectedTariff.exportingCountryCode}</p>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_id">
+							<span class="label-text font-semibold">Product Category ID</span>
+						</label>
+						<p class="w-full">{selectedTariff.productCategory.id}</p>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_code">
+							<span class="label-text font-semibold">Product Category Code</span>
+						</label>
+						<p class="w-full">{selectedTariff.productCategory.categoryCode}</p>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_name">
+							<span class="label-text font-semibold">Product Category Name</span>
+						</label>
+						<p class="w-full">{selectedTariff.productCategory.categoryName}</p>
+					</div>
+
+					<div>
+						<label class="label" for="product_category_description">
+							<span class="label-text font-semibold">Product Category Description</span>
+						</label>
+						<p class="w-full">{selectedTariff.productCategory.description}</p>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="label" for="product_category_active">
+								<span class="label-text font-semibold">Product Category Active</span>
+							</label>
+							<p class="w-full">{selectedTariff.productCategory.isActive ? 'Yes' : 'No'}</p>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="label" for="tariff_rate">
+								<span class="label-text font-semibold">Tariff Rate</span>
+							</label>
+							<p class="w-full">{selectedTariff.tariffRate}</p>
+						</div>
+						<div>
+							<label class="label" for="rate_unit">
+								<span class="label-text font-semibold">Rate Unit</span>
+							</label>
+							<p class="w-full">{selectedTariff.rateUnit}</p>
+						</div>
+					</div>
+
+					<div>
+						<label class="label" for="tariff_type">
+							<span class="label-text font-semibold">Tariff Type</span>
+						</label>
+						<p class="w-full">{selectedTariff.tariffType}</p>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="label" for="effective_date">
+								<span class="label-text font-semibold">Effective Date</span>
+							</label>
+							<p class="w-full">{selectedTariff.effectiveDate}</p>
+						</div>
+						<div>
+							<label class="label" for="expiry_date">
+								<span class="label-text font-semibold">Expiry Date</span>
+							</label>
+							<p class="w-full">{selectedTariff.expiryDate}</p>
+						</div>
+					</div>
+
+					<div>
+						<label class="label" for="preferential_tariff">
+							<span class="label-text font-semibold">Preferential Tariff</span>
+						</label>
+						<p class="w-full">{selectedTariff.preferentialTariff}</p>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="label" for="created_at">
+								<span class="label-text font-semibold">Created At</span>
+							</label>
+							<p class="w-full">{selectedTariff.createdAt}</p>
+						</div>
+						<div>
+							<label class="label" for="updated_at">
+								<span class="label-text font-semibold">Updated At</span>
+							</label>
+							<p class="w-full">{selectedTariff.updatedAt}</p>
+						</div>
+					</div>
+					<div class="modal-action">
+						<button
+							type="button"
+							class="btn"
+							on:click={() => {
+								close();
+								success = '';
+								error = '';
 							}}>Close</button
 						>
 					</div>

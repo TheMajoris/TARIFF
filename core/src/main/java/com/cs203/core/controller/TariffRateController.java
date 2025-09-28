@@ -54,7 +54,7 @@ public class TariffRateController {
     @Operation(summary = "Create a new tariff rate with the response body")
     @ApiResponse(responseCode = "201", description = "Tariff rate created")
     @ApiResponse(responseCode = "400", description = "Create request is invalid")
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<TariffRateDto> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
         return new ResponseEntity<>(tariffRateService.createTariffRate(createTariffRateDto), HttpStatus.CREATED);
     }
