@@ -23,8 +23,8 @@ public class NationalTariffLinesDto {
     // Parent HS code reference
     private ProductCategoriesDto parentHsCode;
 
-    private UserEntity createdBy;
-    private UserEntity updatedBy;
+    private Long createdBy;
+    private Long updatedBy;
     
     @Min(value = 1, message = "Level must be at least 1")
     @Max(value = 10, message = "Level cannot exceed 10")

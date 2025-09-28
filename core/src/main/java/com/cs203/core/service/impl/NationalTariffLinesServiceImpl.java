@@ -98,8 +98,8 @@ public class NationalTariffLinesServiceImpl implements NationalTariffLinesServic
         dto.setTariffLineCode(entity.getTariffLineCode());
         dto.setDescription(entity.getDescription());
         dto.setLevel(entity.getLevel());
-        dto.setCreatedBy(entity.getCreatedBy());
-        dto.setUpdatedBy(entity.getUpdatedBy());
+        dto.setCreatedBy(entity.getCreatedBy().getId());
+        dto.setUpdatedBy(entity.getUpdatedBy().getId());
         if (entity.getParentHsCode() != null) {
             dto.setParentHsCode(convertToDto(entity.getParentHsCode()));
         }
