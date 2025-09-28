@@ -15,14 +15,14 @@
 			<form class="space-y-4" on:submit|preventDefault={calculateCost}>
 				<!-- Product with Search -->
 				<div class="form-control relative">
-					<label class="label text-sm font-medium">Product</label>
+					<label class="label text-sm font-medium hidden">Product</label>
 					<input
 						type="text"
 						placeholder="Search product..."
 						bind:value={productSearch}
 						class="input input-bordered w-full text-sm mb-2"
 						on:focus={() => (showProductDropdown = true)}
-						required
+						hidden
 					/>
 					{#if showProductDropdown && filteredProducts.length > 0}
 						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
@@ -44,25 +44,170 @@
 					{/if}
 				</div>
 
+				<!-- HS Code Input -->
+				<div class="form-control">
+					<label class="label text-sm font-medium">HS Code</label>
+					<input
+						type="text"
+						placeholder="Enter HS Code (e.g., 850110.10)"
+						bind:value={hsCode}
+						class="input input-bordered w-full text-sm"
+						required
+					/>
+					<label class="label">
+						<span class="label-text-alt text-xs text-gray-500">
+							Harmonized System Code for product classification
+						</span>
+					</label>
+				</div>
+
 				<!-- Exporting From -->
 				<div class="form-control">
-					<label class="label text-sm font-medium">Export From</label>
-					<select bind:value={exportFrom} class="select select-bordered w-full text-sm" required>
-						<option disabled value="">Select country</option>
-						{#each countries as country}
-							<option>{country}</option>
-						{/each}
-					</select>
+					<label class="label text-sm font-medium">Exporting From</label>
+					<div class="relative">
+						<div 
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
+							on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
+							on:blur={(e) => {
+								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+									setTimeout(() => (showExportFromDropdown = false), 200);
+								}
+							}}
+							tabindex="0"
+						>
+							<span class="truncate">
+								{#if exportFrom}
+									{(() => {
+										const selected = countries.find(c => c.id == exportFrom);
+										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+									})()}
+								{:else}
+									Select country
+								{/if}
+							</span>
+							<svg class="w-4 h-4 transition-transform {showExportFromDropdown ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</div>
+						
+						{#if showExportFromDropdown}
+							<div 
+								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+								on:click={(e) => e.stopPropagation()}
+								on:mousedown={(e) => e.stopPropagation()}
+							>
+								<div class="p-2 border-b border-base-300">
+									<input
+										type="text"
+										placeholder="Type to search..."
+										bind:value={exportFromSearch}
+										class="input input-sm w-full"
+										on:input={() => (showExportFromDropdown = true)}
+										on:keydown={(e) => e.stopPropagation()}
+										on:click={(e) => e.stopPropagation()}
+										on:mousedown={(e) => e.stopPropagation()}
+										autofocus
+									/>
+								</div>
+								<div class="max-h-60 overflow-y-auto">
+									{#each filteredExportFromCountries as country}
+										<div
+											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {exportFrom == country.id ? 'bg-primary text-primary-content' : ''}"
+											on:click={() => {
+												exportFrom = country.id;
+												exportFromSearch = '';
+												showExportFromDropdown = false;
+											}}
+										>
+											<span>({country.code}) {country.name}</span>
+											{#if exportFrom == country.id}
+												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												</svg>
+											{/if}
+										</div>
+									{/each}
+									{#if filteredExportFromCountries.length === 0}
+										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+					</div>
 				</div>
 				<!-- Importing To -->
 				<div class="form-control mt-4">
 					<label class="label text-sm font-medium">Importing To</label>
-					<select bind:value={importTo} class="select select-bordered w-full text-sm" required>
-						<option disabled value="">Select country</option>
-						{#each countries as country}
-							<option>{country}</option>
-						{/each}
-					</select>
+					<div class="relative">
+						<div 
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
+							on:click={() => (showImportToDropdown = !showImportToDropdown)}
+							on:blur={(e) => {
+								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+									setTimeout(() => (showImportToDropdown = false), 200);
+								}
+							}}
+							tabindex="0"
+						>
+							<span class="truncate">
+								{#if importTo}
+									{(() => {
+										const selected = countries.find(c => c.id == importTo);
+										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+									})()}
+								{:else}
+									Select country
+								{/if}
+							</span>
+							<svg class="w-4 h-4 transition-transform {showImportToDropdown ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</div>
+						
+						{#if showImportToDropdown}
+							<div 
+								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+								on:click={(e) => e.stopPropagation()}
+								on:mousedown={(e) => e.stopPropagation()}
+							>
+								<div class="p-2 border-b border-base-300">
+									<input
+										type="text"
+										placeholder="Type to search..."
+										bind:value={importToSearch}
+										class="input input-sm w-full"
+										on:input={() => (showImportToDropdown = true)}
+										on:keydown={(e) => e.stopPropagation()}
+										on:click={(e) => e.stopPropagation()}
+										on:mousedown={(e) => e.stopPropagation()}
+										autofocus
+									/>
+								</div>
+								<div class="max-h-60 overflow-y-auto">
+									{#each filteredImportToCountries as country}
+										<div
+											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {importTo == country.id ? 'bg-primary text-primary-content' : ''}"
+											on:click={() => {
+												importTo = country.id;
+												importToSearch = '';
+												showImportToDropdown = false;
+											}}
+										>
+											<span>({country.code}) {country.name}</span>
+											{#if importTo == country.id}
+												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												</svg>
+											{/if}
+										</div>
+									{/each}
+									{#if filteredImportToCountries.length === 0}
+										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+					</div>
 				</div>
 
 				<!-- Calculation Date -->
@@ -96,8 +241,19 @@
 					<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
 				</div>
 			</form>
+			
+			<!-- Error Alert -->
+			{#if showErrorAlert && calculationError}
+				<div class="alert alert-error mt-6">
+					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<span>{calculationError}</span>
+				</div>
+			{/if}
+			
 			<!-- Calculation Result -->
-			{#if calculationResult}
+			{#if calculationResult && !showErrorAlert}
 				<div class="card bg-base-100 shadow-md mt-6 p-6">
 					<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
 
@@ -107,17 +263,17 @@
 					</div>
 
 					<div class="flex justify-between text-sm mb-2">
-						<span>Tariff:</span>
-						<span class="text-green-600">+ ${calculationResult.tariff}</span>
+						<span>Tariff Rate:</span>
+						<span class="text-blue-600 font-medium">{(parseFloat(calculationResult.tariffRate)).toFixed(1)}%</span>
 					</div>
 
 					<div class="flex justify-between text-sm mb-4">
-						<span>Customs Duty:</span>
-						<span class="text-green-600">+ ${calculationResult.customsDuty}</span>
+						<span>Tariff Amount:</span>
+						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
 					<div class="flex justify-between border-t border-base-300 pt-3">
-						<span class="font-semibold">Total Import Cost:</span>
+						<span class="font-semibold">Total Cost:</span>
 						<span class="font-bold text-primary">${calculationResult.totalCost}</span>
 					</div>
 				</div>
@@ -164,11 +320,12 @@
 
 <!-- Product and Calculator Logic-->
 <script>
-	import { onMount } from "svelte";
 	import { fetchCountries } from "$lib/api/countries.js";
-  	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import { onMount } from "svelte";
 
 	let product = '';
+	let hsCode = '';
 	let exportFrom = '';
 	let importTo = '';
 	let calculationDate = new Date().toISOString().split("T")[0]; // Set the Calculation Date
@@ -177,6 +334,12 @@
 	// Search state for product
   	let productSearch = "";
   	let showProductDropdown = false;
+
+	// Search state for countries
+	let exportFromSearch = "";
+	let importToSearch = "";
+	let showExportFromDropdown = false;
+	let showImportToDropdown = false;
 
 	/* Jiajun - 14/9/2025
 	This is a placeholder as data have not been done yet. 
@@ -199,12 +362,25 @@
 
 	let countries = [];
 	onMount(async () => {
+		console.log('Fetching countries...');
 		countries = await fetchCountries();
+		console.log('Countries loaded:', countries);
   	});
 
 	$: filteredProducts = products.filter((p) =>
     	p.toLowerCase().includes(productSearch.toLowerCase())
   	);
+
+	// Filter countries for search
+	$: filteredExportFromCountries = countries.filter((country) =>
+		country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
+		country.code.toLowerCase().includes(exportFromSearch.toLowerCase())
+	);
+
+	$: filteredImportToCountries = countries.filter((country) =>
+		country.name.toLowerCase().includes(importToSearch.toLowerCase()) ||
+		country.code.toLowerCase().includes(importToSearch.toLowerCase())
+	);
 
 	// Format Currency
 	function formatCurrency() {
@@ -216,17 +392,58 @@
 
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
+	let calculationError = null;
+	let showErrorAlert = false;
+	
 	async function calculateCost() {
-		if (product && exportFrom && importTo && calculationDate && goodsValue) {
-			calculationResult = await calculateTariffCost({
-				product,
-				exportFrom,
-				importTo,
-				calculationDate,
-				goodsValue
-			});
+		// Clear previous results and errors
+		calculationResult = null;
+		calculationError = null;
+		showErrorAlert = false;
+		
+		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
+			// Validate HS Code format (basic validation)
+			if (!/^\d{6}\.\d{2,4}$/.test(hsCode)) {
+				calculationError = "Please enter a valid HS Code format (e.g., 850110.10 / 850110.100 / 850110.1000)";
+				showErrorAlert = true;
+				return;
+			}
+			
+			try {
+				const result = await calculateTariffCost({
+					hsCode,
+					exportFrom,
+					importTo,
+					calculationDate,
+					goodsValue
+				});
+				
+				console.log('Calculation result:', result);
+				
+				if (result === null) {
+					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+					showErrorAlert = true;
+				} else {
+					// Check if this is a "no data" case (tariff rate is -1)
+					const tariffRate = parseFloat(result.tariffRate);
+					
+					if (tariffRate === -1) {
+						// No tariff data found in database
+						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+						showErrorAlert = true;
+					} else {
+						// Valid tariff data (including 0% tariff)
+						calculationResult = result;
+					}
+				}
+			} catch (error) {
+				console.error('Calculation error:', error);
+				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
+				showErrorAlert = true;
+			}
 		} else {
-			alert("Please fill in all fields before calculating.");
+			calculationError = "Please fill in all fields before calculating.";
+			showErrorAlert = true;
 		}
 	}
 	// End: Tariff Calculation Section 
