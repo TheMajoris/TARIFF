@@ -61,77 +61,6 @@
 					</label>
 				</div>
 
-				<!-- Exporting From -->
-				<div class="form-control">
-					<label class="label text-sm font-medium">Exporting From</label>
-					<div class="relative">
-						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
-							on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
-							on:blur={(e) => {
-								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
-									setTimeout(() => (showExportFromDropdown = false), 200);
-								}
-							}}
-							tabindex="0"
-						>
-							<span class="truncate">
-								{#if exportFrom}
-									{(() => {
-										const selected = countries.find(c => c.id == exportFrom);
-										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
-									})()}
-								{:else}
-									Select country
-								{/if}
-							</span>
-						</div>
-						
-						{#if showExportFromDropdown}
-							<div 
-								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
-								on:click={(e) => e.stopPropagation()}
-								on:mousedown={(e) => e.stopPropagation()}
-							>
-								<div class="p-2 border-b border-base-300">
-									<input
-										type="text"
-										placeholder="Type to search..."
-										bind:value={exportFromSearch}
-										class="input input-sm w-full"
-										on:input={() => (showExportFromDropdown = true)}
-										on:keydown={(e) => e.stopPropagation()}
-										on:click={(e) => e.stopPropagation()}
-										on:mousedown={(e) => e.stopPropagation()}
-										autofocus
-									/>
-								</div>
-								<div class="max-h-60 overflow-y-auto">
-									{#each filteredExportFromCountries as country}
-										<div
-											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {exportFrom == country.id ? 'bg-primary text-primary-content' : ''}"
-											on:click={() => {
-												exportFrom = country.id;
-												exportFromSearch = '';
-												showExportFromDropdown = false;
-											}}
-										>
-											<span>({country.code}) {country.name}</span>
-											{#if exportFrom == country.id}
-												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-												</svg>
-											{/if}
-										</div>
-									{/each}
-									{#if filteredExportFromCountries.length === 0}
-										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
-									{/if}
-								</div>
-							</div>
-						{/if}
-					</div>
-				</div>
 				<!-- Importing To -->
 				<div class="form-control mt-4">
 					<label class="label text-sm font-medium">Importing To</label>
@@ -204,6 +133,78 @@
 					</div>
 				</div>
 
+				<!-- Exporting From -->
+				<div class="form-control">
+					<label class="label text-sm font-medium">Exporting From</label>
+					<div class="relative">
+						<div 
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
+							on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
+							on:blur={(e) => {
+								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
+									setTimeout(() => (showExportFromDropdown = false), 200);
+								}
+							}}
+							tabindex="0"
+						>
+							<span class="truncate">
+								{#if exportFrom}
+									{(() => {
+										const selected = countries.find(c => c.id == exportFrom);
+										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
+									})()}
+								{:else}
+									Select country
+								{/if}
+							</span>
+						</div>
+						
+						{#if showExportFromDropdown}
+							<div 
+								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+								on:click={(e) => e.stopPropagation()}
+								on:mousedown={(e) => e.stopPropagation()}
+							>
+								<div class="p-2 border-b border-base-300">
+									<input
+										type="text"
+										placeholder="Type to search..."
+										bind:value={exportFromSearch}
+										class="input input-sm w-full"
+										on:input={() => (showExportFromDropdown = true)}
+										on:keydown={(e) => e.stopPropagation()}
+										on:click={(e) => e.stopPropagation()}
+										on:mousedown={(e) => e.stopPropagation()}
+										autofocus
+									/>
+								</div>
+								<div class="max-h-60 overflow-y-auto">
+									{#each filteredExportFromCountries as country}
+										<div
+											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {exportFrom == country.id ? 'bg-primary text-primary-content' : ''}"
+											on:click={() => {
+												exportFrom = country.id;
+												exportFromSearch = '';
+												showExportFromDropdown = false;
+											}}
+										>
+											<span>({country.code}) {country.name}</span>
+											{#if exportFrom == country.id}
+												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												</svg>
+											{/if}
+										</div>
+									{/each}
+									{#if filteredExportFromCountries.length === 0}
+										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+				
 				<!-- Calculation Date -->
 				<div class="form-control">
 					<label class="label text-sm font-medium">Calculation Date</label>
