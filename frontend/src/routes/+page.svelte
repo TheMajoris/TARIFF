@@ -49,7 +49,7 @@
 					<label class="label text-sm font-medium">HS Code</label>
 					<input
 						type="text"
-						placeholder="Enter HS Code (e.g., 850110.10)"
+						placeholder="Enter HS Code (e.g., 850110)"
 						bind:value={hsCode}
 						class="input input-bordered w-full text-sm"
 						required
@@ -397,8 +397,8 @@
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
-			if (!/^\d{6}\.\d{2,4}$/.test(hsCode)) {
-				calculationError = "Please enter a valid HS Code format (e.g., 850110.10 / 850110.100 / 850110.1000)";
+			if (!/^\d{6}$/.test(hsCode)) {
+				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
 				showErrorAlert = true;
 				return;
 			}
