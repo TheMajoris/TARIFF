@@ -60,7 +60,7 @@ docker compose up -f
 
 3. **Setup the application:**
 ```bash
-bash gradlew buildRun
+bash gradlew :bootRun
 ```
 
 4. **[Optional] Run Tests:**
