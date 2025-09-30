@@ -246,8 +246,15 @@
 				<!-- User Footer in Sidebar -->
 				<div class="border-base-300 mt-auto border-t px-4 py-5">
 					<div class="flex items-center space-x-3">
-						<div class="avatar placeholder">
-							<div class="bg-neutral text-neutral-content w-10 rounded-full">AD</div>
+						<div class="avatar">
+							<svg
+								  xmlns="http://www.w3.org/2000/svg"
+								  viewBox="0 0 24 24"
+								  fill="black"
+								  class="w-full h-full text-white"
+							>
+								  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+							</svg>
 						</div>
 						<div>
 							<div class="font-medium">{fullName}</div>
