@@ -79,7 +79,7 @@ public class TariffRateController {
     @ApiResponse(responseCode = "400", description = "Calculate request is invalid")
     @PostMapping("/calculate")
     public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
-            @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
+            @Valid @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
         BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
