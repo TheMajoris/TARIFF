@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-unit-test:
-    environment: balls
+    environment: unit-test-envt
     runs-on: ubuntu-latest
     
     services:

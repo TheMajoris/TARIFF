@@ -43,7 +43,7 @@ TARIFF is an application designed to help international traders navigate current
 
 ### **Clone Repo**
 ```
-git clone https://github.com/TheMajoris/CS203
+git clone https://github.com/TheMajoris/CS203 
 ```
 ### **Backend Setup**
 1. **Navigate to the backend directory:**
