@@ -1,13 +1,13 @@
 name: Security Scan
 
 on:
-  workflow_dispatch:
   pull_request:
     paths:
       - core/**
   push:
     paths:
       - core/**
+  workflow_dispatch:
 
 env:
   VERSION: latest
