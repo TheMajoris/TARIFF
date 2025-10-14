@@ -137,7 +137,7 @@ class TariffRateControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/create creates new tariff rate")
+    @DisplayName("POST /api/v1/tariff-rate creates new tariff rate")
     void createTariffRate_returnsCreatedTariffRate() throws Exception {
         // Create a product category DTO
         CreateProductCategoriesDto productCategory = new CreateProductCategoriesDto();
@@ -174,7 +174,7 @@ class TariffRateControllerTest {
 
         Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class))).thenReturn(createdRate);
 
-        mockMvc.perform(post("/api/v1/tariff-rate/create")
+        mockMvc.perform(post("/api/v1/tariff-rate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isCreated())
@@ -321,12 +321,12 @@ class TariffRateControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/create returns 400 for invalid input")
+    @DisplayName("POST /api/v1/tariff-rate returns 400 for invalid input")
     void createTariffRate_returnsBadRequest_whenInputInvalid() throws Exception {
         CreateTariffRateDto invalidDto = new CreateTariffRateDto();
         // Missing required fields will trigger validation
 
-        mockMvc.perform(post("/api/v1/tariff-rate/create")
+        mockMvc.perform(post("/api/v1/tariff-rate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
@@ -350,7 +350,7 @@ class TariffRateControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/create returns 400 for invalid tariff rate")
+    @DisplayName("POST /api/v1/tariff-rate returns 400 for invalid tariff rate")
     void createTariffRate_returnsBadRequest_whenTariffRateInvalid() throws Exception {
         CreateProductCategoriesDto productCategory = new CreateProductCategoriesDto();
         productCategory.setCategoryCode(123);
@@ -367,7 +367,7 @@ class TariffRateControllerTest {
         invalidDto.setPreferentialTariff(false);
         invalidDto.setProductCategory(productCategory);
 
-        mockMvc.perform(post("/api/v1/tariff-rate/create")
+        mockMvc.perform(post("/api/v1/tariff-rate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
