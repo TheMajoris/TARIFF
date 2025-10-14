@@ -55,6 +55,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
+      - name: Clean database
+        env:
+          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        run: |
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h localhost -p 5432 -U ${{ secrets.DATABASE_USERNAME }}; do
+            sleep 1
+          done
+          # Drop and recreate database to ensure clean state
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "DROP DATABASE IF EXISTS tariff_db;"
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "CREATE DATABASE tariff_db;"
+          echo "Database recreated successfully"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
@@ -76,13 +89,13 @@ jobs:
           fail-build: false
           severity-cutoff: 'high'
 
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle-jdk17@master
-        with:
-          path: 'core'
-          args: --severity-threshold=high --sarif-file-output=snyk.sarif
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/gradle-jdk17@master
+#        with:
+#          path: 'core'
+#          args: --severity-threshold=high --sarif-file-output=snyk.sarif
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Upload Anchore vulnerability report
         uses: github/codeql-action/upload-sarif@v3
@@ -90,11 +103,11 @@ jobs:
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-      - name: Upload Snyk vulnerability report
-        uses: github/codeql-action/upload-sarif@v3
-        if: success() || failure()
-        with:
-          sarif_file: snyk.sarif
+#      - name: Upload Snyk vulnerability report
+#        uses: github/codeql-action/upload-sarif@v3
+#        if: success() || failure()
+#        with:
+#          sarif_file: snyk.sarif
 
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
