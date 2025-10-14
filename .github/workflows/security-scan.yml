@@ -85,9 +85,11 @@ jobs:
         uses: anchore/scan-action@v6
         id: scan
         with:
-          path: 'core'
+          path: '.'
           fail-build: false
-          severity-cutoff: 'high'
+          severity-cutoff: high
+          output-format: sarif
+          output-file: anchore.sarif
 
 #      - name: Run Snyk to check for vulnerabilities
 #        uses: snyk/actions/gradle-jdk17@master
@@ -101,7 +103,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
+          sarif_file: anchore.sarif
 
 #      - name: Upload Snyk vulnerability report
 #        uses: github/codeql-action/upload-sarif@v3
@@ -110,5 +112,5 @@ jobs:
 #          sarif_file: snyk.sarif
 
       - name: Inspect action SARIF report
-        run: cat ${{ steps.scan.outputs.sarif }}
+        run: cat anchore.sarif
 
