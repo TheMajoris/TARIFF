@@ -2,7 +2,7 @@
 	"name": "frontend",
 	"private": true,
     "engines": {
-        "node": "20.19.0"
+        "node": "22"
     },
 	"version": "0.0.1",
 	"type": "module",
