@@ -40,11 +40,11 @@ RUN chown -R spring:spring /app
 # Switch to the non-root user
 USER spring
 
-EXPOSE 8080
+EXPOSE 8081
 
 # Your healthcheck remains the same
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
+    CMD curl -f http://localhost:8081/actuator/health || exit 1
 
 # Your entrypoint remains the same
 ENTRYPOINT ["java", "-jar", "core.jar"]

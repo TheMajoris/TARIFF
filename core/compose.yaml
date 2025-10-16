@@ -23,6 +23,6 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${JPA_DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${JPA_SHOW_SQL}
     ports:
-      - "8080:8080"
+      - "8081:8081"
 volumes:
   db_data:

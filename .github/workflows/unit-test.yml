@@ -1,94 +1,94 @@
 name: Backend Unit Test
 on:
-  pull_request:
-    paths:
-      - core/**
-  push:
-    paths:
-      - core/**
-  workflow_dispatch:  # Allows manual triggering
+    pull_request:
+        paths:
+            - core/**
+    push:
+        paths:
+            - core/**
+    workflow_dispatch: # Allows manual triggering
 
 jobs:
-  run-unit-test:
-    environment: unit-test-envt
-    runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+    run-unit-test:
+        environment: unit-test-envt
+        runs-on: ubuntu-latest
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        services:
+            postgres:
+                image: postgres:17
+                env:
+                    POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+                    POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
+                    POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
 
-      - name: Make gradlew executable
-        working-directory: core
-        run: chmod +x ./gradlew
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
 
-      - name: Install PostgreSQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+            - name: Set up JDK
+              uses: actions/setup-java@v4
+              with:
+                  java-version: "17"
+                  distribution: "temurin"
 
-      - name: Clean database
-        env:
-          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        run: |
-          # Wait for PostgreSQL to be ready
-          until pg_isready -h localhost -p 5432 -U ${{ secrets.DATABASE_USERNAME }}; do
-            sleep 1
-          done
-          # Drop and recreate database to ensure clean state
-          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "DROP DATABASE IF EXISTS tariff_db;"
-          psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "CREATE DATABASE tariff_db;"
-          echo "Database recreated successfully"
+            - name: Make gradlew executable
+              working-directory: core
+              run: chmod +x ./gradlew
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+            - name: Install PostgreSQL client
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y postgresql-client
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+            - name: Clean database
+              env:
+                  PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+              run: |
+                  # Wait for PostgreSQL to be ready
+                  until pg_isready -h localhost -p 5432 -U ${{ secrets.DATABASE_USERNAME }}; do
+                    sleep 1
+                  done
+                  # Drop and recreate database to ensure clean state
+                  psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "DROP DATABASE IF EXISTS tariff_db;"
+                  psql -h localhost -U ${{ secrets.DATABASE_USERNAME }} -d postgres -c "CREATE DATABASE tariff_db;"
+                  echo "Database recreated successfully"
 
-      - name: Run tests
-        working-directory: core
-        env:
-          SPRING_APP_NAME: core
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'jdbc:postgresql://localhost:5432/tariff_db' }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME || 'admin' }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
-          JPA_DDL_AUTO: create-drop
-          JPA_SHOW_SQL: true
-          CORS_ORIGIN: http://localhost:5173
-          HTTPS_ENABLED: false
-          JWT_ISSUER: http://localhost:8080/api/v1/auth
-          JWT_KEY_ID: 6f976ce0-4aad-47d7-a141-b7d40e44ea16
-          JWT_PRIVATE_KEY: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9LM3SXZurHiZMlck+YkjBs1qiRRRacSFEywPiyFJo7QdUw3jTqhPycgJkk0Y368GgcHVJuva0/k0HNYajBQjPDL8caHINtK3Tkrnnr+JNCA6czxmVJksiekqXzkd0ehYd2rfGS7S/UsPI89x2viw2HuShadVqZ2ohZoztXsxEGMcMabc05EJ1VWbc9/x3ENlxxrn2qjI9JLDtxZX60QKbHWsd7OYLo5lJ8Td3utoH9bbdFr3wowj62ipUTXdrYDxqOFDJPsURXmLe5XwdIyEXF7QxWHzQmHKfWyGob8B/XL4WW/qBqnw2or2yL48kb3eqhOvXMKuNdlxWNXyVRmB/AgMBAAECggEAHB+gDakq7lqSGQqfm22jIWDXlY4tg3CUIJUJ49oiHkU2tMxGlzkOtBls76TRaJjc9Uwis65e5PN1Yh/7/xpNf/KGKuQAKLd2rCCBEMeeHhOXkIpdZEYIH30Mv9rD1rYbuZ59ebZhjZvxTVurp9+H1Rfsp26DcskjBwom41cXiPvgeWaU2JP2zxtdLfiNkejBmiR9MMFdvyMhlTsPBqUTCoP8Yt6R2eVETsbiozov9BLHGzjsRO+r5oFHJV4uWtDq6Jk9REKzZkH/rl96YcwmGbogJ1GPE/51f+sYRwVy7x8Cj7JSgxe6DySKUiB16V+Jbb2F9wZVHQf7Fiedm9fwCQKBgQDpCIiyDQyPGVvBTr7GOmv6OEqN3MyWG3HqKwpiinuioWCduRwg67xO+jU5/MrHsH1tniN7Snj0ncl3Vc7ZNfkbYi6ru3T1xRV3wFuqDBeO2+Ey81TtCQcBJT/H5yPSHr1iisd7QeURXnbPQ+e0KY+OER+ohaBbs2G3x7oBEMm/LQKBgQDP0bfQZASYSzu4s5FTLhrwiujj/smZ6Und2N1Mq70/00vLgXulPZCuf3iwM6Gb4snXAEG0lRZFtDB5pP4PdIJHU8JWUevEL0Q3feMcQr57dDKytPg6AKZzVSXvNK2z36o3tqX28sdArRB84LcamMb7gvvoJ8B/ROnWWDtTEVxJ2wKBgHa+jYFFGvg0MMgxCw9Rp8HqOztMnseClqp/YhxSequlVeko8UdpOBx6bPLueJoGufNImMXzbe0gFhAEHpIaaaRlhGin7fJqigTqdQsSfFKkgn2G9uiOKA6SX4zKoDsqxNBY7UtGiaYvH5WAAaqRXwBCg4JJDSyNHKccVBDE8DjFAoGAcBH6fGjTiYVYyXwcrKy6XmmqufkWoueJrBddEBG1VwwNXcuP8EZJFbEsVmkhh70/d7BtvoJ/pktLsO3nDFKaRvjGXmKDMCMFOJ+sr/rWWiEJjhHFoxHisWODt4HDArNlSfI3gfretOQfdhiA5djpxYyXaFS3nGp/Z9Xg+CTuje0CgYEAuZzQdPXowDocEMipy2iIKKuRm2jyDsBfHq1X470Z2jPHdFSGIGk/OcMENRz7R5ClEOhPJTgM0HrOj1jy7DG+6yWEfaf8dcvaglN5W1VJ+X3D+wXW/BrdsTdSSiG1yRYrkTQfbd2cwRbw6AEanwn1SASK990Nc6/NjbOjX4OL3Oo=
-          JWT_PUBLIC_KEY: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSzN0l2bqx4mTJXJPmJIwbNaokUUWnEhRMsD4shSaO0HVMN406oT8nICZJNGN+vBoHB1Sbr2tP5NBzWGowUIzwy/HGhyDbSt05K556/iTQgOnM8ZlSZLInpKl85HdHoWHdq3xku0v1LDyPPcdr4sNh7koWnVamdqIWaM7V7MRBjHDGm3NORCdVVm3Pf8dxDZcca59qoyPSSw7cWV+tECmx1rHezmC6OZSfE3d7raB/W23Ra98KMI+toqVE13a2A8ajhQyT7FEV5i3uV8HSMhFxe0MVh80Jhyn1shqG/Af1y+Flv6gap8NqK9si+PJG93qoTr1zCrjXZcVjV8lUZgfwIDAQAB
-          JWT_REFRESH_DURATION: 32400
-          JWT_EXPIRATION_TIME: 240
-        run: ./gradlew test
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v4
+
+            - name: Cache Gradle packages
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                  restore-keys: |
+                      ${{ runner.os }}-gradle-
+
+            - name: Run tests
+              working-directory: core
+              env:
+                  SPRING_APP_NAME: core
+                  DATABASE_URL: ${{ secrets.DATABASE_URL || 'jdbc:postgresql://localhost:5432/tariff_db' }}
+                  DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+                  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+                  POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
+                  JPA_DDL_AUTO: create-drop
+                  JPA_SHOW_SQL: true
+                  CORS_ORIGIN: http://localhost:5173
+                  HTTPS_ENABLED: false
+                  JWT_ISSUER: http://localhost:8081/api/v1/auth
+                  JWT_KEY_ID: 6f976ce0-4aad-47d7-a141-b7d40e44ea16
+                  JWT_PRIVATE_KEY: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9LM3SXZurHiZMlck+YkjBs1qiRRRacSFEywPiyFJo7QdUw3jTqhPycgJkk0Y368GgcHVJuva0/k0HNYajBQjPDL8caHINtK3Tkrnnr+JNCA6czxmVJksiekqXzkd0ehYd2rfGS7S/UsPI89x2viw2HuShadVqZ2ohZoztXsxEGMcMabc05EJ1VWbc9/x3ENlxxrn2qjI9JLDtxZX60QKbHWsd7OYLo5lJ8Td3utoH9bbdFr3wowj62ipUTXdrYDxqOFDJPsURXmLe5XwdIyEXF7QxWHzQmHKfWyGob8B/XL4WW/qBqnw2or2yL48kb3eqhOvXMKuNdlxWNXyVRmB/AgMBAAECggEAHB+gDakq7lqSGQqfm22jIWDXlY4tg3CUIJUJ49oiHkU2tMxGlzkOtBls76TRaJjc9Uwis65e5PN1Yh/7/xpNf/KGKuQAKLd2rCCBEMeeHhOXkIpdZEYIH30Mv9rD1rYbuZ59ebZhjZvxTVurp9+H1Rfsp26DcskjBwom41cXiPvgeWaU2JP2zxtdLfiNkejBmiR9MMFdvyMhlTsPBqUTCoP8Yt6R2eVETsbiozov9BLHGzjsRO+r5oFHJV4uWtDq6Jk9REKzZkH/rl96YcwmGbogJ1GPE/51f+sYRwVy7x8Cj7JSgxe6DySKUiB16V+Jbb2F9wZVHQf7Fiedm9fwCQKBgQDpCIiyDQyPGVvBTr7GOmv6OEqN3MyWG3HqKwpiinuioWCduRwg67xO+jU5/MrHsH1tniN7Snj0ncl3Vc7ZNfkbYi6ru3T1xRV3wFuqDBeO2+Ey81TtCQcBJT/H5yPSHr1iisd7QeURXnbPQ+e0KY+OER+ohaBbs2G3x7oBEMm/LQKBgQDP0bfQZASYSzu4s5FTLhrwiujj/smZ6Und2N1Mq70/00vLgXulPZCuf3iwM6Gb4snXAEG0lRZFtDB5pP4PdIJHU8JWUevEL0Q3feMcQr57dDKytPg6AKZzVSXvNK2z36o3tqX28sdArRB84LcamMb7gvvoJ8B/ROnWWDtTEVxJ2wKBgHa+jYFFGvg0MMgxCw9Rp8HqOztMnseClqp/YhxSequlVeko8UdpOBx6bPLueJoGufNImMXzbe0gFhAEHpIaaaRlhGin7fJqigTqdQsSfFKkgn2G9uiOKA6SX4zKoDsqxNBY7UtGiaYvH5WAAaqRXwBCg4JJDSyNHKccVBDE8DjFAoGAcBH6fGjTiYVYyXwcrKy6XmmqufkWoueJrBddEBG1VwwNXcuP8EZJFbEsVmkhh70/d7BtvoJ/pktLsO3nDFKaRvjGXmKDMCMFOJ+sr/rWWiEJjhHFoxHisWODt4HDArNlSfI3gfretOQfdhiA5djpxYyXaFS3nGp/Z9Xg+CTuje0CgYEAuZzQdPXowDocEMipy2iIKKuRm2jyDsBfHq1X470Z2jPHdFSGIGk/OcMENRz7R5ClEOhPJTgM0HrOj1jy7DG+6yWEfaf8dcvaglN5W1VJ+X3D+wXW/BrdsTdSSiG1yRYrkTQfbd2cwRbw6AEanwn1SASK990Nc6/NjbOjX4OL3Oo=
+                  JWT_PUBLIC_KEY: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSzN0l2bqx4mTJXJPmJIwbNaokUUWnEhRMsD4shSaO0HVMN406oT8nICZJNGN+vBoHB1Sbr2tP5NBzWGowUIzwy/HGhyDbSt05K556/iTQgOnM8ZlSZLInpKl85HdHoWHdq3xku0v1LDyPPcdr4sNh7koWnVamdqIWaM7V7MRBjHDGm3NORCdVVm3Pf8dxDZcca59qoyPSSw7cWV+tECmx1rHezmC6OZSfE3d7raB/W23Ra98KMI+toqVE13a2A8ajhQyT7FEV5i3uV8HSMhFxe0MVh80Jhyn1shqG/Af1y+Flv6gap8NqK9si+PJG93qoTr1zCrjXZcVjV8lUZgfwIDAQAB
+                  JWT_REFRESH_DURATION: 32400
+                  JWT_EXPIRATION_TIME: 240
+              run: ./gradlew test
