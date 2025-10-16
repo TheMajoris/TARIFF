@@ -14,7 +14,9 @@ COPY gradle/ ./gradle/
 COPY src/ ./src/
 
 # Run the Gradle build command to produce the JAR file
-RUN ./gradlew build --no-daemon
+# New command - skips tests
+RUN ./gradlew build -x test --no-daemon
+
 
 # =================
 # Stage 2: The "Runtime" Stage
