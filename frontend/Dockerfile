@@ -8,15 +8,18 @@ WORKDIR /app
 # Copy package files AND your Svelte config file
 COPY package.json package-lock.json svelte.config.js ./
 
-# ---- THIS IS THE KEY CHANGE ----
 # Install ALL dependencies, but do not run any pre/post install scripts yet
 RUN NODE_ENV=development npm ci --ignore-scripts
 
 # Copy the rest of the application code
 COPY . .
 
+# ---- THIS IS THE KEY CHANGE ----
+# Now that all packages are installed, manually run the svelte-kit sync command
+RUN npm run prepare
+
 # Build the application
-# This command will now succeed because all packages, including the adapter, are present
+# This will now succeed because the sync command has run and all packages are present
 RUN npm run build
 
 # ---- Production Stage ----
