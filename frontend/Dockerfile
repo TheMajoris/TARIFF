@@ -9,14 +9,14 @@ WORKDIR /app
 COPY package.json package-lock.json svelte.config.js ./
 
 # ---- THIS IS THE KEY CHANGE ----
-# Temporarily set NODE_ENV to 'development' to ensure devDependencies are installed
-# Then, install dependencies with `npm ci`
-RUN NODE_ENV=development npm ci
+# Install ALL dependencies, but do not run any pre/post install scripts yet
+RUN NODE_ENV=development npm ci --ignore-scripts
 
 # Copy the rest of the application code
 COPY . .
 
 # Build the application
+# This command will now succeed because all packages, including the adapter, are present
 RUN npm run build
 
 # ---- Production Stage ----
