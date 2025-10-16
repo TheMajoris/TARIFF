@@ -6,12 +6,12 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copy package files AND your Svelte config file
-# This ensures that if the config changes, dependencies are re-installed
 COPY package.json package-lock.json svelte.config.js ./
 
-# Install dependencies
-# This command will now re-run if svelte.config.js has changed
-RUN npm ci
+# ---- THIS IS THE KEY CHANGE ----
+# Temporarily set NODE_ENV to 'development' to ensure devDependencies are installed
+# Then, install dependencies with `npm ci`
+RUN NODE_ENV=development npm ci
 
 # Copy the rest of the application code
 COPY . .
