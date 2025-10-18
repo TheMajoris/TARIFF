@@ -21,6 +21,7 @@ public class CustomBearerTokenResolver implements BearerTokenResolver {
     public String resolve(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
+        logger.info("Resolving token for {} {} ", method, path);
 
         if (!requiresAuthentication(path, method)) {
             return null;
@@ -31,6 +32,8 @@ public class CustomBearerTokenResolver implements BearerTokenResolver {
         if (token == null && request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("accessToken".equals(cookie.getName())) {
+                    logger.info("Resolved token {}", cookie.getValue());
+
                     return cookie.getValue();
                 }
             }
