@@ -76,13 +76,13 @@
 
 	let view = false;
 	let edit = false;
-	export let create = false;
+	export let createTariffBoolean = false;
 
 	// Function to validate & submit tariff
 	function submitTariff() {
 		if (TariffValidation()) {
 			if (CategoryValidation()) {
-				if (create) {
+				if (createTariffBoolean) {
 					createTariffMethod();
 				} else if (edit) {
 					editTariffMethod();
@@ -238,7 +238,7 @@
 	// Function used to close the popup and reset the tariff value
 	function close() {
 		edit = false;
-		create = false;
+		createTariffBoolean = false;
 		view = false;
 		selectedTariff = blankTariff();
 		fetchTariffs();
@@ -437,7 +437,7 @@
 </div>
 
 <!-- Modal -->
-{#if view || edit || create}
+{#if view || edit || createTariffBoolean}
 	<div class="modal modal-open">
 		<!-- Background which will close the modal -->
 		<button
@@ -450,8 +450,8 @@
 		>
 
 		<div class="modal-box max-w-2xl">
-			<h3 class="mb-4 text-lg font-bold">{create ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
-			{#if edit || create}
+			<h3 class="mb-4 text-lg font-bold">{createTariffBoolean ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
+			{#if edit || createTariffBoolean}
 				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}>
 					<div>
 						<label class="label" for="tariff_id">

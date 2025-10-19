@@ -5,9 +5,15 @@
 	import { fetchCountries } from '$lib/api/countries.js';
 
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import CategoryComponent from '$lib/components/admin/Category.svelte';
+
+	let mode = 'tariff';
 
 	let success = '';
 	let error = '';
+
+	let createTariffBoolean = false;
+	let createCategoryBoolean = false;
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -82,6 +88,14 @@
 
 		return false;
 	}
+
+	function createButton() {
+		if (mode == 'tariff') {
+			createTariffBoolean = true;
+		} else {
+			createCategoryBoolean = true;
+		}
+	}
 </script>
 
 <div class="space-y-6 p-6">
@@ -131,10 +145,37 @@
 		<!-- Tariffs Card -->
 		<div class="card bg-base-100 p-6 shadow-md">
 			<div class="flex items-center justify-between py-6">
-				<h2 class="mb-1 text-lg font-semibold">Tariffs</h2>
-				<button class="btn btn-primary" on:click={() => (create = true)}>Create</button>
+				<div class="flex">
+					<h2
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
+							? 'border-b-2'
+							: ''}"
+						on:click={() => {
+							mode = 'tariff';
+						}}
+					>
+						Tariffs
+					</h2>
+					<h2
+						class="mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
+							? 'border-b-2'
+							: ''}"
+						on:click={() => {
+							mode = 'category';
+						}}
+					>
+						Product Categories
+					</h2>
+				</div>
+				<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
 			</div>
-			<TariffComponent bind:create />
+			{#if mode == 'tariff'}
+				<TariffComponent bind:createTariffBoolean />
+			{/if}
+
+			{#if mode == 'category'}
+				<CategoryComponent bind:createCategoryBoolean />
+			{/if}
 		</div>
 	</div>
 </div>
