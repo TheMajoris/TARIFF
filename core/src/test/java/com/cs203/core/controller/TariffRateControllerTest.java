@@ -21,12 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.cs203.core.dto.CreateProductCategoriesDto;
 import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.ProductCategoriesDto;
 import com.cs203.core.dto.TariffRateDto;
-import com.cs203.core.dto.requests.TariffCalculatorRequestDto;
 import com.cs203.core.exception.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -139,12 +137,6 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("POST /api/v1/tariff-rate creates new tariff rate")
     void createTariffRate_returnsCreatedTariffRate() throws Exception {
-        // Create a product category DTO
-        CreateProductCategoriesDto productCategory = new CreateProductCategoriesDto();
-        productCategory.setCategoryCode(123);
-        productCategory.setCategoryName("Test Category");
-        productCategory.setDescription("Test Description");
-
         CreateTariffRateDto createDto = new CreateTariffRateDto();
         createDto.setTariffRate(new BigDecimal("0.1"));
         createDto.setTariffType("ad-valorem");
@@ -153,11 +145,11 @@ class TariffRateControllerTest {
         createDto.setImportingCountryCode("US");
         createDto.setExportingCountryCode("CN");
         createDto.setPreferentialTariff(false);
-        createDto.setProductCategory(productCategory);
+        createDto.setHsCode(123123);
 
-        // Create product category DTO for response
+        // Create response DTO
         ProductCategoriesDto productCategoryResponse = new ProductCategoriesDto();
-        productCategoryResponse.setCategoryCode(123);
+        productCategoryResponse.setCategoryCode(123123);
         productCategoryResponse.setCategoryName("Test Category");
         productCategoryResponse.setDescription("Test Description");
 
@@ -172,26 +164,24 @@ class TariffRateControllerTest {
         createdRate.setPreferentialTariff(createDto.getPreferentialTariff());
         createdRate.setProductCategory(productCategoryResponse);
 
-        Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class))).thenReturn(createdRate);
+        // Mock the service response
+        GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.CREATED, "Tariff rate created", createdRate);
+        Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/tariff-rate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.tariffRate").value("0.1"))
-                .andExpect(jsonPath("$.tariffType").value("ad-valorem"));
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.tariffRate").value("0.1"))
+                .andExpect(jsonPath("$.data.tariffType").value("ad-valorem"))
+                .andExpect(jsonPath("$.data.preferentialTariff").value(false))
+                .andExpect(jsonPath("$.data.productCategory.categoryCode").value(123123));
     }
 
     @Test
     @DisplayName("PUT /api/v1/tariff-rate/{id} updates existing tariff rate")
     void updateTariffRate_returnsUpdatedTariffRate() throws Exception {
-        // Create product category DTO for request
-        ProductCategoriesDto productCategory = new ProductCategoriesDto();
-        productCategory.setCategoryCode(123);
-        productCategory.setCategoryName("Test Category");
-        productCategory.setDescription("Test Description");
-
         TariffRateDto updateDto = new TariffRateDto();
         updateDto.setId(1L);
         updateDto.setTariffRate(new BigDecimal("0.15"));
@@ -200,6 +190,12 @@ class TariffRateControllerTest {
         updateDto.setEffectiveDate(LocalDate.now());
         updateDto.setImportingCountryCode("US");
         updateDto.setExportingCountryCode("CN");
+
+        // Create response DTO with associated product category
+        ProductCategoriesDto productCategory = new ProductCategoriesDto();
+        productCategory.setCategoryCode(123123);
+        productCategory.setCategoryName("Test Category");
+        productCategory.setDescription("Test Description");
         updateDto.setProductCategory(productCategory);
 
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.OK, "Tariff rate updated",
@@ -218,12 +214,6 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("PUT /api/v1/tariff-rate/{id} returns 404 when tariff rate not found")
     void updateTariffRate_returnsNotFound_whenTariffRateDoesNotExist() throws Exception {
-        // Create product category DTO for request
-        ProductCategoriesDto productCategory = new ProductCategoriesDto();
-        productCategory.setCategoryCode(123);
-        productCategory.setCategoryName("Test Category");
-        productCategory.setDescription("Test Description");
-
         TariffRateDto updateDto = new TariffRateDto();
         updateDto.setId(999L);
         updateDto.setTariffRate(new BigDecimal("0.15"));
@@ -232,6 +222,12 @@ class TariffRateControllerTest {
         updateDto.setEffectiveDate(LocalDate.now());
         updateDto.setImportingCountryCode("US");
         updateDto.setExportingCountryCode("CN");
+
+        // Add product category info
+        ProductCategoriesDto productCategory = new ProductCategoriesDto();
+        productCategory.setCategoryCode(123123);
+        productCategory.setCategoryName("Test Category");
+        productCategory.setDescription("Test Description");
         updateDto.setProductCategory(productCategory);
 
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.NOT_FOUND, "Tariff rate not found",
@@ -352,11 +348,6 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("POST /api/v1/tariff-rate returns 400 for invalid tariff rate")
     void createTariffRate_returnsBadRequest_whenTariffRateInvalid() throws Exception {
-        CreateProductCategoriesDto productCategory = new CreateProductCategoriesDto();
-        productCategory.setCategoryCode(123);
-        productCategory.setCategoryName("Test Category");
-        productCategory.setDescription("Test Description");
-
         CreateTariffRateDto invalidDto = new CreateTariffRateDto();
         invalidDto.setTariffRate(new BigDecimal("1000.0")); // Above maximum allowed value
         invalidDto.setTariffType("ad-valorem");
@@ -365,7 +356,7 @@ class TariffRateControllerTest {
         invalidDto.setImportingCountryCode("US");
         invalidDto.setExportingCountryCode("CN");
         invalidDto.setPreferentialTariff(false);
-        invalidDto.setProductCategory(productCategory);
+        invalidDto.setHsCode(123);
 
         mockMvc.perform(post("/api/v1/tariff-rate")
                 .contentType(MediaType.APPLICATION_JSON)
