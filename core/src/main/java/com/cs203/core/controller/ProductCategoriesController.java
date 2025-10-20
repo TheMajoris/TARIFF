@@ -46,7 +46,7 @@ public class ProductCategoriesController {
     @ApiResponse(responseCode = "200", description = "Product categories successfuly retrieved.")
     @GetMapping
     public ResponseEntity<Page<ProductCategoriesDto>> getProductCategories(
-            @RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "40") Integer size) {
+            @RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "40") Integer size) {
         Pageable pageable = PageRequest.of(pageNo, size);
         return ResponseEntity.ok(productCategoriesService.getProductCategories(pageable));
     }
