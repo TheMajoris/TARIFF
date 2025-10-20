@@ -9,6 +9,10 @@ on:
       - core/**
   workflow_dispatch:
 
+permissions:
+  contents: read
+  security-events: write
+
 env:
   VERSION: latest
 
