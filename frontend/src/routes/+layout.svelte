@@ -108,7 +108,7 @@
 	}
 </script>
 
-<div class="drawer lg:drawer-open" data-theme="light">
+<div class="drawer lg:drawer-open">
 	<input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
 
 	<!-- Main content -->
@@ -160,7 +160,6 @@
 						<li><a href="/" class="link link-hover">Dashboard</a></li>
 						<li><a href="/tariff" class="link link-hover">Tariff Calculator</a></li>
 						<li><a href="/settings" class="link link-hover">Settings</a></li>
-						<li><a href="/support" class="link link-hover">Support</a></li>
 					</ul>
 				</div>
 
@@ -238,9 +237,8 @@
 					{#if role == 'ROLE_ADMIN'}
 						<li><a href="/admin" class:active={page.url.pathname === '/admin'}>Admin</a></li>
 					{/if}
-					<li class="menu-title"><span>Support</span></li>
+					<li class="menu-title"><span>Settings</span></li>
 					<li><a href="/settings" class:active={page.url.pathname === '/settings'}>Settings</a></li>
-					<li><a href="/support" class:active={page.url.pathname === '/support'}>Support</a></li>
 				</ul>
 
 				<!-- User Footer in Sidebar -->
