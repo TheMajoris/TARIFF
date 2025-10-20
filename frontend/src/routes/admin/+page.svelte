@@ -6,6 +6,9 @@
 
 	let success = '';
 	let error = '';
+	let isBusy = false; // page-level busy indicator for create/edit flows
+	let isCreating = false;
+	let isEditing = false;
 
 	type ProductCategory = {
 		categoryCode: number;
@@ -158,6 +161,7 @@
 
 	// Function to create tariff
 	async function createTariffMethod() {
+		isBusy = true;
 		let payload = {
 			tariffRate: selectedTariff.tariffRate,
 			tariffType: selectedTariff.tariffType,
@@ -185,11 +189,14 @@
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
 			console.error('Creating tariff error:', err);
+		} finally {
+			isBusy = false;
 		}
 	}
 
 	// Function to edit tariff
 	async function editTariffMethod() {
+		isBusy = true;
 		let payload = {
 			id: selectedTariff.id,
 			tariffRate: selectedTariff.tariffRate,
@@ -219,6 +226,8 @@
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
 			console.error('Editing tariff error:', err);
+		} finally {
+			isBusy = false;
 		}
 	}
 
@@ -353,7 +362,12 @@
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1">
 		<!-- Tariffs Card -->
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isBusy}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<div class="flex items-center justify-between py-6">
 				<h2 class="mb-1 text-lg font-semibold">Tariffs</h2>
 				<button class="btn btn-primary" on:click={() => (create = true)}>Create</button>
