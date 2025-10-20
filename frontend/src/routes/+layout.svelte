@@ -1,10 +1,10 @@
 <script lang="ts">
-	import '../app.css';
-	import { page } from '$app/state';
 	import { browser } from '$app/environment';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { logoutUser, refreshToken } from '$lib/api/users';
-	import { goto, beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import '../app.css';
 
 	// so that won't have the syntax line error
 	let role: string | null = null;
@@ -40,9 +40,21 @@
 		updateLocalStorage();
 	});
 
+	function applySavedTheme() {
+		if (browser) {
+			const savedTheme = localStorage.getItem('theme') || 'corporate';
+			document.documentElement.setAttribute('data-theme', savedTheme);
+		}
+	}
+
 	// Update on page load/refresh
 	onMount(() => {
 		updateLocalStorage();
+		applySavedTheme();
+	});
+
+	afterNavigate(() => {
+		applySavedTheme();
 	});
 
 	async function logout() {
