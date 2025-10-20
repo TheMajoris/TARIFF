@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final CustomBearerTokenResolver customBearerTokenResolver;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, CustomBearerTokenResolver customBearerTokenResolver) {
         this.userDetailsService = userDetailsService;
         this.customBearerTokenResolver = customBearerTokenResolver;
     }
