@@ -21,9 +21,9 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db'}}
+          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
         ports:
           - 5432:5432
         options: >-
