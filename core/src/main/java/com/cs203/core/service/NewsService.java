@@ -8,6 +8,6 @@ public interface NewsService {
     // fetch all latest news
     NewsArticlesResponseDTO fetchLatestNews();
 
-    // fetch latest news by country
+    // fetch latest news by tags
     NewsArticlesResponseDTO fetchLatestNewsByTags(List<String> tags);
 }

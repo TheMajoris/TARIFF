@@ -1085,7 +1085,7 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, e
 -- =====================================================
 -- NEWS AI
 -- =====================================================
-ALTER SEQUENCE news_id_seq RESTART WITH 1;
+ALTER SEQUENCE news_news_id_seq RESTART WITH 1;
 INSERT INTO news (headline, summary, url) VALUES
   ('US to impose tariffs on pharma imports, kitchen cabinets, furniture, heavy trucks', 'In a trio of posts on Truth Social on Thursday evening, President Trump said the US would impose a slew of tariffs starting Oct. 1. Trump said imported kitchen cabinets, bathroom vanities, pharmaceutical imports, and heavy trucks will be taxed in the latest move to try to force more manufacturing onto US soil.', 'https://finance.yahoo.com/news/live/trump-tariffs-live-updates-us-to-impose-tariffs-on-pharma-imports-kitchen-cabinets-furniture-heavy-trucks-175804095.html'),
   ('Tariff inflation has been later and less than expected', 'Fed Chair Powell said Tuesday that businesses passing higher costs from tariffs on to consumers has been "later and less than we expected."', 'https://spectrumlocalnews.com/us/snplus/business/2025/09/23/federal-reserve-chair-jerome-powell-speech'),
