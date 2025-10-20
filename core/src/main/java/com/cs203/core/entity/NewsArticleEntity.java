@@ -30,6 +30,6 @@ public class NewsArticleEntity {
 
     @ElementCollection
     @CollectionTable(name = "news_tags", joinColumns = @JoinColumn(name = "news_id"))
-    @Column(name = "tag", nullable = true)
+    @Column(name = "tag", nullable = false)
     List<String> tags = new ArrayList<>();
 }
