@@ -58,10 +58,36 @@ public class TariffRateServiceImpl implements TariffRateService {
     }
 
     // Create a new tariff rate
-    public TariffRateDto createTariffRate(CreateTariffRateDto dto) {
-        TariffRateEntity entity = (convertToEntity(dto));
+    public GenericResponse<TariffRateDto> createTariffRate(CreateTariffRateDto dto) {
+        if (!countryRepository.existsByCountryCode(dto.getExportingCountryCode())) {
+            return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND, "Exporting Country code does not exist", null);
+        }
+        if (!countryRepository.existsByCountryCode(dto.getImportingCountryCode())) {
+            return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND, "Importing Country code does not exist", null);
+        }
+        if (!productCategoriesRepository.existsByCategoryCode(dto.getHsCode())) {
+            return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND, "HS code does not exist", null);
+        }
+
+        TariffRateEntity entity = new TariffRateEntity();
+        Optional<CountryEntity> importingCountry = countryRepository.findByCountryCode(dto.getImportingCountryCode());
+        Optional<CountryEntity> exportingCountry = countryRepository.findByCountryCode(dto.getExportingCountryCode());
+        Optional<ProductCategoriesEntity> productCategory = productCategoriesRepository.findByCategoryCode(dto.getHsCode());
+
+        entity.setTariffRate(dto.getTariffRate());
+        entity.setTariffType(dto.getTariffType());
+        entity.setRateUnit(dto.getRateUnit());
+        entity.setEffectiveDate(dto.getEffectiveDate());
+        entity.setExpiryDate(dto.getExpiryDate());
+        entity.setCreatedAt(LocalDateTime.now());
+        entity.setUpdatedAt(LocalDateTime.now());
+        entity.setPreferentialTariff(dto.getPreferentialTariff());
+        entity.setImportingCountry(importingCountry.get());
+        entity.setExportingCountry(exportingCountry.get());
+        entity.setProductCategory(productCategory.get());
+
         TariffRateEntity savedEntity = tariffRateRepository.save(entity);
-        return convertToDto(savedEntity);
+        return new GenericResponse<TariffRateDto>(HttpStatus.CREATED, "Successfully created Tariff Rate", convertToDto(savedEntity));
     }
 
     // Update tariff rate
@@ -197,63 +223,45 @@ public class TariffRateServiceImpl implements TariffRateService {
         return dto;
     }
 
-    private TariffRateEntity convertToEntity(CreateTariffRateDto dto) {
-        // Verify and get importing country
-        CountryEntity importingCountry = countryRepository.findByCountryCode(dto.getImportingCountryCode())
-                .orElseThrow(() -> new EntityNotFoundException("Importing Country not found"));
+    // private TariffRateEntity convertToEntity(CreateTariffRateDto dto) {
+    //     TariffRateEntity entity = new TariffRateEntity(dto.get)
 
-        // Verify and get exporting country
-        CountryEntity exportingCountry = countryRepository.findByCountryCode(dto.getExportingCountryCode())
-                .orElseThrow(() -> new EntityNotFoundException("Exporting Country not found"));
+    //     if (productCategory.getId() == null) {
+    //         productCategory = productCategoriesRepository.save(productCategory);
+    //     }
 
-        // Handle Product Category - create if it doesn't exist
-        // Eventually, we may want to separate this out so that users have to create
-        // product
-        // categories first
-        ProductCategoriesEntity productCategory = productCategoriesRepository
-                .findByCategoryCode(dto.getProductCategory().getCategoryCode())
-                .orElse(new ProductCategoriesEntity(
-                        dto.getProductCategory().getCategoryCode(),
-                        dto.getProductCategory().getCategoryName(),
-                        dto.getProductCategory().getDescription(),
-                        dto.getProductCategory().getIsActive()));
+    //     // // Handle National Tariff Line
+    //     // if (dto.getNationalTariffLine() != null) {
+    //     // // Check if national tariff line already exists for this country and tariff
+    //     // line code
+    //     // if (!nationalTariffLinesRepository.existsByCountryAndTariffLineCode(
+    //     // importingCountry,
+    //     // dto.getNationalTariffLine().getTariffLineCode())) {
 
-        if (productCategory.getId() == null) {
-            productCategory = productCategoriesRepository.save(productCategory);
-        }
+    //     // // Create new national tariff line if it doesn't exist
+    //     // NationalTariffLinesEntity nationalTariffLine = new NationalTariffLinesEntity(
+    //     // importingCountry,
+    //     // dto.getNationalTariffLine().getTariffLineCode(),
+    //     // dto.getNationalTariffLine().getDescription(),
+    //     // productCategory, // Use the product category as parent HS code
+    //     // dto.getNationalTariffLine().getLevel()
+    //     // );
+    //     // nationalTariffLinesRepository.save(nationalTariffLine);
+    //     // }
+    //     // }
 
-        // // Handle National Tariff Line
-        // if (dto.getNationalTariffLine() != null) {
-        // // Check if national tariff line already exists for this country and tariff
-        // line code
-        // if (!nationalTariffLinesRepository.existsByCountryAndTariffLineCode(
-        // importingCountry,
-        // dto.getNationalTariffLine().getTariffLineCode())) {
-
-        // // Create new national tariff line if it doesn't exist
-        // NationalTariffLinesEntity nationalTariffLine = new NationalTariffLinesEntity(
-        // importingCountry,
-        // dto.getNationalTariffLine().getTariffLineCode(),
-        // dto.getNationalTariffLine().getDescription(),
-        // productCategory, // Use the product category as parent HS code
-        // dto.getNationalTariffLine().getLevel()
-        // );
-        // nationalTariffLinesRepository.save(nationalTariffLine);
-        // }
-        // }
-
-        // Create and return the TariffRate entity
-        return new TariffRateEntity(
-                importingCountry,
-                exportingCountry,
-                productCategory,
-                dto.getTariffRate(),
-                dto.getTariffType(),
-                dto.getRateUnit(),
-                dto.getEffectiveDate(),
-                dto.getExpiryDate(),
-                dto.getPreferentialTariff());
-    }
+    //     // Create and return the TariffRate entity
+    //     return new TariffRateEntity(
+    //             dto.getImportingCountryCode(),
+    //             exportingCountry,
+    //             productCategory,
+    //             dto.getTariffRate(),
+    //             dto.getTariffType(),
+    //             dto.getRateUnit(),
+    //             dto.getEffectiveDate(),
+    //             dto.getExpiryDate(),
+    //             dto.getPreferentialTariff());
+    // }
 
     private ProductCategoriesDto convertToDto(ProductCategoriesEntity entity) {
         ProductCategoriesDto dto = new ProductCategoriesDto();

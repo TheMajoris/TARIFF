@@ -2,6 +2,7 @@ package com.cs203.core.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,13 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     TariffRateRepository tariffRateRepository;
     @Autowired
     NationalTariffLinesRepository nationalTariffLinesRepository;
+    @Override
+    
+    public List<ProductCategoriesDto> getProductCategories() {
+        return productCategoriesRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public Page<ProductCategoriesDto> getProductCategories(Pageable pageable) {

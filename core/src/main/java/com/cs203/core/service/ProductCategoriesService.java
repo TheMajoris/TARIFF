@@ -1,5 +1,7 @@
 package com.cs203.core.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,6 +10,8 @@ import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.ProductCategoriesDto;
 
 public interface ProductCategoriesService {
+    public List<ProductCategoriesDto> getProductCategories();
+
     public Page<ProductCategoriesDto> getProductCategories(Pageable pageable);
 
     public GenericResponse<ProductCategoriesDto> getProductCategoriesById(Long id);

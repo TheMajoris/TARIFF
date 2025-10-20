@@ -1,5 +1,7 @@
 package com.cs203.core.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +35,14 @@ public class ProductCategoriesController {
     @Autowired
     ProductCategoriesService productCategoriesService;
 
-    @Operation(summary = "Get product categories by page and limit")
+    @Operation(summary = "Get all product categories")
+    @ApiResponse(responseCode = "200", description = "Product categories successfuly retrieved.")
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductCategoriesDto>> getAllProductCategories() {
+        return ResponseEntity.ok(productCategoriesService.getProductCategories());
+    }
+
+    @Operation(summary = "Get product categories with page and limit")
     @ApiResponse(responseCode = "200", description = "Product categories successfuly retrieved.")
     @GetMapping
     public ResponseEntity<Page<ProductCategoriesDto>> getProductCategories(
