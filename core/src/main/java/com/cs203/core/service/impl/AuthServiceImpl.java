@@ -43,12 +43,12 @@ public class AuthServiceImpl implements AuthService {
     public GenericResponseDTO login(LoginRequestDTO loginRequestDTO) {
         String userEmail = loginRequestDTO.email();
 
+        UserEntity userEntity = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new InvalidUserCredentials("User does not exist"));
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userEmail, loginRequestDTO.password())
         );
-
-        UserEntity userEntity = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new InvalidUserCredentials("User does not exist"));
 
         logger.info("{} login successful", userEmail);
 

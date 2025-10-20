@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class CreateProductCategoriesDto {
     @NotNull(message = "HS code is required")
-    @Min(value = 10, message = "HS code must be at least 2 digits")
+    @Min(value = 100000, message = "HS code must be at least 6 digits")
     @Max(value = 999999, message = "HS code cannot exceed 6 digits")
     private Integer categoryCode;
 
@@ -21,5 +21,8 @@ public class CreateProductCategoriesDto {
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
+    @NotNull(message = "isActive has to be set")
+    private Boolean isActive;
+    
     // Does not have tariff base rate because there is no way atm to populate it
 }

@@ -43,7 +43,7 @@ TARIFF is an application designed to help international traders navigate current
 
 ### **Clone Repo**
 ```
-git clone https://github.com/TheMajoris/CS203
+git clone https://github.com/TheMajoris/CS203 
 ```
 ### **Backend Setup**
 1. **Navigate to the backend directory:**
@@ -51,22 +51,23 @@ git clone https://github.com/TheMajoris/CS203
 cd core
 ```
 
-1.5. **Setup local instance of DB**
+2. **Setup local instance of DB**
 ```bash
 docker compose up --build -d
 or
 docker compose up -f
 ```
 
-2. **Setup the application:**
+3. **Setup the application:**
 ```bash
-bash gradlew build
+bash gradlew :bootRun
 ```
 
-3. **Run Tests:**
+4. **[Optional] Run Tests:**
 ```bash
 bash gradlew test
 ```
+
 ### **Frontend Setup**
 1. **Navigate to the frontend directory:**
 ```bash
@@ -93,7 +94,9 @@ npm run test:unit
 npm run test:e2e
 ```
 
-5. **Database Setup**
+### **Database Setup**
+Please ensure that you have completed the **backend setup** first.
+
 ```bash
 #Setup an admin user in the database
 sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin123';"

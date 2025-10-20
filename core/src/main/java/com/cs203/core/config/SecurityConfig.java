@@ -1,9 +1,11 @@
 package com.cs203.core.config;
 
+import com.cs203.core.resolver.CustomBearerTokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,33 +31,38 @@ public class SecurityConfig {
     private List<String> corsOrigins;
 
     private final UserDetailsService userDetailsService;
+    private final CustomBearerTokenResolver customBearerTokenResolver;
 
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+        this.customBearerTokenResolver = customBearerTokenResolver;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                // Admin-only
-                .requestMatchers(
-                        // "/api/v1/users", // commented out for easier testing
-                        "/api/v1/tariffs/edit"
-                ).hasAuthority("SCOPE_ROLE_ADMIN")
-                // Any authenticated user
-                .requestMatchers(
-                        "/api/v1/users/logout",
-                        "/api/v1/users/reset-password"
-                ).authenticated()
-                // Everything else
+                // tariff R stuff
+                .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
+
+                // tariff CUD stuff
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+
+                // auth stuff
+                .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
+
+                // everything else
                 .anyRequest().permitAll()
         );
 
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                .bearerTokenResolver(customBearerTokenResolver));
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(Customizer.withDefaults());
 
