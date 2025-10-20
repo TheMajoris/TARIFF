@@ -16,6 +16,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @PostConstruct
+    @Profile("!test")
+    // https://stackoverflow.com/questions/50342929/how-to-automatically-disable-a-spring-bean-when-running-a-unit-test
     @Scheduled(cron = "0 0 0 * * ?")
     protected void scrapeNews() {
         ChatResponse response = chatModel.call(
