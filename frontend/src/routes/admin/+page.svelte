@@ -150,10 +150,6 @@
 						Product Categories
 					</h2>
 											</div>
-				<div class="flex gap-2">
-					<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
-					<button class="btn btn-warning btn-sm" on:click={() => goto('/test-501')}>Test 501</button>
-									</div>
 								</div>
 			{#if mode == 'tariff'}
 				<TariffComponent bind:createTariffBoolean />
