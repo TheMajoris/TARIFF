@@ -10,8 +10,7 @@ DELETE FROM tariff_rates;
 DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
 DELETE FROM country;
-DELETE
-FROM users_refresh; -- Delete refresh tokens first
+DELETE FROM users_refresh; -- Delete refresh tokens first
 DELETE FROM users;
 DELETE FROM news_tags;
 DELETE FROM news;
@@ -19,18 +18,12 @@ DELETE FROM news;
 -- =====================================================
 -- USER DATA (Insert users first to avoid foreign key constraints)
 -- =====================================================
-
-INSERT INTO users (username, email, password_hash, is_admin, first_name, last_name, enabled, created_at)
-VALUES ('admin', 'admin@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'System',
-        'Administrator', true, NOW()),
-       ('john.doe', 'john.doe@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'John',
-        'Doe', true, NOW()),
-       ('jane.smith', 'jane.smith@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false,
-        'Jane', 'Smith', true, NOW()),
-       ('bob.wilson', 'bob.wilson@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false,
-        'Bob', 'Wilson', true, NOW()),
-       ('alice.brown', 'alice.brown@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false,
-        'Alice', 'Brown', true, NOW());
+INSERT INTO users (username, email, password_hash, is_admin, first_name, last_name, enabled, created_at) VALUES
+('admin', 'admin@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'System', 'Administrator', true, NOW()),
+('john.doe', 'john.doe@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', true, 'John', 'Doe', true, NOW()),
+('jane.smith', 'jane.smith@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Jane', 'Smith', true, NOW()),
+('bob.wilson', 'bob.wilson@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Bob', 'Wilson', true, NOW()),
+('alice.brown', 'alice.brown@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37UIsEhx.dYH4HP9GmO.', false, 'Alice', 'Brown', true, NOW());
 
 -- Note: Password is 'password123' for all users (hashed with BCrypt 8 rounds)
 
@@ -38,8 +31,7 @@ VALUES ('admin', 'admin@cs203.com', '$2a$08$IZyVxB7U36Xo8fzalZDqwel.gjVeraa5K37U
 -- COUNTRY DATA (Essential countries only)
 -- =====================================================
 
-INSERT INTO country (country_code, country_name, region, currency_code)
-VALUES
+INSERT INTO country (country_code, country_name, region, currency_code) VALUES
 -- Major Electronics Trading Countries
 ('SG', 'Singapore', 'Asia', 'SGD'),
 ('MY', 'Malaysia', 'Asia', 'MYR'),
@@ -90,30 +82,21 @@ INSERT INTO product_categories (hs_code, category_name, description, is_active) 
 
 INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, parent_hs_code, level, created_by, updated_by) VALUES
 -- Singapore National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'SG'), '851713.10', 'Smartphones - Premium', 851713, 10,
- (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'SG'), '854231.10', 'Processors - ARM', 854231, 10,
- (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'SG'), '854232.10', 'Memory - DDR5', 854232, 10,
- (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '851713.10', 'Smartphones - Premium', 851713, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854231.10', 'Processors - ARM', 854231, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+((SELECT country_id FROM country WHERE country_code = 'SG'), '854232.10', 'Memory - DDR5', 854232, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
 
 -- Malaysia National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'MY'), '851713.20', 'Smartphones - Mid-range', 851713, 10,
- (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
-((SELECT country_id FROM country WHERE country_code = 'MY'), '847141.20', 'Laptops - Consumer', 847141, 10,
- (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '851713.20', 'Smartphones - Mid-range', 851713, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
+((SELECT country_id FROM country WHERE country_code = 'MY'), '847141.20', 'Laptops - Consumer', 847141, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
 
 -- China National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'CN'), '851713.30', 'Smartphones - Budget', 851713, 10,
- (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'CN'), '854231.30', 'Processors - Mobile', 854231, 10,
- (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '851713.30', 'Smartphones - Budget', 851713, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+((SELECT country_id FROM country WHERE country_code = 'CN'), '854231.30', 'Processors - Mobile', 854231, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
 
 -- United States National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'US'), '851713.40', 'Smartphones - iPhone', 851713, 10,
- (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
-((SELECT country_id FROM country WHERE country_code = 'US'), '847141.40', 'Laptops - MacBook', 847141, 10,
- (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe'))
+((SELECT country_id FROM country WHERE country_code = 'US'), '851713.40', 'Smartphones - iPhone', 851713, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
+((SELECT country_id FROM country WHERE country_code = 'US'), '847141.40', 'Laptops - MacBook', 847141, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe'))
 ;
 
 -- =====================================================
@@ -175,20 +158,15 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, rate_unit, effective_date, e
 -- SEED SCRIPT COMPLETION VERIFICATION
 -- =====================================================
 -- Display summary counts to verify successful data insertion
-SELECT 'Countries:' as table_name, COUNT(*) as count
-FROM country
+SELECT 'Countries:' as table_name, COUNT(*) as count FROM country
 UNION ALL
-SELECT 'Product Categories:', COUNT(*)
-FROM product_categories
+SELECT 'Product Categories:', COUNT(*) FROM product_categories
 UNION ALL
-SELECT 'Users:', COUNT(*)
-FROM users
+SELECT 'Users:', COUNT(*) FROM users
 UNION ALL
-SELECT 'National Tariff Lines:', COUNT(*)
-FROM national_tariff_lines
+SELECT 'National Tariff Lines:', COUNT(*) FROM national_tariff_lines
 UNION ALL
-SELECT 'Tariff Rates:', COUNT(*)
-FROM tariff_rates;
+SELECT 'Tariff Rates:', COUNT(*) FROM tariff_rates;
 
 -- =====================================================
 -- NEWS AI
