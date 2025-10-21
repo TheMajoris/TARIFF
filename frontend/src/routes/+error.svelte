@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 
-	// Get error details from the page state
-	$: status = page.status;
-	$: message = page.error?.message || 'An unexpected error occurred';
+	// Official SvelteKit error page props
+	export let status: number;
+	export let error: Error | null;
+
+	// Get error message from the error prop
+	$: message = error?.message || 'An unexpected error occurred';
 
 	// Determine which error page to show based on status
 	$: errorType = (() => {
