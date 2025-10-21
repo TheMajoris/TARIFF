@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	// Official SvelteKit error page props
 	export let status: number;
@@ -7,6 +8,17 @@
 
 	// Get error message from the error prop
 	$: message = error?.message || 'An unexpected error occurred';
+
+	// Redirect to specific error pages for better UX
+	onMount(() => {
+		if (status === 404) {
+			goto('/error/404');
+		} else if (status === 403) {
+			goto('/error/403');
+		} else if (status === 501) {
+			goto('/error/501');
+		}
+	});
 
 	// Determine which error page to show based on status
 	$: errorType = (() => {
