@@ -77,7 +77,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
             return new GenericResponse<ProductCategoriesDto>(HttpStatus.NOT_FOUND, "Product category not found with id", dto);
         }
 
-        if (productCategoriesRepository.existsByCategoryCodeAndNotId(entity.get().getCategoryCode(), entity.get().getId())) {
+        if (productCategoriesRepository.existsByCategoryCodeAndNotId(dto.getCategoryCode(), entity.get().getId())) {
             return new GenericResponse<ProductCategoriesDto>(HttpStatus.CONFLICT, "Product category's code already exists", dto);
         }
 
