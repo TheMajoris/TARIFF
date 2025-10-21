@@ -81,41 +81,51 @@
 				{/if}
 			</div>
 
-			<!-- Error Code -->
-			<h1 class="text-6xl font-bold {errorType === '404' ? 'text-primary' : errorType === '403' ? 'text-error' : 'text-warning'}">
-				{status}
-			</h1>
-
-			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">
+			<!-- Main Message -->
+			<h1 class="mb-4 text-4xl font-bold {errorType === '404' ? 'text-primary' : errorType === '403' ? 'text-error' : 'text-warning'}">
 				{#if errorType === '404'}
 					Page Not Found
 				{:else if errorType === '403'}
-					Access Forbidden
+					Access Denied
 				{:else}
-					Server Error
+					Service Unavailable
 				{/if}
-			</h2>
+			</h1>
+			<p class="mb-2 text-lg text-base-content/80">
+				{#if errorType === '404'}
+					The page you're looking for doesn't exist or has been moved.
+				{:else if errorType === '403'}
+					You don't have permission to access this resource.
+				{:else}
+					This feature is temporarily unavailable or not yet implemented.
+				{/if}
+			</p>
 			<p class="mb-8 text-base-content/70">
 				{#if errorType === '404'}
-					The page you're looking for doesn't exist or has been moved. Please check the URL or return to the
-					dashboard.
+					Please check the URL or return to the dashboard.
 				{:else if errorType === '403'}
-					You don't have permission to access this resource. Please contact your administrator if you believe
-					this is an error.
+					If you need access, please contact your administrator.
 				{:else}
-					The server encountered an unexpected error. Please try again later or contact support if the
-					problem persists.
+					Please try again later or contact support if the problem persists.
 				{/if}
 			</p>
 
-			<!-- Error Details (for development) -->
-			{#if message && message !== 'An unexpected error occurred'}
-				<div class="mb-6 rounded-lg bg-base-300 p-4 text-left">
-					<p class="text-sm text-base-content/60">Error Details:</p>
-					<p class="text-sm font-mono">{message}</p>
+			<!-- Technical Details (Collapsed) -->
+			<details class="mb-8 text-left">
+				<summary class="cursor-pointer text-sm text-base-content/60 hover:text-base-content/80">
+					Technical Details
+				</summary>
+				<div class="mt-2 rounded bg-base-300 p-3 text-xs text-base-content/70">
+					<div class="mb-1 font-mono">Error Code: {status}</div>
+					<div class="mb-1 font-mono">Status: {errorType === '404' ? 'Not Found' : errorType === '403' ? 'Forbidden' : 'Not Implemented'}</div>
+					{#if message && message !== 'An unexpected error occurred'}
+						<div class="mt-2 pt-2 border-t border-base-content/20">
+							<div class="text-xs text-base-content/60">Error Message:</div>
+							<div class="text-xs font-mono">{message}</div>
+						</div>
+					{/if}
 				</div>
-			{/if}
+			</details>
 
 			<!-- Action Buttons -->
 			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">

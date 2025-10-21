@@ -23,15 +23,25 @@
 				</svg>
 			</div>
 
-			<!-- Error Code -->
-			<h1 class="text-6xl font-bold text-primary">404</h1>
-
-			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">Page Not Found</h2>
-			<p class="mb-8 text-base-content/70">
-				The page you're looking for doesn't exist or has been moved. Please check the URL or return to the
-				dashboard.
+			<!-- Main Message -->
+			<h1 class="mb-4 text-4xl font-bold text-primary">Page Not Found</h1>
+			<p class="mb-2 text-lg text-base-content/80">
+				The page you're looking for doesn't exist or has been moved.
 			</p>
+			<p class="mb-8 text-base-content/70">
+				Please check the URL or return to the dashboard.
+			</p>
+
+			<!-- Technical Details (Collapsed) -->
+			<details class="mb-8 text-left">
+				<summary class="cursor-pointer text-sm text-base-content/60 hover:text-base-content/80">
+					Technical Details
+				</summary>
+				<div class="mt-2 rounded bg-base-300 p-3 text-xs text-base-content/70">
+					<div class="mb-1 font-mono">Error Code: 404</div>
+					<div class="font-mono">Status: Not Found</div>
+				</div>
+			</details>
 
 			<!-- Action Buttons -->
 			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">

@@ -23,15 +23,25 @@
 				</svg>
 			</div>
 
-			<!-- Error Code -->
-			<h1 class="text-6xl font-bold text-warning">501</h1>
-
-			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">Server Error</h2>
-			<p class="mb-8 text-base-content/70">
-				The server encountered an unexpected error. Please try again later or contact support if the
-				problem persists.
+			<!-- Main Message -->
+			<h1 class="mb-4 text-4xl font-bold text-warning">Service Unavailable</h1>
+			<p class="mb-2 text-lg text-base-content/80">
+				This feature is temporarily unavailable or not yet implemented.
 			</p>
+			<p class="mb-8 text-base-content/70">
+				Please try again later or contact support if the problem persists.
+			</p>
+
+			<!-- Technical Details (Collapsed) -->
+			<details class="mb-8 text-left">
+				<summary class="cursor-pointer text-sm text-base-content/60 hover:text-base-content/80">
+					Technical Details
+				</summary>
+				<div class="mt-2 rounded bg-base-300 p-3 text-xs text-base-content/70">
+					<div class="mb-1 font-mono">Error Code: 501</div>
+					<div class="font-mono">Status: Not Implemented</div>
+				</div>
+			</details>
 
 			<!-- Action Buttons -->
 			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">

@@ -23,15 +23,25 @@
 				</svg>
 			</div>
 
-			<!-- Error Code -->
-			<h1 class="text-6xl font-bold text-error">403</h1>
-
-			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">Access Forbidden</h2>
-			<p class="mb-8 text-base-content/70">
-				You don't have permission to access this resource. Please contact your administrator if you believe
-				this is an error.
+			<!-- Main Message -->
+			<h1 class="mb-4 text-4xl font-bold text-error">Access Denied</h1>
+			<p class="mb-2 text-lg text-base-content/80">
+				You don't have permission to access this resource.
 			</p>
+			<p class="mb-8 text-base-content/70">
+				If you need access, please contact your administrator.
+			</p>
+
+			<!-- Technical Details (Collapsed) -->
+			<details class="mb-8 text-left">
+				<summary class="cursor-pointer text-sm text-base-content/60 hover:text-base-content/80">
+					Technical Details
+				</summary>
+				<div class="mt-2 rounded bg-base-300 p-3 text-xs text-base-content/70">
+					<div class="mb-1 font-mono">Error Code: 403</div>
+					<div class="font-mono">Status: Forbidden</div>
+				</div>
+			</details>
 
 			<!-- Action Buttons -->
 			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
