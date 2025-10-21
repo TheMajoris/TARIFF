@@ -1,11 +1,7 @@
 <script lang="ts">
-	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
-	import { beforeNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { fetchCountries } from '$lib/api/countries.js';
 
-	import TariffComponent from '$lib/components/admin/Tariff.svelte';
 	import CategoryComponent from '$lib/components/admin/Category.svelte';
+	import TariffComponent from '$lib/components/admin/Tariff.svelte';
 
 	let mode = 'tariff';
 
