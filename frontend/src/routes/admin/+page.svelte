@@ -865,7 +865,7 @@
 								error = '';
 							}}>Close</button
 						>
-						<button type="submit" class="btn btn-primary">Submit</button>
+						+<button type="submit" class="btn btn-primary" disabled={isBusy}>Submit</button>
 					</div>
 				</form>
 			{:else}
