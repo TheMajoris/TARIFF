@@ -471,7 +471,7 @@
 							</label>
 							<select
 								id="product_category_active"
-								bind:value={selectedCategory.isActive}
+								value={selectedCategory.isActive + ""}
 								on:change={(e) =>
 									(selectedCategory.isActive =
 										(e.currentTarget as HTMLSelectElement).value === 'true')}

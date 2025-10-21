@@ -719,7 +719,7 @@
 						</label>
 						<select
 							id="preferential_tariff"
-							bind:value={selectedTariff.preferentialTariff}
+							value={selectedTariff.preferentialTariff + ""}
 							on:change={(e) =>
 								(selectedTariff.preferentialTariff =
 									(e.currentTarget as HTMLSelectElement).value === 'true')}
