@@ -333,16 +333,16 @@
 		<thead class="bg-base-300 text-base font-semibold">
 			<tr>
 				<th on:click={() => sortBy('id')} class="cursor-pointer"
-					>Tariff Id {sortKey === 'id' ? (sortAsc ? '▲' : '▼') : ''}</th
+					>Product Category Id {sortKey === 'id' ? (sortAsc ? '▲' : '▼') : ''}</th
 				>
 				<th on:click={() => sortBy('categoryCode')} class="cursor-pointer"
-					>Importing Country {sortKey === 'categoryCode' ? (sortAsc ? '▲' : '▼') : ''}</th
+					>HSCode {sortKey === 'categoryCode' ? (sortAsc ? '▲' : '▼') : ''}</th
 				>
 				<th on:click={() => sortBy('categoryName')} class="cursor-pointer"
-					>Exporting Country {sortKey === 'categoryName' ? (sortAsc ? '▲' : '▼') : ''}</th
+					>Name {sortKey === 'categoryName' ? (sortAsc ? '▲' : '▼') : ''}</th
 				>
 				<th on:click={() => sortBy('isActive')} class="cursor-pointer"
-					>Tariff Type {sortKey === 'isActive' ? (sortAsc ? '▲' : '▼') : ''}</th
+					>Is Active? {sortKey === 'isActive' ? (sortAsc ? '▲' : '▼') : ''}</th
 				>
 				<th></th>
 			</tr>
@@ -353,7 +353,7 @@
 					<td>{line.id}</td>
 					<td>{line.categoryCode}</td>
 					<td>{line.categoryName}</td>
-					<td>{line.isActive ? 'True' : 'False'}</td>
+					<td>{line.isActive ? 'Yes' : 'No'}</td>
 					<td class="p-0">
 						<div class="dropdown dropdown-end static">
 							<button class=" btn btn-ghost btn-circle text-xl">⋮</button>
@@ -431,7 +431,7 @@
 
 					<div>
 						<label class="label" for="product_category_code">
-							<span class="label-text font-semibold">Product Category Code</span>
+							<span class="label-text font-semibold">HSCode</span>
 						</label>
 						<input
 							type="text"
@@ -443,7 +443,7 @@
 
 					<div>
 						<label class="label" for="product_category_name">
-							<span class="label-text font-semibold">Product Category Name</span>
+							<span class="label-text font-semibold">Name</span>
 						</label>
 						<input
 							type="text"
@@ -455,7 +455,7 @@
 
 					<div>
 						<label class="label" for="product_category_description">
-							<span class="label-text font-semibold">Product Category Description</span>
+							<span class="label-text font-semibold">Description</span>
 						</label>
 						<textarea
 							id="product_category_description"
@@ -467,15 +467,15 @@
 					<div class="grid grid-cols-2 gap-4">
 						<div>
 							<label class="label" for="product_category_active">
-								<span class="label-text font-semibold">Product Category Active</span>
+								<span class="label-text font-semibold">Is Active?</span>
 							</label>
 							<select
 								id="product_category_active"
 								bind:value={selectedCategory.isActive}
 								class="select select-bordered w-full"
 							>
-								<option value={true}>True</option>
-								<option value={false}>False</option>
+								<option value={true}>Yes</option>
+								<option value={false}>No</option>
 							</select>
 						</div>
 					</div>
@@ -524,21 +524,21 @@
 
 					<div>
 						<label class="label" for="product_category_code">
-							<span class="label-text font-semibold">Product Category Code</span>
+							<span class="label-text font-semibold">HSCode</span>
 						</label>
 						<p class="w-full">{selectedCategory.categoryCode}</p>
 					</div>
 
 					<div>
 						<label class="label" for="product_category_name">
-							<span class="label-text font-semibold">Product Category Name</span>
+							<span class="label-text font-semibold">Name</span>
 						</label>
 						<p class="w-full">{selectedCategory.categoryName}</p>
 					</div>
 
 					<div>
 						<label class="label" for="product_category_description">
-							<span class="label-text font-semibold">Product Category Description</span>
+							<span class="label-text font-semibold">Description</span>
 						</label>
 						<p class="w-full">{selectedCategory.description}</p>
 					</div>
@@ -546,9 +546,9 @@
 					<div class="grid grid-cols-2 gap-4">
 						<div>
 							<label class="label" for="product_category_active">
-								<span class="label-text font-semibold">Product Category Active</span>
+								<span class="label-text font-semibold">Is Active?</span>
 							</label>
-							<p class="w-full">{selectedCategory.isActive ? 'True' : 'False'}</p>
+							<p class="w-full">{selectedCategory.isActive ? 'Yes' : 'No'}</p>
 						</div>
 					</div>
 					<div class="modal-action">
