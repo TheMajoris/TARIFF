@@ -7,8 +7,6 @@
 	let success = '';
 	let error = '';
 	let isBusy = false; // page-level busy indicator for create/edit flows
-	let isCreating = false;
-	let isEditing = false;
 
 	type ProductCategory = {
 		categoryCode: number;
