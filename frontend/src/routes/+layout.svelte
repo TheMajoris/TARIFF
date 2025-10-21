@@ -1,10 +1,10 @@
 <script lang="ts">
-	import '../app.css';
-	import { page } from '$app/state';
 	import { browser } from '$app/environment';
+	import { beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { logoutUser, refreshToken } from '$lib/api/users';
-	import { goto, beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import '../app.css';
 
 	// so that won't have the syntax line error
 	let role: string | null = null;
@@ -14,14 +14,14 @@
 	// Validate if user is in a page his allowed to be in
 	function validatePageAccess() {
 		// No localstorage, need to login again
-		if (jwt == null && page.url.pathname != '/login' && page.url.pathname != '/register') {
+		// Exclude error pages from authentication check
+		const isErrorPage = page.url.pathname.startsWith('/error/');
+		if (jwt == null && page.url.pathname != '/login' && page.url.pathname != '/register' && !isErrorPage) {
 			goto('/login');
 		}
 
-		// Admin page but no admin access
-		if (page.url.pathname === '/admin' && (role == null || role != 'ROLE_ADMIN')) {
-			goto('/login');
-		}
+		// Note: Admin page authentication is now handled in /admin/+page.svelte
+		// This prevents conflicts between layout and page-level auth checks
 	}
 
 	// Update localstorage

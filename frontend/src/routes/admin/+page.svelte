@@ -1,7 +1,19 @@
 <script lang="ts">
-
+	import { goto } from '$app/navigation';
 	import CategoryComponent from '$lib/components/admin/Category.svelte';
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import { onMount } from 'svelte';
+
+	// Check authentication on page load
+	onMount(() => {
+		const token = localStorage.getItem('jwt'); // Use same key as layout
+		const role = localStorage.getItem('role');
+		
+		if (!token || role !== 'ROLE_ADMIN') { // Use same role format as layout
+			// Redirect to 403 page for unauthorized access
+			goto('/error/403');
+		}
+	});
 
 	let mode = 'tariff';
 
@@ -120,8 +132,8 @@
 					<h2
 						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
 							? 'border-b-2'
-							: ''}"
-						on:click={() => {
+													: ''}"
+												on:click={() => {
 							mode = 'tariff';
 						}}
 					>
@@ -130,19 +142,22 @@
 					<h2
 						class="mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
 							? 'border-b-2'
-							: ''}"
-						on:click={() => {
+													: ''}"
+												on:click={() => {
 							mode = 'category';
 						}}
 					>
 						Product Categories
 					</h2>
-				</div>
-				<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
-			</div>
+											</div>
+				<div class="flex gap-2">
+					<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
+					<button class="btn btn-warning btn-sm" on:click={() => goto('/test-501')}>Test 501</button>
+									</div>
+								</div>
 			{#if mode == 'tariff'}
 				<TariffComponent bind:createTariffBoolean />
-			{/if}
+					{/if}
 
 			{#if mode == 'category'}
 				<CategoryComponent bind:createCategoryBoolean />
