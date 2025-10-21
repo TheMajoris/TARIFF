@@ -4,15 +4,17 @@
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
 	import { onMount } from 'svelte';
 
-	// Check authentication on page load
+	// Server-side data from +page.server.ts
+	export let data: any;
+
+	// Gate rendering and redirect if not authorized (prevents SSR leak/flicker)
+	let authorized = false;
 	onMount(() => {
-		const token = localStorage.getItem('jwt'); // Use same key as layout
+		const token = localStorage.getItem('jwt');
 		const role = localStorage.getItem('role');
-		
-		if (!token || role !== 'ROLE_ADMIN') { // Use same role format as layout
-			// Redirect to 403 page for unauthorized access
-			goto('/error/403');
-		}
+		const isAdmin = Boolean(token) && role === 'ROLE_ADMIN';
+		if (!isAdmin) goto('/error/403');
+		else authorized = true;
 	});
 
 	let mode = 'tariff';
@@ -58,7 +60,7 @@
 			importingCountryCode: '',
 			preferentialTariff: false,
 			productCategory: {
-				categoryCode: 0,
+				categoryCode: '',
 				categoryName: '',
 				description: '',
 				id: 0,
@@ -81,6 +83,7 @@
 	}
 </script>
 
+{#if authorized}
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
@@ -161,3 +164,4 @@
 		</div>
 	</div>
 </div>
+{/if}
