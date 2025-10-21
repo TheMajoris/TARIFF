@@ -5,10 +5,16 @@
 	import { fetchCountries } from '$lib/api/countries.js';
 
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import CategoryComponent from '$lib/components/admin/Category.svelte';
+
+	let mode = 'tariff';
 
 	let success = '';
 	let error = '';
 	let isBusy = false; // page-level busy indicator for create/edit flows
+
+	let createTariffBoolean = false;
+	let createCategoryBoolean = false;
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -59,29 +65,12 @@
 
 	let create = false;
 
-	// Function to validate Category
-	function CategoryValidation() {
-		if (
-			selectedTariff.productCategory.categoryCode != null &&
-			/^\d{6}$/.test(selectedTariff.productCategory.categoryCode)
-		) {
-			if (
-				selectedTariff.productCategory.categoryName != '' &&
-				selectedTariff.productCategory.categoryName.length <= 100
-			) {
-				if (selectedTariff.productCategory.description.length <= 500) {
-					return true;
-				} else {
-					error = 'Category Description can only have up to 500 characters';
-				}
-			} else {
-				error = 'Category Name can only have up to 500 characters';
-			}
+	function createButton() {
+		if (mode == 'tariff') {
+			createTariffBoolean = true;
 		} else {
-			error = 'Category Code can only be from 100000 to 999999';
+			createCategoryBoolean = true;
 		}
-
-		return false;
 	}
 </script>
 
@@ -137,10 +126,37 @@
 				</div>
 			{/if}
 			<div class="flex items-center justify-between py-6">
-				<h2 class="mb-1 text-lg font-semibold">Tariffs</h2>
-				<button class="btn btn-primary" on:click={() => (create = true)}>Create</button>
+				<div class="flex">
+					<h2
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
+							? 'border-b-2'
+							: ''}"
+						on:click={() => {
+							mode = 'tariff';
+						}}
+					>
+						Tariffs
+					</h2>
+					<h2
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
+							? 'border-b-2'
+							: ''}"
+						on:click={() => {
+							mode = 'category';
+						}}
+					>
+						Product Categories
+					</h2>
+				</div>
+				<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
 			</div>
-			<TariffComponent bind:create bind:isBusy />
+			{#if mode == 'tariff'}
+				<TariffComponent bind:createTariffBoolean bind:isBusy/>
+			{/if}
+
+			{#if mode == 'category'}
+				<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
+			{/if}
 		</div>
 	</div>
 </div>
