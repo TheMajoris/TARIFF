@@ -42,4 +42,6 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
 
     // Find all categories ordered by name
     List<ProductCategoriesEntity> findAllByOrderByCategoryNameAsc();
+
+    boolean existsByCategoryCodeAndNotId(int categoryCode, long id);
 }

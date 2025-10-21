@@ -56,7 +56,7 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
 
     // Count all tariff rates for a specific HS code
     @Query("SELECT COUNT(t) FROM TariffRateEntity t WHERE t.productCategory.categoryCode = :hsCode")
-    Integer countByHsCode(@Param("hsCode") Integer hsCode);
+    long countByHsCode(@Param("hsCode") Integer hsCode);
     
     // Find tariff rates by type
     List<TariffRateEntity> findByTariffType(String tariffType);

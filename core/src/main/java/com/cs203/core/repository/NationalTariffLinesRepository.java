@@ -51,7 +51,7 @@ public interface NationalTariffLinesRepository extends JpaRepository<NationalTar
     boolean existsByCountryAndTariffLineCode(CountryEntity country, String tariffLineCode);
 
     @Query("SELECT COUNT(ntl) FROM NationalTariffLinesEntity ntl WHERE ntl.parentHsCode.categoryCode = :hsCode")
-    Integer countByHsCode(@Param("hsCode") Integer hsCode);
+    long countByHsCode(@Param("hsCode") Integer hsCode);
 
     @Query("SELECT ntl.id FROM NationalTariffLinesEntity ntl WHERE ntl.parentHsCode.categoryCode = :hsCode")
     List<Long> findIdsByHsCode(@Param("hsCode") Integer hsCode);

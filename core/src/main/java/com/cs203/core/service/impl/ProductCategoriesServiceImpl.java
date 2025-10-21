@@ -62,7 +62,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
         // Check if HSCode exists first
         if (productCategoriesRepository.existsByCategoryCode(dto.getCategoryCode())) {
             ProductCategoriesDto responseDto = new ProductCategoriesDto(null, dto.getCategoryCode(), dto.getCategoryName(), dto.getDescription(), dto.getIsActive());
-            return new GenericResponse<ProductCategoriesDto>(HttpStatus.BAD_REQUEST, "Category code (HSCode) already exists", responseDto);
+            return new GenericResponse<ProductCategoriesDto>(HttpStatus.CONFLICT, "Category code (HSCode) already exists", responseDto);
         }
 
         ProductCategoriesEntity entity = convertToEntity(dto);
@@ -75,6 +75,10 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
         Optional<ProductCategoriesEntity> entity = productCategoriesRepository.findById(id);
         if (entity.isEmpty()) {
             return new GenericResponse<ProductCategoriesDto>(HttpStatus.NOT_FOUND, "Product category not found with id", dto);
+        }
+
+        if (productCategoriesRepository.existsByCategoryCodeAndNotId(entity.get().getCategoryCode(), entity.get().getId())) {
+            return new GenericResponse<ProductCategoriesDto>(HttpStatus.CONFLICT, "Product category's code already exists", dto);
         }
 
         ProductCategoriesEntity updatedEntity = entity.get();
@@ -96,7 +100,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
             return new GenericResponse<Void>(HttpStatus.NOT_FOUND, "Product category not found with id", null);
         }
 
-        Integer relations = tariffRateRepository.countByHsCode(optional.get().getCategoryCode());
+        long relations = tariffRateRepository.countByHsCode(optional.get().getCategoryCode());
         relations += nationalTariffLinesRepository.countByHsCode(optional.get().getCategoryCode());
         if (relations > 0) {
             return new GenericResponse<Void>(HttpStatus.CONFLICT, "Product categories has " + relations + " related tariff rates and national tariff lines. Set request params flag to true to cascade delete", null);
@@ -122,7 +126,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     }
 
     private ProductCategoriesEntity convertToEntity(CreateProductCategoriesDto dto) {
-        return new ProductCategoriesEntity(dto.getCategoryCode(), dto.getCategoryName(), dto.getDescription());
+        return new ProductCategoriesEntity(dto.getCategoryCode(), dto.getCategoryName(), dto.getDescription(), dto.getIsActive());
     }
     
 }

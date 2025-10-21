@@ -65,7 +65,7 @@ public class ProductCategoriesController {
     @Operation(summary = "Create a new product category with the response body")
     @ApiResponse(responseCode = "201", description = "Product category created")
     @ApiResponse(responseCode = "400", description = "Data is invalid")
-    @ApiResponse(responseCode = "400", description = "Category code (HSCode) already exists")
+    @ApiResponse(responseCode = "409", description = "Category code (HSCode) already exists")
     @PostMapping
     public ResponseEntity<GenericResponse<ProductCategoriesDto>> createProductCategories(
             @Valid @RequestBody CreateProductCategoriesDto createProductCategoriesDto) {
@@ -78,6 +78,7 @@ public class ProductCategoriesController {
     @ApiResponse(responseCode = "200", description = "Successfully updated Product category")
     @ApiResponse(responseCode = "400", description = "Data is invalid")
     @ApiResponse(responseCode = "404", description = "Product category not found with id")
+    @ApiResponse(responseCode = "409", description = "Product category's code already exists")
     @PutMapping("/{productCategoryId}")
     public ResponseEntity<GenericResponse<ProductCategoriesDto>> updateProductCategories(
             @Valid @RequestBody ProductCategoriesDto productCategoriesDto, @PathVariable Long productCategoryId) {

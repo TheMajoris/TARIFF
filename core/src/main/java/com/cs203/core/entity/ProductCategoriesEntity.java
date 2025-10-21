@@ -28,8 +28,8 @@ public class ProductCategoriesEntity {
 
     @Column(name = "hs_code", nullable = false, unique = true)
     @NotNull(message = "HS code is required")
-    @Min(value = 100000, message = "HS code must be at least 2 digits")
-    @Max(value = 999999, message = "HS code cannot exceed 6 digits")
+    @Min(value = 100000, message = "HS code must be 6 digits")
+    @Max(value = 999999, message = "HS code must be 6 digits")
     private Integer categoryCode;
 
     @Column(name = "category_name", nullable = false, length = 100)
