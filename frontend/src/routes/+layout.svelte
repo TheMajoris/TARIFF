@@ -3,13 +3,16 @@
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { logoutUser, refreshToken } from '$lib/api/users';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import '../app.css';
 
 	// so that won't have the syntax line error
 	let role: string | null = null;
 	let fullName: string | null = null;
 	let jwt: string | null = null;
+	
+	// Interval ID for cleanup
+	let refreshTokenInterval: number | null = null;
 
 	// Validate if user is in a page his allowed to be in
 	function validatePageAccess() {
@@ -43,6 +46,26 @@
 	// Update on page load/refresh
 	onMount(() => {
 		updateLocalStorage();
+		
+		// Set up token refresh interval (only in browser)
+		if (browser) {
+			refreshTokenInterval = setInterval(async () => {
+				if (jwt && isExpiringSoon()) {
+					const result = await refreshAccessToken();
+					if (result && result.message && result.message.jwt) {
+						localStorage.setItem('jwt', result.message.jwt);
+						jwt = result.message.jwt;
+					}
+				}
+			}, 60 * 1000); // check every minute
+		}
+	});
+
+	// Clean up interval on component destruction
+	onDestroy(() => {
+		if (refreshTokenInterval) {
+			clearInterval(refreshTokenInterval);
+		}
 	});
 
 	async function logout() {
@@ -68,19 +91,10 @@
 		goto('/login');
 	}
 
-	// 1 minute intervals check/refresh token
-	let refreshTokenInterval = setInterval(async () => {
-		if (jwt && isExpiringSoon()) {
-			const result = await refreshAccessToken();
-			if (result && result.message && result.message.jwt) {
-				localStorage.setItem('jwt', result.message.jwt);
-				jwt = result.message.jwt;
-			}
-		}
-	}, 60 * 1000); // check every minute
 
 	// Check if its gonna expire (left less than 1 minute)
 	function isExpiringSoon() {
+		if (!jwt) return false;
 		// base64 decode the jwt to get expiring date
 		const { exp } = JSON.parse(atob(jwt.split('.')[1]));
 		const now = Math.floor(Date.now() / 1000);
