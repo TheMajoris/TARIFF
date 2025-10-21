@@ -187,7 +187,7 @@
 			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
 			console.error('Creating tariff error:', err);
 		} finally {
-			isBusy = true;
+			isBusy = false;
 		}
 	}
 
@@ -224,7 +224,7 @@
 			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
 			console.error('Editing tariff error:', err);
 		} finally {
-			isBusy = true;
+			isBusy = false;
 		}
 	}
 
@@ -241,7 +241,7 @@
 			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
 			console.error('Deleting tariff error:', err);
 		} finally {
-			isBusy = true;
+			isBusy = false;
 		}
 	}
 
