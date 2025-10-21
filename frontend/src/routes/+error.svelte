@@ -27,12 +27,11 @@
 				return '404';
 			case 403:
 				return '403';
-			case 501:
-				return '501';
 			case 500:
+			case 501:
 			case 502:
 			case 503:
-				return 'server-error';
+				return '501';
 			default:
 				return 'generic';
 		}
@@ -97,15 +96,13 @@
 			</div>
 
 			<!-- Main Message -->
-			<h1 class="mb-4 text-4xl font-bold {errorType === '404' ? 'text-primary' : errorType === '403' ? 'text-error' : errorType === '501' ? 'text-warning' : 'text-warning'}">
+			<h1 class="mb-4 text-4xl font-bold {errorType === '404' ? 'text-primary' : errorType === '403' ? 'text-error' : 'text-warning'}">
 				{#if errorType === '404'}
 					Page Not Found
 				{:else if errorType === '403'}
 					Access Denied
-				{:else if errorType === '501'}
-					Service Unavailable
 				{:else}
-					Server Error
+					Service Unavailable
 				{/if}
 			</h1>
 			<p class="mb-2 text-lg text-base-content/80">
@@ -113,10 +110,8 @@
 					The page you're looking for doesn't exist or has been moved.
 				{:else if errorType === '403'}
 					You don't have permission to access this resource.
-				{:else if errorType === '501'}
-					This feature is temporarily unavailable or not yet implemented.
 				{:else}
-					The server encountered an unexpected error.
+					This feature is temporarily unavailable or not yet implemented.
 				{/if}
 			</p>
 			<p class="mb-8 text-base-content/70">
@@ -124,8 +119,6 @@
 					Please check the URL or return to the dashboard.
 				{:else if errorType === '403'}
 					If you need access, please contact your administrator.
-				{:else if errorType === '501'}
-					Please try again later or contact support if the problem persists.
 				{:else}
 					Please try again later or contact support if the problem persists.
 				{/if}
@@ -138,7 +131,7 @@
 				</summary>
 				<div class="mt-2 rounded bg-base-300 p-3 text-xs text-base-content/70">
 					<div class="mb-1 font-mono">Error Code: {status}</div>
-					<div class="mb-1 font-mono">Status: {errorType === '404' ? 'Not Found' : errorType === '403' ? 'Forbidden' : errorType === '501' ? 'Not Implemented' : 'Server Error'}</div>
+					<div class="mb-1 font-mono">Status: {errorType === '404' ? 'Not Found' : errorType === '403' ? 'Forbidden' : 'Not Implemented'}</div>
 					{#if message && message !== 'An unexpected error occurred'}
 						<div class="mt-2 pt-2 border-t border-base-content/20">
 							<div class="text-xs text-base-content/60">Error Message:</div>
