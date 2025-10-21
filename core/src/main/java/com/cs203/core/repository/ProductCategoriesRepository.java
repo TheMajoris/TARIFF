@@ -2,6 +2,7 @@ package com.cs203.core.repository;
 
 import com.cs203.core.entity.ProductCategoriesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,5 +44,6 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
     // Find all categories ordered by name
     List<ProductCategoriesEntity> findAllByOrderByCategoryNameAsc();
 
+    @Query("SELECT CASE WHEN COUNT(pc) > 0 THEN true ELSE false END FROM ProductCategoriesEntity pc WHERE pc.categoryCode = :categoryCode AND pc.id != :id")
     boolean existsByCategoryCodeAndNotId(int categoryCode, long id);
 }
