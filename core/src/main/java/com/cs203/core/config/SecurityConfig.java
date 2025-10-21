@@ -42,14 +42,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                // tariff R stuff
+                // tariff, productCategories R stuff
                 .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/product-categories/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
 
                 // tariff CUD stuff
                 .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+
+                // Product Categories CUD
+                .requestMatchers(HttpMethod.POST, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
 
                 // auth stuff
                 .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()

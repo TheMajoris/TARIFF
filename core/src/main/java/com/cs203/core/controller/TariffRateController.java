@@ -44,10 +44,14 @@ public class TariffRateController {
 
     @Operation(summary = "Create a new tariff rate with the response body")
     @ApiResponse(responseCode = "201", description = "Tariff rate created")
-    @ApiResponse(responseCode = "400", description = "Create request is invalid")
+    @ApiResponse(responseCode = "400", description = "Data is invalid")
+    @ApiResponse(responseCode = "404", description = "Importing Country code does not exist")
+    @ApiResponse(responseCode = "404", description = "Exporting Country code does not exist")
+    @ApiResponse(responseCode = "404", description = "HS code does not exist")
     @PostMapping
-    public ResponseEntity<TariffRateDto> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
-        return new ResponseEntity<>(tariffRateService.createTariffRate(createTariffRateDto), HttpStatus.CREATED);
+    public ResponseEntity<GenericResponse<TariffRateDto>> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
+        GenericResponse<TariffRateDto> response = tariffRateService.createTariffRate(createTariffRateDto);
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @Operation(summary = "Update tariff rate by id")
