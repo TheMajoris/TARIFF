@@ -5,7 +5,7 @@
 -- Schema creation is handled by Hibernate (JPA_DDL_AUTO=create-drop)
 -- This script is disabled in test environment via application-test.properties
 
--- Clear any existing data (just in case) - Delete in correct order to avoid foreign key constraints
+-- Clear any existing data (Delete in correct order to avoid foreign key constraints)
 DELETE FROM tariff_rates;
 DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
