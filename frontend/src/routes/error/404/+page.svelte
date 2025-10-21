@@ -2,17 +2,13 @@
 	import { goto } from '$app/navigation';
 </script>
 
-<svelte:head>
-	<title>Server Error - TARIFF</title>
-</svelte:head>
-
 <div class="hero min-h-screen bg-base-200">
 	<div class="hero-content text-center">
 		<div class="max-w-md">
-			<!-- 501 Icon -->
+			<!-- Search Icon -->
 			<div class="mb-8">
 				<svg
-					class="mx-auto h-32 w-32 text-warning"
+					class="mx-auto h-32 w-32 text-primary"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -22,19 +18,19 @@
 						stroke-linecap="round"
 						stroke-linejoin="round"
 						stroke-width="1"
-						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+						d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z"
 					></path>
 				</svg>
 			</div>
 
 			<!-- Error Code -->
-			<h1 class="text-6xl font-bold text-warning">501</h1>
+			<h1 class="text-6xl font-bold text-primary">404</h1>
 
 			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">Server Error</h2>
+			<h2 class="mb-4 text-2xl font-semibold">Page Not Found</h2>
 			<p class="mb-8 text-base-content/70">
-				The server encountered an unexpected error or this feature is not yet implemented. Please try again
-				later or contact support if the problem persists.
+				The page you're looking for doesn't exist or has been moved. Please check the URL or return to the
+				dashboard.
 			</p>
 
 			<!-- Action Buttons -->
@@ -56,7 +52,7 @@
 					</svg>
 					Back to Dashboard
 				</button>
-				<button class="btn btn-outline" on:click={() => window.location.reload()}>
+				<button class="btn btn-outline" on:click={() => window.history.back()}>
 					<svg
 						class="h-4 w-4"
 						fill="none"
@@ -68,13 +64,12 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							stroke-width="2"
-							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+							d="M10 19l-7-7m0 0l7-7m-7 7h18"
 						></path>
 					</svg>
-					Try Again
+					Go Back
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
-

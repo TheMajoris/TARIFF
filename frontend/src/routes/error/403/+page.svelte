@@ -2,17 +2,13 @@
 	import { goto } from '$app/navigation';
 </script>
 
-<svelte:head>
-	<title>Page Not Found - TARIFF</title>
-</svelte:head>
-
 <div class="hero min-h-screen bg-base-200">
 	<div class="hero-content text-center">
 		<div class="max-w-md">
-			<!-- 404 Icon -->
+			<!-- Lock Icon -->
 			<div class="mb-8">
 				<svg
-					class="mx-auto h-32 w-32 text-primary"
+					class="mx-auto h-32 w-32 text-error"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -22,19 +18,19 @@
 						stroke-linecap="round"
 						stroke-linejoin="round"
 						stroke-width="1"
-						d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+						d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
 					></path>
 				</svg>
 			</div>
 
 			<!-- Error Code -->
-			<h1 class="text-6xl font-bold text-primary">404</h1>
+			<h1 class="text-6xl font-bold text-error">403</h1>
 
 			<!-- Error Message -->
-			<h2 class="mb-4 text-2xl font-semibold">Page Not Found</h2>
+			<h2 class="mb-4 text-2xl font-semibold">Access Forbidden</h2>
 			<p class="mb-8 text-base-content/70">
-				The page you're looking for doesn't exist or has been moved. Please check the URL or return to the
-				dashboard.
+				You don't have permission to access this resource. Please contact your administrator if you believe
+				this is an error.
 			</p>
 
 			<!-- Action Buttons -->
@@ -56,7 +52,7 @@
 					</svg>
 					Back to Dashboard
 				</button>
-				<button class="btn btn-outline" on:click={() => window.history.back()}>
+				<button class="btn btn-outline" on:click={() => goto('/login')}>
 					<svg
 						class="h-4 w-4"
 						fill="none"
@@ -68,13 +64,12 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							stroke-width="2"
-							d="M10 19l-7-7m0 0l7-7m-7 7h18"
+							d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
 						></path>
 					</svg>
-					Go Back
+					Login
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
-
