@@ -3,7 +3,6 @@ package com.cs203.core.service.impl;
 import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
 import com.cs203.core.entity.NewsArticleEntity;
 import com.cs203.core.repository.NewsRepository;
-import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.NewsService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,13 +28,11 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final ChatModel chatModel;
-    private final TariffRateRepository tariffRateRepository;
 
     @Autowired
-    public NewsServiceImpl(NewsRepository newsRepository, ChatModel chatModel, TariffRateRepository tariffRateRepository) {
+    public NewsServiceImpl(NewsRepository newsRepository, ChatModel chatModel) {
         this.newsRepository = newsRepository;
         this.chatModel = chatModel;
-        this.tariffRateRepository = tariffRateRepository;
     }
 
     @PostConstruct
@@ -55,7 +52,7 @@ public class NewsServiceImpl implements NewsService {
                                 "Do not include any other text.",
                         OpenAiChatOptions.builder()
                                 .model("sonar")
-                                .maxTokens(200) // blast it once we ready
+                                .maxTokens(500) // blast it once we ready
                                 .responseFormat(
                                         ResponseFormat.builder()
                                                 .type(ResponseFormat.Type.JSON_SCHEMA)
@@ -102,7 +99,7 @@ public class NewsServiceImpl implements NewsService {
                 if (lastIndex == -1) {
                     return Collections.emptyList();
                 }
-                text = text.substring(0, lastIndex + 1);
+                text = text.substring(0, lastIndex + 1) + "]";
             }
         }
         return Collections.emptyList();
