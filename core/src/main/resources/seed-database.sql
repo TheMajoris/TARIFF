@@ -1,5 +1,5 @@
 -- =====================================================
--- Database Seed Script for CS203 Tariff Management System (FIXED)
+-- Database Seed Script for CS203 Tariff Management System
 -- =====================================================
 -- This script populates the database with seed data for production/development
 -- Schema creation is handled by Hibernate (JPA_DDL_AUTO=create-drop)
