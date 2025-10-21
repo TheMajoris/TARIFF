@@ -111,7 +111,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:number, categoryName:string, description?:string}} payload.productCategory
+ * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
  */
 export async function createTariff(payload) {
   try {
@@ -155,7 +155,7 @@ export async function createTariff(payload) {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{id:number, categoryCode:number, categoryName:string, description?:string}} payload.productCategory
+ * @param {{id:number, categoryCode:string, categoryName:string, description?:string}} payload.productCategory
  */
 export async function editTariff(payload) {
   try {
