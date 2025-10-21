@@ -2,7 +2,7 @@
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Calculator</h1>
 	<p class="text-sm text-gray-500">
-		Enter product details, select countries, and calculate the cost of importing goods.
+		Enter HS Code, select countries, and calculate the cost of importing goods.
 	</p>
 
   	<!-- Two-column layout -->
@@ -10,40 +10,9 @@
     	<!-- Tariff Calculator Card -->
 		<div class="card bg-base-100 p-6 shadow-md">
 			<h2 class="mb-1 text-lg font-semibold">Tariff Calculator</h2>
-			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing a product</p>
+			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing goods</p>
 
 			<form class="space-y-4" on:submit|preventDefault={calculateCost}>
-				<!-- Product with Search -->
-				<div class="form-control relative">
-					<label class="label text-sm font-medium hidden">Product</label>
-					<input
-						type="text"
-						placeholder="Search product..."
-						bind:value={productSearch}
-						class="input input-bordered w-full text-sm mb-2"
-						on:focus={() => (showProductDropdown = true)}
-						hidden
-					/>
-					{#if showProductDropdown && filteredProducts.length > 0}
-						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
-						{#each filteredProducts as item}
-							<li>
-							<a
-								class="text-sm"
-								on:click={() => {
-								product = item;
-								productSearch = item;
-								showProductDropdown = false;
-								}}
-							>
-								{item}
-							</a>
-							</li>
-						{/each}
-						</ul>
-					{/if}
-				</div>
-
 				<!-- HS Code Input -->
 				<div class="form-control">
 					<label class="label text-sm font-medium">HS Code</label>
@@ -313,22 +282,17 @@
 	</div>
 {/if}
 
-<!-- Product and Calculator Logic-->
+<!-- Calculator Logic-->
 <script>
 	import { fetchCountries } from "$lib/api/countries.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
 	import { onMount } from "svelte";
 
-	let product = '';
 	let hsCode = '';
 	let exportFrom = '';
 	let importTo = '';
 	let calculationDate = new Date().toISOString().split("T")[0]; // Set the Calculation Date
 	let goodsValue = '';
-
-	// Search state for product
-  	let productSearch = "";
-  	let showProductDropdown = false;
 
 	// Search state for countries
 	let exportFromSearch = "";
@@ -336,24 +300,7 @@
 	let showExportFromDropdown = false;
 	let showImportToDropdown = false;
 
-	/* Jiajun - 14/9/2025
-	This is a placeholder as data have not been done yet. 
-	This will be replaced with a function to fetch the real 
-	product data in the next sprint when the necessary 
-	dependancies are finished.
-	*/
-	const products = [
-		"Electronics",
-		"Textiles",
-		"Automobiles",
-		"Agricultural Goods",
-		"Chemicals",
-		"Machinery",
-		"Pharmaceuticals",
-		"Food Products",
-		"Metals",
-		"Plastics"
-	];
+	
 
 	let countries = [];
 	onMount(async () => {
@@ -362,10 +309,7 @@
 		console.log('Countries loaded:', countries);
   	});
 
-	$: filteredProducts = products.filter((p) =>
-    	p.toLowerCase().includes(productSearch.toLowerCase())
-  	);
-
+	
 	// Filter countries for search
 	$: filteredExportFromCountries = countries.filter((country) =>
 		country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
