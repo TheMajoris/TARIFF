@@ -40,6 +40,12 @@ public class NewsServiceImpl implements NewsService {
     // https://stackoverflow.com/questions/50342929/how-to-automatically-disable-a-spring-bean-when-running-a-unit-test
     @Scheduled(cron = "0 0 0 * * ?")
     protected void scrapeNews() {
+        // no‑op if provider key not configured
+        if (System.getenv("PERPLEXITY_KEY") == null &&
+                System.getProperty("PERPLEXITY_KEY") == null) {
+            logger.info("PERPLEXITY_KEY not set; skipping scrape.");
+            return;
+        }
         ChatResponse response = chatModel.call(
                 new Prompt(
                         "You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
