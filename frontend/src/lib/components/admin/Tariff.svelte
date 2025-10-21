@@ -121,7 +121,7 @@
 					error = 'Rate Unit can only be up to 20 characters';
 				}
 			} else {
-				error = 'Tarrif Type must not be blank and can only be up to 50 characters';
+				error = 'Tariff Type must not be blank and can only be up to 50 characters';
 			}
 		} else {
 			error = 'Tariff Type can only be from 0 to 999.9999';
@@ -146,7 +146,7 @@
 					error = 'Category Description can only have up to 500 characters';
 				}
 			} else {
-				error = 'Category Name can only have up to 500 characters';
+				error = 'Category Name can only have up to 100 characters';
 			}
 		} else {
 			error = 'Category Code can only be from 100000 to 999999';
@@ -244,12 +244,11 @@
 		fetchTariffs();
 	}
 
-    // Function that will return a date time in a readable format
-    function readableDateTime(datetime){
-        const date = new Date(datetime);
-        return date.toLocaleString();
-
-    }
+	// Function that will return a date time in a readable format
+	function readableDateTime(datetime) {
+		const date = new Date(datetime);
+		return date.toLocaleString();
+	}
 
 	// Restrict TariffKey to only contain header values (TariffRecord)
 	type TariffKey = keyof TariffRecord;
@@ -450,7 +449,9 @@
 		>
 
 		<div class="modal-box max-w-2xl">
-			<h3 class="mb-4 text-lg font-bold">{createTariffBoolean ? 'Create' : edit ? 'Edit' : 'View'} Tariff</h3>
+			<h3 class="mb-4 text-lg font-bold">
+				{createTariffBoolean ? 'Create' : edit ? 'Edit' : 'View'} Tariff
+			</h3>
 			{#if edit || createTariffBoolean}
 				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}>
 					<div>
@@ -642,9 +643,9 @@
 							bind:value={selectedTariff.productCategory.categoryCode}
 							class="select select-bordered w-full"
 						>
-							<option value={851713}>(851713) Smartphones</option>
-							<option value={850120}>(850120) Universal AC/DC Motors > 37.5W</option>
-							<option value={850110}>(850110) Electric Motors ≤ 37.5W</option>
+							<option value="851713">(851713) Smartphones</option>
+							<option value="850120">(850120) Universal AC/DC Motors > 37.5W</option>
+							<option value="850110">(850110) Electric Motors ≤ 37.5W</option>
 						</select>
 					</div>
 
@@ -719,10 +720,13 @@
 						<select
 							id="preferential_tariff"
 							bind:value={selectedTariff.preferentialTariff}
+							on:change={(e) =>
+								(selectedTariff.preferentialTariff =
+									(e.currentTarget as HTMLSelectElement).value === 'true')}
 							class="select select-bordered w-full"
 						>
-							<option value={true}>Yes</option>
-							<option value={false}>No</option>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
 						</select>
 					</div>
 

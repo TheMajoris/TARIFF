@@ -147,7 +147,7 @@
 	// 				error = 'Category Description can only have up to 500 characters';
 	// 			}
 	// 		} else {
-	// 			error = 'Category Name can only have up to 500 characters';
+	// 			error = 'Category Name can only have up to 100 characters';
 	// 		}
 	// 	} else {
 	// 		error = 'Category Code can only be from 100000 to 999999';
@@ -472,10 +472,13 @@
 							<select
 								id="product_category_active"
 								bind:value={selectedCategory.isActive}
+								on:change={(e) =>
+									(selectedCategory.isActive =
+										(e.currentTarget as HTMLSelectElement).value === 'true')}
 								class="select select-bordered w-full"
 							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
+								<option value="true">Yes</option>
+								<option value="false">No</option>
 							</select>
 						</div>
 					</div>

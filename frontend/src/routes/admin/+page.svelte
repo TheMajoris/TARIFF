@@ -64,31 +64,6 @@
 
 	let create = false;
 
-	// Function to validate Category
-	function CategoryValidation() {
-		if (
-			selectedTariff.productCategory.categoryCode != null &&
-			/^\d{6}$/.test(selectedTariff.productCategory.categoryCode)
-		) {
-			if (
-				selectedTariff.productCategory.categoryName != '' &&
-				selectedTariff.productCategory.categoryName.length <= 100
-			) {
-				if (selectedTariff.productCategory.description.length <= 500) {
-					return true;
-				} else {
-					error = 'Category Description can only have up to 500 characters';
-				}
-			} else {
-				error = 'Category Name can only have up to 500 characters';
-			}
-		} else {
-			error = 'Category Code can only be from 100000 to 999999';
-		}
-
-		return false;
-	}
-
 	function createButton() {
 		if (mode == 'tariff') {
 			createTariffBoolean = true;
