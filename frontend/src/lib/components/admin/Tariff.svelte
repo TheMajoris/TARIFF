@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
+	import { getAllProductCategories } from '$lib/api/productCategory';
 	import { beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { fetchCountries } from '$lib/api/countries.js';
@@ -30,6 +31,7 @@
 		tariffRate: number;
 		tariffType: string;
 	};
+	let allProductCategories: ProductCategory[] = [];
 	let allTariff: TariffRecord[] = [];
 	let selectedTariff: TariffRecord = blankTariff();
 	function blankTariff() {
@@ -65,14 +67,27 @@
 		}
 	}
 
+	async function fetchProductCategories() {
+		try {
+			const result = await getAllProductCategories();
+			allProductCategories = result;
+		} catch (err) {
+			console.error('Getting all product category error:', err);
+			error =
+				err instanceof Error ? err.message : 'Viewing product category failed. Please try again.';
+		}
+	}
+
 	// Update when any page -> admin
 	beforeNavigate(() => {
 		fetchTariffs();
+		fetchProductCategories();
 	});
 
 	// Update on page load/refresh
 	onMount(() => {
 		fetchTariffs();
+		fetchProductCategories();
 	});
 
 	let view = false;
@@ -82,12 +97,10 @@
 	// Function to validate & submit tariff
 	function submitTariff() {
 		if (TariffValidation()) {
-			if (CategoryValidation()) {
-				if (createTariffBoolean) {
-					createTariffMethod();
-				} else if (edit) {
-					editTariffMethod();
-				}
+			if (createTariffBoolean) {
+				createTariffMethod();
+			} else if (edit) {
+				editTariffMethod();
 			}
 		}
 	}
@@ -131,31 +144,6 @@
 		return false;
 	}
 
-	// Function to validate Category
-	function CategoryValidation() {
-		if (
-			selectedTariff.productCategory.categoryCode != null &&
-			/^\d{6}$/.test(selectedTariff.productCategory.categoryCode)
-		) {
-			if (
-				selectedTariff.productCategory.categoryName != '' &&
-				selectedTariff.productCategory.categoryName.length <= 100
-			) {
-				if (selectedTariff.productCategory.description.length <= 500) {
-					return true;
-				} else {
-					error = 'Category Description can only have up to 500 characters';
-				}
-			} else {
-				error = 'Category Name can only have up to 100 characters';
-			}
-		} else {
-			error = 'Category Code can only be from 100000 to 999999';
-		}
-
-		return false;
-	}
-
 	// Function to create tariff
 	async function createTariffMethod() {
 		isBusy = true;
@@ -168,12 +156,7 @@
 			preferentialTariff: selectedTariff.preferentialTariff,
 			importingCountryCode: selectedTariff.importingCountryCode,
 			exportingCountryCode: selectedTariff.exportingCountryCode,
-			productCategory: {
-				categoryCode: selectedTariff.productCategory.categoryCode,
-				categoryName: selectedTariff.productCategory.categoryName,
-				description: selectedTariff.productCategory.description,
-				isActive: selectedTariff.productCategory.isActive
-			}
+			hsCode: selectedTariff.productCategory.categoryCode
 		};
 
 		try {
@@ -182,6 +165,7 @@
 			success = 'Created Tariff id: ' + result.id;
 			close();
 			fetchTariffs();
+			fetchProductCategories();
 			error = '';
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
@@ -219,6 +203,7 @@
 			success = result.message;
 			close();
 			fetchTariffs();
+			fetchProductCategories();
 			error = '';
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
@@ -236,6 +221,7 @@
 
 			success = result.message;
 			fetchTariffs();
+			fetchProductCategories();
 			error = '';
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
@@ -252,6 +238,7 @@
 		view = false;
 		selectedTariff = blankTariff();
 		fetchTariffs();
+		fetchProductCategories();
 	}
 
 	// Function that will return a date time in a readable format
@@ -363,7 +350,7 @@
 {/if}
 
 <div class="overflow-x-auto">
-	<table class="table-zebra static table">
+	<table class="table static table-zebra">
 		<thead class="bg-base-300 text-base font-semibold">
 			<tr>
 				<th on:click={() => sortBy('id')} class="cursor-pointer"
@@ -399,15 +386,15 @@
 					<td>{line.id}</td>
 					<td>{line.importingCountryCode}</td>
 					<td>{line.exportingCountryCode}</td>
-					<td>{line.preferentialTariff ? "Yes" : "No"}</td>
+					<td>{line.preferentialTariff ? 'Yes' : 'No'}</td>
 					<td>{line.tariffType}</td>
 					<td>{line.tariffRate} {line.rateUnit}</td>
 					<td>{line.effectiveDate}</td>
 					<td>{line.expiryDate}</td>
 					<td class="p-0">
-						<div class="dropdown dropdown-end static">
-							<button class=" btn btn-ghost btn-circle text-xl">⋮</button>
-							<ul class="menu menu-sm dropdown-content bg-base-100 rounded-box w-40 p-2 shadow">
+						<div class="dropdown static dropdown-end">
+							<button class=" btn btn-circle text-xl btn-ghost">⋮</button>
+							<ul class="dropdown-content menu w-40 menu-sm rounded-box bg-base-100 p-2 shadow">
 								<li>
 									<button
 										class="text-sm"
@@ -432,7 +419,7 @@
 								</li>
 								<li>
 									<button
-										class="text-error text-sm font-semibold"
+										class="text-sm font-semibold text-error"
 										on:click={deleteTariffMethod(line.id)}>Delete</button
 									>
 								</li>
@@ -447,7 +434,7 @@
 
 <!-- Modal -->
 {#if view || edit || createTariffBoolean}
-	<div class="modal modal-open">
+	<div class="modal-open modal">
 		<!-- Background which will close the modal -->
 		<button
 			class="modal-backdrop cursor-pointer"
@@ -472,7 +459,7 @@
 							type="text"
 							id="tariff_id"
 							bind:value={selectedTariff.id}
-							class="input input-bordered w-full"
+							class="input-bordered input w-full"
 							disabled
 						/>
 					</div>
@@ -481,7 +468,7 @@
 						<label class="label text-sm font-medium">Importing Country</label>
 						<div class="relative">
 							<div
-								class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm"
+								class="select-bordered select flex w-full cursor-pointer items-center justify-between text-sm"
 								on:click={() => (showImportToDropdown = !showImportToDropdown)}
 								on:blur={(e) => {
 									if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
@@ -506,14 +493,14 @@
 
 							{#if showImportToDropdown}
 								<div
-									class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
+									class="dropdown-panel absolute top-full right-0 left-0 z-20 mt-1 rounded-md border border-base-300 bg-base-100 shadow-lg"
 									on:click={(e) => {
 										e.stopPropagation();
 										console.log(selectedTariff.importingCountryCode);
 									}}
 									on:mousedown={(e) => e.stopPropagation()}
 								>
-									<div class="border-base-300 border-b p-2">
+									<div class="border-b border-base-300 p-2">
 										<input
 											type="text"
 											placeholder="Type to search..."
@@ -529,7 +516,7 @@
 									<div class="max-h-60 overflow-y-auto">
 										{#each filteredImportToCountries as country}
 											<div
-												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.importingCountryCode ==
+												class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm hover:bg-base-200 {selectedTariff.importingCountryCode ==
 												country.code
 													? 'bg-primary text-primary-content'
 													: ''}"
@@ -552,7 +539,7 @@
 											</div>
 										{/each}
 										{#if filteredImportToCountries.length === 0}
-											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
+											<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
 										{/if}
 									</div>
 								</div>
@@ -564,7 +551,7 @@
 						<label class="label text-sm font-medium">Exporting Country</label>
 						<div class="relative">
 							<div
-								class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm"
+								class="select-bordered select flex w-full cursor-pointer items-center justify-between text-sm"
 								on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
 								on:blur={(e) => {
 									if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
@@ -589,14 +576,14 @@
 
 							{#if showExportFromDropdown}
 								<div
-									class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
+									class="dropdown-panel absolute top-full right-0 left-0 z-20 mt-1 rounded-md border border-base-300 bg-base-100 shadow-lg"
 									on:click={(e) => {
 										e.stopPropagation();
 										console.log(selectedTariff.exportingCountryCode);
 									}}
 									on:mousedown={(e) => e.stopPropagation()}
 								>
-									<div class="border-base-300 border-b p-2">
+									<div class="border-b border-base-300 p-2">
 										<input
 											type="text"
 											placeholder="Type to search..."
@@ -612,7 +599,7 @@
 									<div class="max-h-60 overflow-y-auto">
 										{#each filteredExportFromCountries as country}
 											<div
-												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.exportingCountryCode ==
+												class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm hover:bg-base-200 {selectedTariff.exportingCountryCode ==
 												country.code
 													? 'bg-primary text-primary-content'
 													: ''}"
@@ -635,7 +622,7 @@
 											</div>
 										{/each}
 										{#if filteredExportFromCountries.length === 0}
-											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
+											<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
 										{/if}
 									</div>
 								</div>
@@ -651,11 +638,19 @@
 						<select
 							id="product_category_code"
 							bind:value={selectedTariff.productCategory.categoryCode}
-							class="select select-bordered w-full"
+							class="select-bordered select w-full"
 						>
-							<option value="851713">(851713) Smartphones</option>
-							<option value="850120">(850120) Universal AC/DC Motors > 37.5W</option>
-							<option value="850110">(850110) Electric Motors ≤ 37.5W</option>
+							{#each allProductCategories as line}
+								{#if selectedTariff.productCategory.categoryCode == line.categoryCode}
+									<option value={line.categoryCode} selected
+										>({line.categoryCode}) {line.categoryName}</option
+									>
+								{:else}
+									<option value={line.categoryCode}
+										>({line.categoryCode}) {line.categoryName}</option
+									>
+								{/if}
+							{/each}
 						</select>
 					</div>
 
@@ -668,7 +663,7 @@
 								type="number"
 								id="tariff_rate"
 								bind:value={selectedTariff.tariffRate}
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 							/>
 						</div>
 						<div>
@@ -678,7 +673,7 @@
 							<select
 								id="rate_unit"
 								bind:value={selectedTariff.rateUnit}
-								class="select select-bordered w-full"
+								class="select-bordered select w-full"
 							>
 								<option></option>
 								<option>ad valorem</option>
@@ -694,7 +689,7 @@
 							type="text"
 							id="tariff_type"
 							bind:value={selectedTariff.tariffType}
-							class="input input-bordered w-full"
+							class="input-bordered input w-full"
 						/>
 					</div>
 
@@ -707,7 +702,7 @@
 								type="date"
 								id="effective_date"
 								bind:value={selectedTariff.effectiveDate}
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 							/>
 						</div>
 						<div>
@@ -718,7 +713,7 @@
 								type="date"
 								id="expiry_date"
 								bind:value={selectedTariff.expiryDate}
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 							/>
 						</div>
 					</div>
@@ -729,11 +724,11 @@
 						</label>
 						<select
 							id="preferential_tariff"
-							value={selectedTariff.preferentialTariff + ""}
+							value={selectedTariff.preferentialTariff + ''}
 							on:change={(e) =>
 								(selectedTariff.preferentialTariff =
 									(e.currentTarget as HTMLSelectElement).value === 'true')}
-							class="select select-bordered w-full"
+							class="select-bordered select w-full"
 						>
 							<option value="true">Yes</option>
 							<option value="false">No</option>
@@ -749,7 +744,7 @@
 								type="text"
 								id="created_at"
 								value={readableDateTime(selectedTariff.createdAt)}
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 								disabled
 							/>
 						</div>
@@ -761,7 +756,7 @@
 								type="text"
 								id="updated_at"
 								value={readableDateTime(selectedTariff.updatedAt)}
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 								disabled
 							/>
 						</div>
@@ -874,7 +869,7 @@
 						<label class="label" for="preferential_tariff">
 							<span class="label-text font-semibold">Preferential Tariff</span>
 						</label>
-						<p class="w-full">{selectedTariff.preferentialTariff ? "Yes" : "No"}</p>
+						<p class="w-full">{selectedTariff.preferentialTariff ? 'Yes' : 'No'}</p>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">

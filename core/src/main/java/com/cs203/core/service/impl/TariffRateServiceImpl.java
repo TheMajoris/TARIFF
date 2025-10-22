@@ -115,17 +115,12 @@ public class TariffRateServiceImpl implements TariffRateService {
         // Verify product category exists
         // User has to create new product category separately if tariff needs a new one.
         ProductCategoriesEntity productCategory = productCategoriesRepository
-                .findById(dto.getProductCategory().getId())
+                .findByCategoryCode(dto.getProductCategory().getCategoryCode())
                 .orElse(null);
                 
         if (productCategory == null) {
             return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND,
                     "Product Category not found with code: " + dto.getProductCategory().getCategoryCode(), null);
-        }else{
-            // productCategory.setCategoryCode(dto.getProductCategory().getCategoryCode());
-            productCategory.setCategoryName(dto.getProductCategory().getCategoryName());
-            productCategory.setDescription(dto.getProductCategory().getDescription());
-            productCategory.setIsActive(dto.getProductCategory().getIsActive());
         }
 
         // Update fields

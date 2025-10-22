@@ -85,89 +85,91 @@
 </script>
 
 {#if authorized}
-<div class="space-y-6 p-6">
-	<!-- Page Title -->
-	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
+	<div class="space-y-6 p-6">
+		<!-- Page Title -->
+		<h1 class="text-2xl font-semibold text-primary">Admin</h1>
 
-	{#if error}
-		<div class="alert alert-error">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6 shrink-0 stroke-current"
-				fill="none"
-				viewBox="0 0 24 24"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/>
-			</svg>
-			<span>{error}</span>
-		</div>
-	{/if}
+		{#if error}
+			<div class="alert alert-error">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-6 w-6 shrink-0 stroke-current"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+				<span>{error}</span>
+			</div>
+		{/if}
 
-	{#if success}
-		<div class="alert alert-success">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6 shrink-0 stroke-current"
-				fill="none"
-				viewBox="0 0 24 24"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/>
-			</svg>
-			<span>{success}</span>
-		</div>
-	{/if}
+		{#if success}
+			<div class="alert alert-success">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-6 w-6 shrink-0 stroke-current"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+				<span>{success}</span>
+			</div>
+		{/if}
 
-	<!-- Two-column layout -->
-	<div class="grid grid-cols-1">
-		<!-- Tariffs Card -->
-		<div class="card bg-base-100 p-6 shadow-md relative">
-			{#if isBusy}
-				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
-					<span class="loading loading-spinner loading-lg text-primary"></span>
+		<!-- Two-column layout -->
+		<div class="grid grid-cols-1">
+			<!-- Tariffs Card -->
+			<div class="card relative bg-base-100 p-6 shadow-md">
+				{#if isBusy}
+					<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+						<span class="loading loading-lg loading-spinner text-primary"></span>
+					</div>
+				{/if}
+				<div class="flex items-center justify-between py-6">
+					<div class="flex">
+						<h2
+							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode == 'tariff'
+								? 'border-b-2'
+								: ''}"
+							on:click={() => {
+								mode = 'tariff';
+							}}
+						>
+							Tariffs
+						</h2>
+						<h2
+							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode ==
+							'category'
+								? 'border-b-2'
+								: ''}"
+							on:click={() => {
+								mode = 'category';
+							}}
+						>
+							Product Categories
+						</h2>
+					</div>
+					<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
 				</div>
-			{/if}
-			<div class="flex items-center justify-between py-6">
-				<div class="flex">
-					<h2
-						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
-							? 'border-b-2'
-													: ''}"
-												on:click={() => {
-							mode = 'tariff';
-						}}
-					>
-						Tariffs
-					</h2>
-					<h2
-						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
-							? 'border-b-2'
-													: ''}"
-												on:click={() => {
-							mode = 'category';
-						}}
-					>
-						Product Categories
-					</h2>
-											</div>
-								</div>
-			{#if mode == 'tariff'}
-				<TariffComponent bind:createTariffBoolean bind:isBusy/>
-			{/if}
+				{#if mode == 'tariff'}
+					<TariffComponent bind:createTariffBoolean bind:isBusy />
+				{/if}
 
-			{#if mode == 'category'}
-				<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
-			{/if}
+				{#if mode == 'category'}
+					<CategoryComponent bind:createCategoryBoolean bind:isBusy />
+				{/if}
+			</div>
 		</div>
 	</div>
-</div>
 {/if}
