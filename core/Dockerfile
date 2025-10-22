@@ -3,15 +3,19 @@ FROM eclipse-temurin:17-jdk-jammy AS build
 
 WORKDIR /app
 
-# Copy Gradle/Maven wrapper and build files
+# Copy Gradle wrapper and build files first (for better caching)
 COPY gradlew .
 COPY gradle ./gradle
 COPY build.gradle .
-# Copy source code
-COPY src ./src
 
 # Make Gradle wrapper executable
 RUN chmod +x ./gradlew
+
+# Download dependencies first (this layer will be cached if dependencies don't change)
+RUN ./gradlew dependencies --no-daemon || true
+
+# Copy source code last (changes most frequently)
+COPY src ./src
 
 # Build the JAR and skip tests
 RUN ./gradlew clean bootJar -x test --no-daemon
