@@ -13,6 +13,12 @@ export async function fetchNews() {
     const response = await res.json();
     console.log('Raw news data:', response);
     
+    // Validate response structure
+    if (!response || !Array.isArray(response.articles)) {
+      console.error('Invalid response structure:', response);
+      return [];
+    }
+    
     // Map the response to match frontend expectations
     const mappedNews = response.articles.map((article) => ({
       id: article.id,
