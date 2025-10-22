@@ -288,7 +288,7 @@ class TariffRateControllerTest {
         LocalDate date = LocalDate.of(2025, 1, 1);
         TariffRateEntity mockEntity = new TariffRateEntity();
         mockEntity.setTariffRate(new BigDecimal("0.1"));
-        mockEntity.setRateUnit("ad valorem");
+        mockEntity.setTariffType("ad valorem");
 
         // Mock getLowestActiveTariff to return the entity
         Mockito.when(tariffRateService.getLowestActiveTariff(
@@ -323,7 +323,7 @@ class TariffRateControllerTest {
         LocalDate date = LocalDate.of(2025, 1, 1);
         TariffRateEntity mockEntity = new TariffRateEntity();
         mockEntity.setTariffRate(BigDecimal.ZERO);
-        mockEntity.setRateUnit("ad valorem");
+        mockEntity.setTariffType("ad valorem");
 
         Mockito.when(tariffRateService.getLowestActiveTariff(
                         eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
