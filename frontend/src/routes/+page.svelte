@@ -282,7 +282,7 @@
 				</div>
 			{:else}
 				<ul class="space-y-4">
-					{#each news as article}
+					{#each displayNews as article}
 						<li
 							class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
 							on:click={() => (selectedArticle = article)}
@@ -300,6 +300,31 @@
 						</li>
 					{/each}
 				</ul>
+				
+				<!-- Pagination Controls -->
+				{#if news.length > pageSize}
+					<div class="flex items-center justify-between mt-4 pt-4 border-t border-base-300">
+						<div class="text-sm text-gray-500">
+							Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, news.length)} of {news.length} articles
+						</div>
+						<div class="flex gap-2">
+							<button 
+								class="btn btn-sm btn-outline" 
+								disabled={currentPage === 1}
+								on:click={() => currentPage = Math.max(1, currentPage - 1)}
+							>
+								Previous
+							</button>
+							<button 
+								class="btn btn-sm btn-outline" 
+								disabled={currentPage * pageSize >= news.length}
+								on:click={() => currentPage = currentPage + 1}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+				{/if}
 			{/if}
 		</div>
   </div>
@@ -441,11 +466,28 @@
 	// End: Tariff Calculation Section 
 
 
-	// Start: Related News Section 
+	// Start: Related News Section
 	let selectedArticle = null;
 	let news = [];
 	let newsLoading = false;
 	let newsError = null;
+	
+	// Pagination state
+	let currentPage = 1;
+	let pageSize = 2; // Changed to 2 for testing
+	let displayNews = [];
+	
+	// Calculate displayed news based on pagination
+	$: {
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+		displayNews = news.slice(startIndex, endIndex);
+	}
+	
+	// Reset to first page when news changes
+	$: if (news.length > 0) {
+		currentPage = 1;
+	}
 
 	// Fetch news from API
 	async function loadNews() {
