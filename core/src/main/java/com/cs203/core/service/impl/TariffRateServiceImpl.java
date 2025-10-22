@@ -1,17 +1,5 @@
 package com.cs203.core.service.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.ProductCategoriesDto;
@@ -23,8 +11,19 @@ import com.cs203.core.repository.CountryRepository;
 import com.cs203.core.repository.ProductCategoriesRepository;
 import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.TariffRateService;
-
+import com.cs203.core.strategy.TariffCalculationStrategy;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,6 +37,12 @@ public class TariffRateServiceImpl implements TariffRateService {
 
     @Autowired
     private ProductCategoriesRepository productCategoriesRepository;
+
+    @Autowired
+    private TariffCalculationStrategy adValoremStrategy;
+
+    @Autowired
+    private TariffCalculationStrategy specificRateStrategy;
 
     // Get all tariff rates
     public List<TariffRateDto> getAllTariffRates() {
@@ -117,11 +122,11 @@ public class TariffRateServiceImpl implements TariffRateService {
         ProductCategoriesEntity productCategory = productCategoriesRepository
                 .findById(dto.getProductCategory().getId())
                 .orElse(null);
-                
+
         if (productCategory == null) {
             return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND,
                     "Product Category not found with code: " + dto.getProductCategory().getCategoryCode(), null);
-        }else{
+        } else {
             // productCategory.setCategoryCode(dto.getProductCategory().getCategoryCode());
             productCategory.setCategoryName(dto.getProductCategory().getCategoryName());
             productCategory.setDescription(dto.getProductCategory().getDescription());
@@ -156,45 +161,46 @@ public class TariffRateServiceImpl implements TariffRateService {
         return new GenericResponse<Void>(HttpStatus.OK, "Successfully deleted Tariff Rate", null);
     }
 
-    // get tariffRate
     public BigDecimal getFinalPrice(Long importingCountryId, Long exportingCountryId, Integer hsCode,
-            BigDecimal initialPrice, LocalDate date) {
-        // get List of rates based on input and attributed data in repo
-        BigDecimal tariffRate = getLowestActiveTariffRate(importingCountryId, exportingCountryId, hsCode, initialPrice, date);
-        
-        // If no tariff data found (tariffRate = -1), return initial price
-        if (tariffRate.compareTo(new BigDecimal("-1")) == 0) {
-            return initialPrice;
+                                    BigDecimal initialPrice, BigDecimal quantity, LocalDate date) {
+
+        Optional<TariffRateEntity> tariffOpt = tariffRateRepository
+                .findCurrentTariffRate(importingCountryId, exportingCountryId, hsCode, date);
+
+        if (tariffOpt.isEmpty()) {
+            return initialPrice; // No tariff — price unchanged
         }
-        
-        // Convert percentage to decimal (divide by 100)
-        BigDecimal tariffRateDecimal = tariffRate.divide(new BigDecimal("100"));
-        BigDecimal finalPrice = initialPrice.add(initialPrice.multiply(tariffRateDecimal));
-        return finalPrice;
+
+        TariffRateEntity tariff = tariffOpt.get();
+
+        // Choose the correct strategy according to rateUnit
+        if (tariff.getRateUnit().equalsIgnoreCase("SPECIFIC")) {
+            return specificRateStrategy.calculateFinalPrice(initialPrice, quantity, tariff);
+        } else {
+            return adValoremStrategy.calculateFinalPrice(initialPrice, quantity, tariff);
+        }
     }
 
     // get LowestTariffRate
+    @Override
     public BigDecimal getLowestActiveTariffRate(Long importingCountryId, Long exportingCountryId, Integer hsCode,
-            BigDecimal initialPrice, LocalDate date) {
-        
-        // API Endpoint for Country-specific tariffs is not ready yet, Use first 6 digits only
-        Integer sixDigitHsCode = Integer.parseInt(String.valueOf(hsCode).substring(0, Math.min(6, String.valueOf(hsCode).length())));
-        Optional<TariffRateEntity> currentTariffRates = tariffRateRepository
-                .findCurrentTariffRate(importingCountryId, exportingCountryId, sixDigitHsCode, date);
-        
-        // Check if any tariff data exists
-        if (!currentTariffRates.isPresent()) {
-            // Return -1 to indicate no data found (instead of 0 which could be a valid tariff rate)
+                                                BigDecimal initialPrice, LocalDate date) {
+        Optional<TariffRateEntity> currentTariffRate = tariffRateRepository
+                .findCurrentTariffRate(importingCountryId, exportingCountryId, hsCode, date);
+
+        if (currentTariffRate.isEmpty()) {
             return new BigDecimal("-1");
         }
-        
-        // get n set lowest rate
-        BigDecimal tariffRate = currentTariffRates
-                .stream()
-                .map(TariffRateEntity::getTariffRate)
-                .min(Comparable::compareTo)
-                .orElse(BigDecimal.ZERO);
-        return tariffRate;
+
+        return currentTariffRate.get().getTariffRate();
+    }
+
+    public Optional<TariffRateEntity> getLowestActiveTariff(Long importingCountryId, Long exportingCountryId, Integer hsCode,
+                                                            BigDecimal initialPrice, LocalDate date) {
+        Optional<TariffRateEntity> currentTariffRate = tariffRateRepository
+                .findCurrentTariffRate(importingCountryId, exportingCountryId, hsCode, date);
+
+        return currentTariffRate;
     }
 
     // get TariffCost

@@ -4,15 +4,22 @@ import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.ProductCategoriesDto;
 import com.cs203.core.dto.TariffRateDto;
+import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.exception.GlobalExceptionHandler;
 import com.cs203.core.service.TariffRateService;
+import com.cs203.core.strategy.TariffCalculationStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -22,6 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,15 +37,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 class TariffRateControllerTest {
+    @Autowired
     private MockMvc mockMvc;
+    @MockitoBean
     private TariffRateService tariffRateService;
     private TariffRateController controller;
     private ObjectMapper objectMapper;
+    @Mock
+    private TariffCalculationStrategy adValoremStrategy;
+    @Mock
+    private TariffCalculationStrategy specificStrategy;
 
     @BeforeEach
     void setUp() throws Exception {
-        tariffRateService = Mockito.mock(TariffRateService.class);
         controller = new TariffRateController();
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules(); // This helps with LocalDate serialization
@@ -269,41 +284,61 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculation returns TariffCalculatorResponseDto with tariffRate, tariffCost, and finalPrice")
     void post_calculate_returnsTariffCalculatorResponseDto() throws Exception {
-        // Mock the service methods to return expected values
+        // Create mock entity with all required fields
         LocalDate date = LocalDate.of(2025, 1, 1);
-        Mockito.when(tariffRateService.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")),
-                        eq(date)))
-                .thenReturn(new BigDecimal("0.1"));
-        Mockito.when(tariffRateService.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        TariffRateEntity mockEntity = new TariffRateEntity();
+        mockEntity.setTariffRate(new BigDecimal("0.1"));
+        mockEntity.setRateUnit("ad valorem");
+
+        // Mock getLowestActiveTariff to return the entity
+        Mockito.when(tariffRateService.getLowestActiveTariff(
+                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+                .thenReturn(Optional.of(mockEntity));
+
+        // Mock getFinalPrice
+        Mockito.when(tariffRateService.getFinalPrice(
+                        eq(1L), eq(2L), eq(123),
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("110.00"));
-        Mockito.when(tariffRateService.getTariffCost(eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
+
+        // Mock getTariffCost
+        Mockito.when(tariffRateService.getTariffCost(
+                        eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(new BigDecimal("10.00"));
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tariffRate").value(0.1))
-                .andExpect(jsonPath("$.tariffCost").value(10.00))
-                .andExpect(jsonPath("$.finalPrice").value(110.00));
+                .andExpect(jsonPath("$.finalPrice").value(110.00))
+                .andExpect(jsonPath("$.tariffCost").value(10.00));
     }
 
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculation with zero tariff rate returns zero tariff cost")
     void post_calculate_zeroTariffRate_returnsZeroTariffCost() throws Exception {
-        // Mock the service methods to return expected values for zero tariff rate
         LocalDate date = LocalDate.of(2025, 1, 1);
-        Mockito.when(tariffRateService.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")),
-                        eq(date)))
-                .thenReturn(BigDecimal.ZERO);
-        Mockito.when(tariffRateService.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        TariffRateEntity mockEntity = new TariffRateEntity();
+        mockEntity.setTariffRate(BigDecimal.ZERO);
+        mockEntity.setRateUnit("ad valorem");
+
+        Mockito.when(tariffRateService.getLowestActiveTariff(
+                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+                .thenReturn(Optional.of(mockEntity));
+
+        Mockito.when(tariffRateService.getFinalPrice(
+                        eq(1L), eq(2L), eq(123),
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("100.00"));
-        Mockito.when(tariffRateService.getTariffCost(eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
+
+        Mockito.when(tariffRateService.getTariffCost(
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(BigDecimal.ZERO);
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -380,7 +415,7 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculation returns 400 for negative price")
     void calculate_returnsBadRequest_whenPriceIsNegative() throws Exception {
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"quantity\":1.0\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
