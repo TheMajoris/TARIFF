@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { beforeNavigate, goto } from '$app/navigation';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { logoutUser, refreshToken } from '$lib/api/users';
 	import { onDestroy, onMount } from 'svelte';
@@ -43,9 +43,17 @@
 		updateLocalStorage();
 	});
 
-	// Update on page load/refresh
+	function applySavedTheme() {
+		if (browser) {
+			const savedTheme = localStorage.getItem('theme') || 'light';
+			document.documentElement.setAttribute('data-theme', savedTheme);
+		}
+	}
+
+		// Update on page load/refresh
 	onMount(() => {
 		updateLocalStorage();
+		applySavedTheme();
 		
 		// Set up token refresh interval (only in browser)
 		if (browser) {
@@ -61,6 +69,10 @@
 		}
 	});
 
+	afterNavigate(() => {
+		applySavedTheme();
+	});
+
 	// Clean up interval on component destruction
 	onDestroy(() => {
 		if (refreshTokenInterval) {
@@ -72,7 +84,6 @@
 		// Clear localStorage and state first
 		if (browser) {
 			localStorage.clear();
-		}
 		role = null;
 		fullName = null;
 		jwt = null;
@@ -90,6 +101,7 @@
 		// Always redirect to login
 		goto('/login');
 	}
+}
 
 
 	// Check if its gonna expire (left less than 1 minute)
@@ -122,7 +134,7 @@
 	}
 </script>
 
-<div class="drawer lg:drawer-open" data-theme="light">
+<div class="drawer lg:drawer-open">
 	<input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
 
 	<!-- Main content -->
@@ -174,7 +186,6 @@
 						<li><a href="/" class="link link-hover">Dashboard</a></li>
 						<li><a href="/tariff" class="link link-hover">Tariff Calculator</a></li>
 						<li><a href="/settings" class="link link-hover">Settings</a></li>
-						<li><a href="/support" class="link link-hover">Support</a></li>
 					</ul>
 				</div>
 
@@ -252,9 +263,8 @@
 					{#if role == 'ROLE_ADMIN'}
 						<li><a href="/admin" class:active={page.url.pathname === '/admin'}>Admin</a></li>
 					{/if}
-					<li class="menu-title"><span>Support</span></li>
+					<li class="menu-title"><span>Settings</span></li>
 					<li><a href="/settings" class:active={page.url.pathname === '/settings'}>Settings</a></li>
-					<li><a href="/support" class:active={page.url.pathname === '/support'}>Support</a></li>
 				</ul>
 
 				<!-- User Footer in Sidebar -->

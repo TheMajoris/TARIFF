@@ -10,6 +10,7 @@
 	let view = false;
 	let edit = false;
 	export let createCategoryBoolean = false;
+	export let isBusy = false; // page-level busy indicator for create/edit flows
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -101,13 +102,16 @@
 	// }
 
 	// async function fetchTariffs() {
+	// isBusy = true;
 	// 	try {
 	// 		const result = await getAllTariff();
 	// 		allTariff = result;
 	// 	} catch (err) {
 	// 		console.error('Getting all tariff error:', err);
 	// 		error = err instanceof Error ? err.message : 'Viewing tariff failed. Please try again.';
-	// 	}
+	// 	} finally {
+	// 	isBusy = false;
+	// }
 	// }
 
 	// // Update when any page -> admin
@@ -158,6 +162,7 @@
 
 	// // Function to create tariff
 	// async function createTariffMethod() {
+	// isBusy = true;
 	// 	let payload = {
 	// 		tariffRate: selectedCategory.tariffRate,
 	// 		tariffType: selectedCategory.tariffType,
@@ -185,11 +190,14 @@
 	// 	} catch (err) {
 	// 		error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
 	// 		console.error('Creating tariff error:', err);
-	// 	}
+	// 	} finally{
+	// isBusy = false;
+	// }
 	// }
 
 	// // Function to edit tariff
 	// async function editTariffMethod() {
+	// isBusy = true;
 	// 	let payload = {
 	// 		id: selectedCategory.id,
 	// 		tariffRate: selectedCategory.tariffRate,
@@ -219,11 +227,14 @@
 	// 	} catch (err) {
 	// 		error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
 	// 		console.error('Editing tariff error:', err);
-	// 	}
+	// 	} finally {
+	// isBusy = false;
+	// }
 	// }
 
 	// // Function to edit tariff
 	// async function deleteTariffMethod(id: number) {
+	// isBusy = true;
 	// 	try {
 	// 		const result = await deleteSpecificTariff(id);
 
@@ -233,7 +244,9 @@
 	// 	} catch (err) {
 	// 		error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
 	// 		console.error('Deleting tariff error:', err);
-	// 	}
+	// 	}finally{
+	// isBusy = false;
+	// }
 	// }
 
 	// Function used to close the popup and reset the tariff value
@@ -471,7 +484,7 @@
 							</label>
 							<select
 								id="product_category_active"
-								value={selectedCategory.isActive + ""}
+								value={selectedCategory.isActive + ''}
 								on:change={(e) =>
 									(selectedCategory.isActive =
 										(e.currentTarget as HTMLSelectElement).value === 'true')}
