@@ -1,7 +1,9 @@
 package com.cs203.core.entity;
 
+import com.cs203.core.enums.TariffType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "tariff_rates")
 @Getter
 @Setter
+@AllArgsConstructor
 public class TariffRateEntity {
 
     @Id
@@ -120,5 +123,14 @@ public class TariffRateEntity {
 
     public boolean isEffective() {
         return effectiveDate != null && !effectiveDate.isAfter(LocalDate.now());
+    }
+
+    @Transient
+    public TariffType getTariffTypeEnum() {
+        return tariffType == null ? null : TariffType.fromValue(tariffType);
+    }
+
+    public void setTariffTypeEnum(TariffType type) {
+        this.tariffType = type == null ? null : type.getValue();
     }
 }

@@ -81,6 +81,7 @@ class TariffRateControllerTest {
         rate1.setId(1L);
         rate1.setTariffRate(new BigDecimal("0.1"));
         rate1.setTariffType("ad-valorem");
+        rate1.setUnitQuantity(new BigDecimal("1.0"));
         rate1.setRateUnit("percent");
         rate1.setEffectiveDate(LocalDate.now());
         rate1.setImportingCountryCode("US");
@@ -90,6 +91,7 @@ class TariffRateControllerTest {
         rate2.setId(2L);
         rate2.setTariffRate(new BigDecimal("0.20"));
         rate2.setTariffType("ad-valorem");
+        rate1.setUnitQuantity(new BigDecimal("1.0"));
         rate2.setRateUnit("percent");
         rate2.setEffectiveDate(LocalDate.now());
         rate2.setImportingCountryCode("US");

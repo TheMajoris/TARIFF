@@ -216,6 +216,7 @@ public class TariffRateServiceImpl implements TariffRateService {
         TariffRateDto dto = new TariffRateDto();
         dto.setId(entity.getId());
         dto.setTariffRate(entity.getTariffRate());
+        dto.setUnitQuantity(entity.getUnitQuantity());
         dto.setTariffType(entity.getTariffType());
         dto.setRateUnit(entity.getRateUnit());
         dto.setEffectiveDate(entity.getEffectiveDate());
