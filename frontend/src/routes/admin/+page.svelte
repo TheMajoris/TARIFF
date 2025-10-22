@@ -1,11 +1,21 @@
 <script lang="ts">
-	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
-	import { beforeNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { fetchCountries } from '$lib/api/countries.js';
-
-	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import { goto } from '$app/navigation';
 	import CategoryComponent from '$lib/components/admin/Category.svelte';
+	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import { onMount } from 'svelte';
+
+	// Server-side data from +page.server.ts
+	export let data: any;
+
+	// Gate rendering and redirect if not authorized (prevents SSR leak/flicker)
+	let authorized = false;
+	onMount(() => {
+		const token = localStorage.getItem('jwt');
+		const role = localStorage.getItem('role');
+		const isAdmin = Boolean(token) && role === 'ROLE_ADMIN';
+		if (!isAdmin) goto('/error/403');
+		else authorized = true;
+	});
 
 	let mode = 'tariff';
 
@@ -50,7 +60,7 @@
 			importingCountryCode: '',
 			preferentialTariff: false,
 			productCategory: {
-				categoryCode: 0,
+				categoryCode: '',
 				categoryName: '',
 				description: '',
 				id: 0,
@@ -73,6 +83,7 @@
 	}
 </script>
 
+{#if authorized}
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
@@ -124,8 +135,8 @@
 					<h2
 						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
 							? 'border-b-2'
-							: ''}"
-						on:click={() => {
+													: ''}"
+												on:click={() => {
 							mode = 'tariff';
 						}}
 					>
@@ -134,19 +145,18 @@
 					<h2
 						class="mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
 							? 'border-b-2'
-							: ''}"
-						on:click={() => {
+													: ''}"
+												on:click={() => {
 							mode = 'category';
 						}}
 					>
 						Product Categories
 					</h2>
-				</div>
-				<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
-			</div>
+											</div>
+								</div>
 			{#if mode == 'tariff'}
 				<TariffComponent bind:createTariffBoolean />
-			{/if}
+					{/if}
 
 			{#if mode == 'category'}
 				<CategoryComponent bind:createCategoryBoolean />
@@ -154,3 +164,4 @@
 		</div>
 	</div>
 </div>
+{/if}
