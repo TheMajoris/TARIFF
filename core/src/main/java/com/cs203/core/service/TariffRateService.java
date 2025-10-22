@@ -15,7 +15,7 @@ public interface TariffRateService {
 
     GenericResponse<TariffRateDto> getTariffRateById(Long tariffRateId);
 
-    TariffRateDto createTariffRate(CreateTariffRateDto createTariffRateDto);
+    GenericResponse<TariffRateDto> createTariffRate(CreateTariffRateDto createTariffRateDto);
 
     GenericResponse<TariffRateDto> updateTariffRate(TariffRateDto tariffRateDto, Long tariffRateId);
 

@@ -110,7 +110,12 @@
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isLoading}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Register</h2>
 
 			<!-- Error/Success Messages -->
@@ -237,7 +242,7 @@
 						disabled={isLoading}
 					>
 						{#if isLoading}
-							<span class="loading loading-spinner loading-sm"></span>
+							<span class="loading loading-spinner loading-sm text-primary-content"></span>
 							Registering...
 						{:else}
 							Register

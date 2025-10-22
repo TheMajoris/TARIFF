@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { loginUser } from '$lib/api/users';
 	import { page } from '$app/stores';
+	import { loginUser } from '$lib/api/users';
 
 
 	let email = '';
@@ -21,6 +21,10 @@
 	async function login() {
 		if (email && password) {
 			if (validateEmail()) {
+				isLoading = true;
+				error = '';
+				success = '';
+				
 				try {
 					const result = await loginUser({
 						email,
@@ -61,7 +65,12 @@
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isLoading}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Login</h2>
 
 			<!-- Error/Success Messages -->
@@ -133,9 +142,9 @@
 				<!-- Submit -->
 				<div class="form-control flex justify-around">
 					<a href="./register" class="btn btn-primary btn-sm w-1/3">Register</a>
-					<button type="submit" class="btn btn-primary btn-sm w-1/3">
+					<button type="submit" class="btn btn-primary btn-sm w-1/3" disabled={isLoading}>
 						{#if isLoading}
-							<span class="loading loading-spinner loading-sm"></span>
+							<span class="loading loading-spinner loading-sm text-primary-content"></span>
 							Logging in...
 						{:else}
 							Login
