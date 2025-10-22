@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,7 +80,7 @@ public class TariffRateController {
     @Operation(summary = "Calculate the tariff cost given tariff and price")
     @ApiResponse(responseCode = "200", description = "Request successful")
     @ApiResponse(responseCode = "400", description = "Calculate request is invalid")
-    @PostMapping("/calculate")
+    @PostMapping("/calculation")
     public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
             @Valid @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
         BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
