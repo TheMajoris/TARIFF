@@ -174,7 +174,7 @@ public class TariffRateServiceImpl implements TariffRateService {
         TariffRateEntity tariff = tariffOpt.get();
 
         // Choose the correct strategy according to rateUnit
-        if (tariff.getRateUnit().equalsIgnoreCase("SPECIFIC")) {
+        if (tariff.getTariffType().equalsIgnoreCase("SPECIFIC")) {
             return specificRateStrategy.calculateFinalPrice(initialPrice, quantity, tariff);
         } else {
             return adValoremStrategy.calculateFinalPrice(initialPrice, quantity, tariff);
