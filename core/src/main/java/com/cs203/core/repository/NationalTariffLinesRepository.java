@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,4 +49,10 @@ public interface NationalTariffLinesRepository extends JpaRepository<NationalTar
     
     // Check if tariff line exists for country and code
     boolean existsByCountryAndTariffLineCode(CountryEntity country, String tariffLineCode);
+
+    @Query("SELECT COUNT(ntl) FROM NationalTariffLinesEntity ntl WHERE ntl.parentHsCode.categoryCode = :hsCode")
+    long countByHsCode(@Param("hsCode") Integer hsCode);
+
+    @Query("SELECT ntl.id FROM NationalTariffLinesEntity ntl WHERE ntl.parentHsCode.categoryCode = :hsCode")
+    List<Long> findIdsByHsCode(@Param("hsCode") Integer hsCode);
 }

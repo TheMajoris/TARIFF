@@ -3,25 +3,28 @@
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { logoutUser, refreshToken } from '$lib/api/users';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import '../app.css';
 
 	// so that won't have the syntax line error
 	let role: string | null = null;
 	let fullName: string | null = null;
 	let jwt: string | null = null;
+	
+	// Interval ID for cleanup
+	let refreshTokenInterval: number | null = null;
 
 	// Validate if user is in a page his allowed to be in
 	function validatePageAccess() {
 		// No localstorage, need to login again
-		if (jwt == null && page.url.pathname != '/login' && page.url.pathname != '/register') {
+		// Exclude error pages from authentication check
+		const isErrorPage = page.url.pathname.startsWith('/error/');
+		if (jwt == null && page.url.pathname != '/login' && page.url.pathname != '/register' && !isErrorPage) {
 			goto('/login');
 		}
 
-		// Admin page but no admin access
-		if (page.url.pathname === '/admin' && (role == null || role != 'ROLE_ADMIN')) {
-			goto('/login');
-		}
+		// Note: Admin page authentication is now handled in /admin/+page.svelte
+		// This prevents conflicts between layout and page-level auth checks
 	}
 
 	// Update localstorage
@@ -47,21 +50,40 @@
 		}
 	}
 
-	// Update on page load/refresh
+		// Update on page load/refresh
 	onMount(() => {
 		updateLocalStorage();
 		applySavedTheme();
+		
+		// Set up token refresh interval (only in browser)
+		if (browser) {
+			refreshTokenInterval = setInterval(async () => {
+				if (jwt && isExpiringSoon()) {
+					const result = await refreshAccessToken();
+					if (result && result.message && result.message.jwt) {
+						localStorage.setItem('jwt', result.message.jwt);
+						jwt = result.message.jwt;
+					}
+				}
+			}, 60 * 1000); // check every minute
+		}
 	});
 
 	afterNavigate(() => {
 		applySavedTheme();
 	});
 
+	// Clean up interval on component destruction
+	onDestroy(() => {
+		if (refreshTokenInterval) {
+			clearInterval(refreshTokenInterval);
+		}
+	});
+
 	async function logout() {
 		// Clear localStorage and state first
 		if (browser) {
 			localStorage.clear();
-		}
 		role = null;
 		fullName = null;
 		jwt = null;
@@ -80,19 +102,10 @@
 		goto('/login');
 	}
 
-	// 1 minute intervals check/refresh token
-	let refreshTokenInterval = setInterval(async () => {
-		if (jwt && isExpiringSoon()) {
-			const result = await refreshAccessToken();
-			if (result && result.message && result.message.jwt) {
-				localStorage.setItem('jwt', result.message.jwt);
-				jwt = result.message.jwt;
-			}
-		}
-	}, 60 * 1000); // check every minute
 
 	// Check if its gonna expire (left less than 1 minute)
 	function isExpiringSoon() {
+		if (!jwt) return false;
 		// base64 decode the jwt to get expiring date
 		const { exp } = JSON.parse(atob(jwt.split('.')[1]));
 		const now = Math.floor(Date.now() / 1000);

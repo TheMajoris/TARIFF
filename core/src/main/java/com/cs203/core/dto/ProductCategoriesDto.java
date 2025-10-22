@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
 public class ProductCategoriesDto {
@@ -25,4 +26,20 @@ public class ProductCategoriesDto {
     
     @NotNull(message = "isActive has to be set")
     private Boolean isActive;
+
+    public ProductCategoriesDto() {}
+
+    public ProductCategoriesDto(Long id,
+            Integer categoryCode,
+            String categoryName,
+            String description,
+            Boolean isActive) {
+        this.id = id;
+        this.categoryCode = categoryCode;
+        this.categoryName = categoryName;
+        this.description = description;
+        this.isActive = isActive;
+    };
+
+    
 }
