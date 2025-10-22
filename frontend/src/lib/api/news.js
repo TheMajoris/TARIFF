@@ -20,7 +20,7 @@ export async function fetchNews() {
       summary: article.summary,
       link: article.url,
       tags: article.tags || [],
-      date: new Date().toISOString().split('T')[0] // Use current date as fallback
+      date: article.publishedDate || "Date unavailable" // Use actual date or indicate missing
     }));
     
     // Sort by most recent first (since we don't have actual dates, sort by ID descending)
@@ -59,7 +59,7 @@ export async function fetchNewsByTags(tags) {
       summary: article.summary,
       link: article.url,
       tags: article.tags || [],
-      date: new Date().toISOString().split('T')[0] // Use current date as fallback
+      date: null // No fallback date for undated articles
     }));
     
     // Sort by most recent first (since we don't have actual dates, sort by ID descending)

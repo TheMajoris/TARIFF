@@ -288,7 +288,7 @@
 							on:click={() => (selectedArticle = article)}
 						>
 							<h3 class="text-base font-medium">{article.title}</h3>
-							<p class="text-xs text-gray-500">{article.date}</p>
+							<p class="text-xs text-gray-500">{article.date || 'Date unavailable'}</p>
 							<p class="mt-1 text-sm">{article.summary}</p>
 							{#if article.tags && article.tags.length > 0}
 								<div class="mt-2 flex flex-wrap gap-1">
