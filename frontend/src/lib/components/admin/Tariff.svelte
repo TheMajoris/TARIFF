@@ -6,6 +6,7 @@
 
 	let success = '';
 	let error = '';
+	export let isBusy = false; // page-level busy indicator for create/edit flows
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -157,6 +158,7 @@
 
 	// Function to create tariff
 	async function createTariffMethod() {
+		isBusy = true;
 		let payload = {
 			tariffRate: selectedTariff.tariffRate,
 			tariffType: selectedTariff.tariffType,
@@ -184,11 +186,14 @@
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
 			console.error('Creating tariff error:', err);
+		} finally {
+			isBusy = false;
 		}
 	}
 
 	// Function to edit tariff
 	async function editTariffMethod() {
+		isBusy = true;
 		let payload = {
 			id: selectedTariff.id,
 			tariffRate: selectedTariff.tariffRate,
@@ -218,11 +223,14 @@
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
 			console.error('Editing tariff error:', err);
+		} finally {
+			isBusy = false;
 		}
 	}
 
 	// Function to edit tariff
 	async function deleteTariffMethod(id: number) {
+		isBusy = true;
 		try {
 			const result = await deleteSpecificTariff(id);
 
@@ -232,6 +240,8 @@
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
 			console.error('Deleting tariff error:', err);
+		} finally {
+			isBusy = false;
 		}
 	}
 
@@ -389,7 +399,7 @@
 					<td>{line.id}</td>
 					<td>{line.importingCountryCode}</td>
 					<td>{line.exportingCountryCode}</td>
-					<td>{line.preferentialTariff}</td>
+					<td>{line.preferentialTariff ? "Yes" : "No"}</td>
 					<td>{line.tariffType}</td>
 					<td>{line.tariffRate} {line.rateUnit}</td>
 					<td>{line.effectiveDate}</td>
@@ -786,7 +796,7 @@
 								error = '';
 							}}>Close</button
 						>
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="submit" class="btn btn-primary" disabled={isBusy}>Submit</button>
 					</div>
 				</form>
 			{:else}
@@ -864,7 +874,7 @@
 						<label class="label" for="preferential_tariff">
 							<span class="label-text font-semibold">Preferential Tariff</span>
 						</label>
-						<p class="w-full">{selectedTariff.preferentialTariff}</p>
+						<p class="w-full">{selectedTariff.preferentialTariff ? "Yes" : "No"}</p>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">

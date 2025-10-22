@@ -21,6 +21,7 @@
 
 	let success = '';
 	let error = '';
+	let isBusy = false; // page-level busy indicator for create/edit flows
 
 	let createTariffBoolean = false;
 	let createCategoryBoolean = false;
@@ -129,7 +130,12 @@
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1">
 		<!-- Tariffs Card -->
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isBusy}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<div class="flex items-center justify-between py-6">
 				<div class="flex">
 					<h2
@@ -143,7 +149,7 @@
 						Tariffs
 					</h2>
 					<h2
-						class="mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
 							? 'border-b-2'
 													: ''}"
 												on:click={() => {
@@ -155,11 +161,11 @@
 											</div>
 								</div>
 			{#if mode == 'tariff'}
-				<TariffComponent bind:createTariffBoolean />
-					{/if}
+				<TariffComponent bind:createTariffBoolean bind:isBusy/>
+			{/if}
 
 			{#if mode == 'category'}
-				<CategoryComponent bind:createCategoryBoolean />
+				<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
 			{/if}
 		</div>
 	</div>

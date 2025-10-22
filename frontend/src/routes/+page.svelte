@@ -8,7 +8,12 @@
   	<!-- Two-column layout -->
   	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
     	<!-- Tariff Calculator Card -->
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isCalculating}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Tariff Calculator</h2>
 			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing goods</p>
 
@@ -21,6 +26,7 @@
 						placeholder="Enter HS Code (e.g., 850110)"
 						bind:value={hsCode}
 						class="input input-bordered w-full text-sm"
+						disabled={isCalculating}
 						required
 					/>
 					<label class="label">
@@ -35,8 +41,8 @@
 					<label class="label text-sm font-medium">Importing To</label>
 					<div class="relative">
 						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
-							on:click={() => (showImportToDropdown = !showImportToDropdown)}
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between {isCalculating ? 'opacity-50 cursor-not-allowed' : ''}"
+							on:click={() => !isCalculating && (showImportToDropdown = !showImportToDropdown)}
 							on:blur={(e) => {
 								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
 									setTimeout(() => (showImportToDropdown = false), 200);
@@ -202,7 +208,14 @@
 
 				<!-- Submit -->
 				<div class="form-control">
-					<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
+					<button type="submit" class="btn btn-primary btn-sm w-full" disabled={isCalculating}>
+						{#if isCalculating}
+							<span class="loading loading-spinner loading-sm text-primary-content"></span>
+							Calculating...
+						{:else}
+							Calculate Cost
+						{/if}
+					</button>
 				</div>
 			</form>
 			
@@ -333,18 +346,21 @@
 	let calculationResult = null;
 	let calculationError = null;
 	let showErrorAlert = false;
+	let isCalculating = false;
 	
 	async function calculateCost() {
 		// Clear previous results and errors
 		calculationResult = null;
 		calculationError = null;
 		showErrorAlert = false;
+		isCalculating = true;
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
 			if (!/^\d{6}$/.test(hsCode)) {
 				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
 				showErrorAlert = true;
+				isCalculating = false;
 				return;
 			}
 			
@@ -384,6 +400,8 @@
 			calculationError = "Please fill in all fields before calculating.";
 			showErrorAlert = true;
 		}
+		
+		isCalculating = false;
 	}
 	// End: Tariff Calculation Section 
 
