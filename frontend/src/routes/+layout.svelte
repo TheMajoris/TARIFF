@@ -101,6 +101,7 @@
 		// Always redirect to login
 		goto('/login');
 	}
+}
 
 
 	// Check if its gonna expire (left less than 1 minute)

@@ -399,7 +399,7 @@
 					<td>{line.id}</td>
 					<td>{line.importingCountryCode}</td>
 					<td>{line.exportingCountryCode}</td>
-					<td>{line.preferentialTariff}</td>
+					<td>{line.preferentialTariff ? "Yes" : "No"}</td>
 					<td>{line.tariffType}</td>
 					<td>{line.tariffRate} {line.rateUnit}</td>
 					<td>{line.effectiveDate}</td>
@@ -874,7 +874,7 @@
 						<label class="label" for="preferential_tariff">
 							<span class="label-text font-semibold">Preferential Tariff</span>
 						</label>
-						<p class="w-full">{selectedTariff.preferentialTariff}</p>
+						<p class="w-full">{selectedTariff.preferentialTariff ? "Yes" : "No"}</p>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
