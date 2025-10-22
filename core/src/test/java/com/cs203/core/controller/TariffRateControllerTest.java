@@ -417,7 +417,7 @@ class TariffRateControllerTest {
     @Test
     @DisplayName("POST /api/v1/tariff-rate/calculation returns 400 for negative price")
     void calculate_returnsBadRequest_whenPriceIsNegative() throws Exception {
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"quantity\":1.0\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
         mockMvc.perform(post("/api/v1/tariff-rate/calculation")
                         .contentType(MediaType.APPLICATION_JSON)

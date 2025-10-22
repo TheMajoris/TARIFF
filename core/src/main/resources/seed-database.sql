@@ -107,49 +107,49 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
                          importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
 
 -- Singapore importing from China
-(0.00, 'ad_valorem',NULL, 'kg', '2024-01-01', '2024-12-31', false,
+(0.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  851713, NOW(), NOW()),
 
 -- Singapore importing from US
-(5.00, 'ad_valorem', NULL, 'kg', '2024-01-01', '2024-12-31', false,
+(5.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  854231, NOW(), NOW()),
 
 -- Malaysia importing from Singapore (FTA)
-(0.00, 'ad_valorem', NULL,'kg', '2024-01-01', '2024-12-31', true,
+(0.00, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', true,
  (SELECT country_id FROM country WHERE country_code = 'MY'), 
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  851713, NOW(), NOW()),
 
 -- China importing from US
-(25.00, 'ad_valorem',NULL, 'kg', '2024-01-01', '2024-12-31', false,
+(25.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  854231, NOW(), NOW()),
 
 -- US importing from China
-(26.40, 'ad_valorem', NULL,'kg', '2024-01-01', '2024-12-31', false,
+(26.40, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  851713, NOW(), NOW()),
 
 -- Germany importing from US
-(0.00, 'ad_valorem', NULL,'kg', '2024-01-01', '2024-12-31', false,
+(0.00, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'DE'), 
  (SELECT country_id FROM country WHERE country_code = 'US'), 
  854231, NOW(), NOW()),
 
 -- Japan importing from South Korea
-(0.00, 'ad_valorem',NULL, 'kg', '2024-01-01', '2024-12-31', false,
+(0.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'JP'), 
  (SELECT country_id FROM country WHERE country_code = 'KR'), 
  854232, NOW(), NOW()),
 
 -- India importing from China
-(30.00, 'ad_valorem',NULL, 'kg', '2024-01-01', '2024-12-31', false,
+(30.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'IN'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
  851713, NOW(), NOW()),
