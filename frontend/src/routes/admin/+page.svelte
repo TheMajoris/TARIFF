@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import CategoryComponent from '$lib/components/admin/Category.svelte';
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
-	import Alert from '$lib/components/Alert.svelte';
 	import { onMount } from 'svelte';
 
 	// Server-side data from +page.server.ts
@@ -86,82 +85,70 @@
 </script>
 
 {#if authorized}
-<div class="p-6">
+<div class="space-y-6 p-6">
 	<!-- Page Title -->
-	<h1 class="text-primary text-2xl font-semibold mb-6">Admin</h1>
+	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
 	
-	<!-- Admin Content - Directly under title -->
-	<div class="card bg-base-100 p-6 shadow-md relative">
-		<!-- Global Alerts - Inside the admin card -->
-		{#if error}
-			<Alert 
-				type="error" 
-				message={error} 
-				show={true}
-				autoDismiss={true}
-			/>
-		{/if}
+	<!-- Global Alerts - Below page title -->
+	{#if error}
+		<Alert 
+			type="error" 
+			message={error} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
-		{#if success}
-			<Alert 
-				type="success" 
-				message={success} 
-				show={true}
-				autoDismiss={true}
-			/>
-		{/if}
-		
-		<!-- Admin Tabs and Content -->
-		{#if isBusy}
-			<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
-				<span class="loading loading-spinner loading-lg text-primary"></span>
-			</div>
-		{/if}
-		
-		<!-- Tab Navigation -->
-		<div class="flex items-center justify-between py-6">
-			<div class="flex">
-				<button
-					class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
-						? 'border-b-2'
-												: ''}"
-					on:click={() => {
-						mode = 'tariff';
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
+	{#if success}
+		<Alert 
+			type="success" 
+			message={success} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+
+	<!-- Two-column layout -->
+	<div class="grid grid-cols-1">
+		<!-- Tariffs Card -->
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isBusy}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
+			<div class="flex items-center justify-between py-6">
+				<div class="flex">
+					<h2
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
+							? 'border-b-2'
+													: ''}"
+												on:click={() => {
 							mode = 'tariff';
-						}
-					}}
-				>
-					Tariffs
-				</button>
-				<button
-					class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
-						? 'border-b-2'
-												: ''}"
-					on:click={() => {
-						mode = 'category';
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
+						}}
+					>
+						Tariffs
+					</h2>
+					<h2
+						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
+							? 'border-b-2'
+													: ''}"
+												on:click={() => {
 							mode = 'category';
-						}
-					}}
-				>
-					Product Categories
-				</button>
-			</div>
-		</div>
-		
-		<!-- Tab Content -->
-		{#if mode == 'tariff'}
-			<TariffComponent bind:createTariffBoolean bind:isBusy/>
-		{/if}
+						}}
+					>
+						Product Categories
+					</h2>
+											</div>
+								</div>
+			{#if mode == 'tariff'}
+				<TariffComponent bind:createTariffBoolean bind:isBusy/>
+			{/if}
 
-		{#if mode == 'category'}
-			<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
-		{/if}
+			{#if mode == 'category'}
+				<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
+			{/if}
+		</div>
 	</div>
 </div>
 {/if}
