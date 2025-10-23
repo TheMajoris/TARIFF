@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import CategoryComponent from '$lib/components/admin/Category.svelte';
 	import TariffComponent from '$lib/components/admin/Tariff.svelte';
+	import Alert from '$lib/components/Alert.svelte';
 	import { onMount } from 'svelte';
 
 	// Server-side data from +page.server.ts
@@ -119,28 +120,38 @@
 			{/if}
 			<div class="flex items-center justify-between py-6">
 				<div class="flex">
-					<h2
+					<button
 						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
 							? 'border-b-2'
 													: ''}"
-												on:click={() => {
+						on:click={() => {
 							mode = 'tariff';
+						}}
+						on:keydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								mode = 'tariff';
+							}
 						}}
 					>
 						Tariffs
-					</h2>
-					<h2
+					</button>
+					<button
 						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
 							? 'border-b-2'
 													: ''}"
-												on:click={() => {
+						on:click={() => {
 							mode = 'category';
+						}}
+						on:keydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								mode = 'category';
+							}
 						}}
 					>
 						Product Categories
-					</h2>
-											</div>
-								</div>
+					</button>
+				</div>
+			</div>
 			{#if mode == 'tariff'}
 				<TariffComponent bind:createTariffBoolean bind:isBusy/>
 			{/if}
