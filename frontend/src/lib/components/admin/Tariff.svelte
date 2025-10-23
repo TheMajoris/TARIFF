@@ -213,7 +213,7 @@
 		}
 	}
 
-	// Function to edit tariff
+	// Function to delete tariff
 	async function deleteTariffMethod(id: number) {
 		isBusy = true;
 		try {
