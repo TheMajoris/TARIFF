@@ -41,6 +41,9 @@
 					error = '';
 					success = 'Login successful! Redirecting to dashboard...';
 
+					// Scroll to top to show success message
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+
 					// Redirect to login page after 2 seconds
 					setTimeout(() => {
 						goto('/');
@@ -48,14 +51,21 @@
 				} catch (err) {
 					error = err instanceof Error ? err.message : 'Login failed. Please try again.';
 					console.error('Login error:', err);
+					
+					// Scroll to top to show error message
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 				} finally {
 					isLoading = false;
 				}
 			} else {
 				error = 'The email is not in a valid format.';
+				// Scroll to top to show error message
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
 		} else {
 			error = 'Please fill in all fields before logging in.';
+			// Scroll to top to show error message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 	}
 </script>
@@ -63,29 +73,28 @@
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Dashboard</h1>
-	
-	<!-- Global Alerts - Below page title -->
-	{#if error}
-		<Alert 
-			type="error" 
-			message={error} 
-			show={true}
-			autoDismiss={true}
-		/>
-	{/if}
-
-	{#if success}
-		<Alert 
-			type="success" 
-			message={success} 
-			show={true}
-			autoDismiss={true}
-		/>
-	{/if}
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
 		<div class="card bg-base-100 p-6 shadow-md relative">
+			<!-- Alerts inside the form card -->
+			{#if error}
+				<Alert 
+					type="error" 
+					message={error} 
+					show={true}
+					autoDismiss={true}
+				/>
+			{/if}
+
+			{#if success}
+				<Alert 
+					type="success" 
+					message={success} 
+					show={true}
+					autoDismiss={true}
+				/>
+			{/if}
 			{#if isLoading}
 				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
 					<span class="loading loading-spinner loading-lg text-primary"></span>
