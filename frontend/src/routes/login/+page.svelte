@@ -11,7 +11,7 @@
 	let error = '';
 	let success = '';
 	
-	$: error = $page.url.searchParams.get('reason') === "session_expired" ? "Your session expired. Please log in again." : "";
+	$: error = $page.url.searchParams.get('reason') === "session_expired" ? "🔒 Your session has expired for security reasons. Please log in again to continue." : "";
 
 	// Function that will use regex to validate the email
 	function validateEmail() {
@@ -39,7 +39,7 @@
 					localStorage.setItem('userId', result.message.userId);
 
 					error = '';
-					success = 'Login successful! Redirecting to dashboard...';
+					success = '🎉 Welcome back! Login successful. Redirecting to your dashboard...';
 
 					// Scroll to top to show success message
 					window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -49,7 +49,7 @@
 						goto('/');
 					}, 2000);
 				} catch (err) {
-					error = err instanceof Error ? err.message : 'Login failed. Please try again.';
+					error = err instanceof Error ? err.message : '❌ Login failed. Please check your email and password, then try again.';
 					console.error('Login error:', err);
 					
 					// Scroll to top to show error message
@@ -58,12 +58,12 @@
 					isLoading = false;
 				}
 			} else {
-				error = 'The email is not in a valid format.';
+				error = '📧 Please enter a valid email address (e.g., user@example.com)';
 				// Scroll to top to show error message
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
 		} else {
-			error = 'Please fill in all fields before logging in.';
+			error = '⚠️ Please fill in both email and password fields to continue';
 			// Scroll to top to show error message
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}

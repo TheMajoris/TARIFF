@@ -108,16 +108,16 @@
 								if (selectedTariff.productCategory != null) {
 									return true;
 								} else {
-									error = 'Product Category cannot be null';
+									error = '⚠️ Please select a product category';
 								}
 							} else {
-								error = 'Exporting Country Code cannot be null';
+								error = '🌍 Please select an exporting country';
 							}
 						} else {
-							error = 'Importing Country Code cannot be null';
+							error = '🌍 Please select an importing country';
 						}
 					} else {
-						error = 'Effective Date cannot be null';
+						error = '📅 Please select an effective date';
 					}
 				} else {
 					error = 'Rate Unit can only be up to 20 characters';
@@ -180,12 +180,12 @@
 		try {
 			const result = await createTariff(payload);
 
-			success = 'Created Tariff id: ' + result.id;
+			success = '✅ Tariff rate created successfully! (ID: ' + result.id + ')';
 			close();
 			fetchTariffs();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : '❌ Failed to create tariff rate. Please check your data and try again.';
 			console.error('Creating tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -217,12 +217,12 @@
 		try {
 			const result = await editTariff(payload);
 
-			success = result.message;
+			success = '✅ ' + result.message;
 			close();
 			fetchTariffs();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : '❌ Failed to update tariff rate. Please check your data and try again.';
 			console.error('Editing tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -236,11 +236,11 @@
 			const result = await deleteSpecificTariff(id);
 			console.log('Delete result:', result);
 
-			success = result.message || 'Successfully deleted Tariff Rate';
+			success = '🗑️ ' + (result.message || 'Tariff rate deleted successfully');
 			fetchTariffs();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : '❌ Failed to delete tariff rate. Please try again.';
 			console.error('Deleting tariff error:', err);
 		} finally {
 			isBusy = false;
