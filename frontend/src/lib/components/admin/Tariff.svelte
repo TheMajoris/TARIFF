@@ -229,13 +229,14 @@
 		}
 	}
 
-	// Function to edit tariff
+	// Function to delete tariff
 	async function deleteTariffMethod(id: number) {
 		isBusy = true;
 		try {
 			const result = await deleteSpecificTariff(id);
+			console.log('Delete result:', result);
 
-			success = result.message;
+			success = result.message || 'Successfully deleted Tariff Rate';
 			fetchTariffs();
 			error = '';
 		} catch (err) {
@@ -415,7 +416,11 @@
 								<li>
 									<button
 										class="text-error text-sm font-semibold"
-										on:click={deleteTariffMethod(line.id)}>Delete</button
+										on:click={() => {
+											success = '';
+											error = '';
+											deleteTariffMethod(line.id);
+										}}>Delete</button
 									>
 								</li>
 							</ul>
