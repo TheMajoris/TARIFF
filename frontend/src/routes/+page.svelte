@@ -221,12 +221,12 @@
 			
 			<!-- Error Alert -->
 			{#if showErrorAlert && calculationError}
-				<div class="alert alert-error mt-6">
-					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					<span>{calculationError}</span>
-				</div>
+				<Alert 
+					type="error" 
+					message={calculationError} 
+					show={showErrorAlert}
+					autoDismiss={true}
+				/>
 			{/if}
 			
 			<!-- Calculation Result -->
@@ -268,11 +268,13 @@
 					<span class="ml-2 text-sm text-gray-500">Loading latest news...</span>
 				</div>
 			{:else if newsError}
-				<div class="alert alert-warning">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-					</svg>
-					<span>{newsError}</span>
+				<Alert 
+					type="warning" 
+					message={newsError} 
+					show={true}
+					autoDismiss={false}
+				/>
+				<div class="mt-2">
 					<button class="btn btn-sm btn-outline" on:click={loadNews}>Retry</button>
 				</div>
 			{:else if news.length === 0}
@@ -367,6 +369,7 @@
 	import { fetchCountries } from "$lib/api/countries.js";
 	import { fetchNews } from "$lib/api/news.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import Alert from "$lib/components/Alert.svelte";
 	import { onMount } from "svelte";
 
 	let hsCode = '';

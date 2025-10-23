@@ -5,10 +5,10 @@
 	export let message = '';
 	export let show = false;
 	export let autoDismiss = true;
-	export let dismissDelay = 3000; // Default 3 seconds
 
 	let alertClass = '';
 	let iconSvg = '';
+	let timeoutId = null;
 
 	// Set alert styling and icon based on type
 	$: {
@@ -41,7 +41,6 @@
 		}
 	}
 
-	let timeoutId = null;
 
 	// Auto-dismiss functionality
 	$: if (show && autoDismiss && message) {
