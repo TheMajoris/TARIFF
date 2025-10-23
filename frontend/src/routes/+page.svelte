@@ -333,6 +333,14 @@
 <!-- Modal -->
 {#if selectedArticle}
 	<div class="modal modal-open">
+		<!-- Background which will close the modal -->
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={() => {
+				selectedArticle = null;
+			}}>close</button
+		>
+
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-2 text-lg font-semibold">{selectedArticle.title}</h3>
 			<p class="mb-4 text-xs text-gray-500">{selectedArticle.date}</p>
