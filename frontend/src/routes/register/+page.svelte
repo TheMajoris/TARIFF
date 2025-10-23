@@ -108,6 +108,25 @@
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Dashboard</h1>
+	
+	<!-- Global Alerts - Below page title -->
+	{#if error}
+		<Alert 
+			type="error" 
+			message={error} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+
+	{#if success}
+		<Alert 
+			type="success" 
+			message={success} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
@@ -119,24 +138,6 @@
 			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Register</h2>
 
-			<!-- Error/Success Messages -->
-			{#if error}
-				<Alert 
-					type="error" 
-					message={error} 
-					show={true}
-					autoDismiss={true}
-				/>
-			{/if}
-
-			{#if success}
-				<Alert 
-					type="success" 
-					message={success} 
-					show={true}
-					autoDismiss={true}
-				/>
-			{/if}
 
 			<form class="space-y-4"  on:submit|preventDefault={register}>
 				<!-- First Name -->

@@ -4,6 +4,16 @@
 	<p class="text-sm text-gray-500">
 		Enter HS Code, select countries, and calculate the cost of importing goods.
 	</p>
+	
+	<!-- Global Alerts - Below page title -->
+	{#if showErrorAlert && calculationError}
+		<Alert 
+			type="error" 
+			message={calculationError} 
+			show={showErrorAlert}
+			autoDismiss={true}
+		/>
+	{/if}
 
   	<!-- Two-column layout -->
   	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -219,15 +229,6 @@
 				</div>
 			</form>
 			
-			<!-- Error Alert -->
-			{#if showErrorAlert && calculationError}
-				<Alert 
-					type="error" 
-					message={calculationError} 
-					show={showErrorAlert}
-					autoDismiss={true}
-				/>
-			{/if}
 			
 			<!-- Calculation Result -->
 			{#if calculationResult && !showErrorAlert}

@@ -88,7 +88,8 @@
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
-
+	
+	<!-- Global Alerts - Below page title -->
 	{#if error}
 		<Alert 
 			type="error" 

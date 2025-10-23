@@ -299,6 +299,7 @@
 				});
 </script>
 
+<!-- Global Alerts - Below component title -->
 {#if error}
 	<Alert 
 		type="error" 
