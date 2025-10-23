@@ -162,7 +162,7 @@
 		try {
 			const result = await createTariff(payload);
 
-			success = 'Created Tariff id: ' + result.id;
+			success = 'Created Tariff id: ' + result.data.id;
 			close();
 			fetchTariffs();
 			fetchProductCategories();
