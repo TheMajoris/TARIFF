@@ -163,10 +163,6 @@
 			</div>
 		{/if}
 
-		<!-- Global Alert Container - Below header, above content -->
-		<div id="global-alerts" class="px-4 pt-4">
-			<!-- This will be populated by individual pages -->
-		</div>
 
 		<!-- Page content -->
 		<main class="flex-1 p-6">
