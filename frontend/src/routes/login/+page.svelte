@@ -132,8 +132,8 @@
 				</div>
 
 				<!-- Submit -->
-				<div class="form-control flex justify-around">
-					<a href="./register" class="btn btn-primary btn-sm w-1/3">Register</a>
+				<div class="form-control flex justify-around gap-4">
+					<a href="./register" class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800">Register →</a>
 					<button type="submit" class="btn btn-primary btn-sm w-1/3" disabled={isLoading}>
 						{#if isLoading}
 							<span class="loading loading-spinner loading-sm text-primary-content"></span>

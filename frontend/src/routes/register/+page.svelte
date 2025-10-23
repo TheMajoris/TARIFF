@@ -247,8 +247,14 @@
 				</div>
 
 				<!-- Submit -->
-				<div class="form-control flex justify-around">
-					<button class="btn btn-primary btn-sm invisible w-1/3" aria-label="Spacer button"></button>
+				<div class="form-control flex justify-around gap-4">
+					<button 
+						type="button"
+						class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800"
+						on:click={() => goto('/login')}
+					>
+						← Back to Login
+					</button>
 					<button 
 						type="submit" 
 						class="btn btn-primary btn-sm w-1/3"
