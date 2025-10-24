@@ -6,8 +6,10 @@
 		deleteSpecificProductCategory,
 		editProductCategory,
 		forceDeleteSpecificProductCategory,
-		getAllProductCategories
+		getAllProductCategories,
+		getProductCategoriesPage
 	} from '$lib/api/productCategory';
+	import { page } from '$app/state';
 
 	let success = '';
 	let error = '';
@@ -17,6 +19,12 @@
 	export let createCategoryBoolean = false;
 	export let isBusy = false; // page-level busy indicator for create/edit flows
 	let confirmDelete = -1;
+
+	// variables for pagination
+	let pageNo = 0;
+	let totalPage = 0;
+	let totalProductCategories = 0;
+	let size = 5;
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -39,11 +47,25 @@
 		};
 	}
 
-	async function fetchProductCategories() {
+	async function fetchProductCategories(sortKey: string, sortAsc: boolean) {
 		isBusy = true;
 		try {
-			const result = await getAllProductCategories();
-			allCategory = result;
+			let sortDirection;
+			if (sortAsc) {
+				sortDirection = 'ascending';
+			} else {
+				sortDirection = 'descending';
+			}
+
+			const result = await getProductCategoriesPage(pageNo, size, sortKey, sortDirection);
+			allCategory = result.content;
+			totalPage = result.totalPages;
+			totalProductCategories = result.totalElements;
+
+			if (pageNo + 1 > totalPage) {
+				pageNo = totalPage - 1;
+				fetchProductCategories(sortKey, sortAsc);
+			}
 		} catch (err) {
 			console.error('Getting all product categories:', err);
 			error =
@@ -55,12 +77,12 @@
 
 	// Update when any page -> admin
 	beforeNavigate(() => {
-		fetchProductCategories();
+		fetchProductCategories(sortKey, sortAsc);
 	});
 
 	// Update on page load/refresh
 	onMount(() => {
-		fetchProductCategories();
+		fetchProductCategories(sortKey, sortAsc);
 	});
 
 	// Function to validate & submit Category
@@ -108,7 +130,7 @@
 
 			success = 'Created product category id: ' + result.data.id;
 			close();
-			fetchProductCategories();
+			fetchProductCategories(sortKey, sortAsc);
 			error = '';
 		} catch (err) {
 			error =
@@ -135,7 +157,7 @@
 
 			success = result.message;
 			close();
-			fetchProductCategories();
+			fetchProductCategories(sortKey, sortAsc);
 			error = '';
 		} catch (err) {
 			error =
@@ -160,12 +182,16 @@
 			}
 
 			success = result.message;
-			fetchProductCategories();
+			fetchProductCategories(sortKey, sortAsc);
 			error = '';
 		} catch (err) {
 			// request for force delete (there are tariffs using that HSCode)
-			console.log(err)
-			if (err && err instanceof Error && err.message.endsWith("Set request params flag to true to cascade delete")) {
+			console.log(err);
+			if (
+				err &&
+				err instanceof Error &&
+				err.message.endsWith('Set request params flag to true to cascade delete')
+			) {
 				error =
 					err.message +
 					' Please click delete again to confirm deletion (inclusive of tariffs using it)';
@@ -187,46 +213,49 @@
 		createCategoryBoolean = false;
 		view = false;
 		selectedCategory = blankCategory();
-		fetchProductCategories();
+		fetchProductCategories(sortKey, sortAsc);
 	}
 
 	// Restrict CategoryKey to only contain header values (ProductCategory)
 	type CategoryKey = keyof ProductCategory;
-	let sortKey: CategoryKey | null = null;
+	let sortKey: CategoryKey = 'id';
 	let sortAsc = true;
 
 	function sortBy(key: CategoryKey) {
+		console.log('A');
 		if (sortKey === key) {
 			sortAsc = !sortAsc;
 		} else {
 			sortKey = key;
 			sortAsc = true;
 		}
+
+		fetchProductCategories(sortKey, sortAsc);
 	}
 
-	// Need to give a new array
-	$: sortedCategories =
-		// If not sorted then use default data, else sort
-		sortKey === null
-			? allCategory
-			: [...allCategory].sort((a, b) => {
-					const key = sortKey as CategoryKey;
-					let valA = a[key];
-					let valB = b[key];
+	// // Need to give a new array
+	// $: sortedCategories =
+	// 	// If not sorted then use default data, else sort
+	// 	sortKey === null
+	// 		? allCategory
+	// 		: [...allCategory].sort((a, b) => {
+	// 				const key = sortKey as CategoryKey;
+	// 				let valA = a[key];
+	// 				let valB = b[key];
 
-					const numA = Number(valA);
-					const numB = Number(valB);
+	// 				const numA = Number(valA);
+	// 				const numB = Number(valB);
 
-					// If the data is a number
-					if (!isNaN(numA) && !isNaN(numB)) {
-						return sortAsc ? numA - numB : numB - numA;
-					}
+	// 				// If the data is a number
+	// 				if (!isNaN(numA) && !isNaN(numB)) {
+	// 					return sortAsc ? numA - numB : numB - numA;
+	// 				}
 
-					// If it is not a number
-					return sortAsc
-						? String(valA).localeCompare(String(valB))
-						: String(valB).localeCompare(String(valA));
-				});
+	// 				// If it is not a number
+	// 				return sortAsc
+	// 					? String(valA).localeCompare(String(valB))
+	// 					: String(valB).localeCompare(String(valA));
+	// 			});
 </script>
 
 {#if error}
@@ -268,7 +297,7 @@
 {/if}
 
 <div class="overflow-x-auto">
-	<table class="table static table-zebra">
+	<table class="table-zebra static table">
 		<thead class="bg-base-300 text-base font-semibold">
 			<tr>
 				<th on:click={() => sortBy('id')} class="cursor-pointer"
@@ -287,16 +316,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each sortedCategories as line}
+			{#each allCategory as line}
 				<tr>
 					<td>{line.id}</td>
 					<td>{line.categoryCode}</td>
 					<td>{line.categoryName}</td>
 					<td>{line.isActive ? 'Yes' : 'No'}</td>
 					<td class="p-0">
-						<div class="dropdown static dropdown-end">
-							<button class=" btn btn-circle text-xl btn-ghost">⋮</button>
-							<ul class="dropdown-content menu w-40 menu-sm rounded-box bg-base-100 p-2 shadow">
+						<div class="dropdown dropdown-end static">
+							<button class=" btn btn-circle btn-ghost text-xl">⋮</button>
+							<ul class="dropdown-content menu menu-sm rounded-box bg-base-100 w-40 p-2 shadow">
 								<li>
 									<button
 										class="text-sm"
@@ -321,7 +350,7 @@
 								</li>
 								<li>
 									<button
-										class="text-sm font-semibold text-error"
+										class="text-error text-sm font-semibold"
 										on:click={() => deleteProductCategoryMethod(line.id)}>Delete</button
 									>
 								</li>
@@ -333,6 +362,37 @@
 		</tbody>
 	</table>
 </div>
+
+{#if totalPage > 1}
+	<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
+		<div class="text-sm text-gray-500">
+			Showing {size * pageNo + 1}-{size * pageNo + allCategory.length} of
+			{totalProductCategories} articles
+		</div>
+		<div class="flex gap-2">
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo === 0}
+				on:click={() => {
+					pageNo--;
+					fetchProductCategories(sortKey, sortAsc);
+				}}
+			>
+				Previous
+			</button>
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo + 1 >= totalPage}
+				on:click={() => {
+					pageNo++;
+					fetchProductCategories(sortKey, sortAsc);
+				}}
+			>
+				Next
+			</button>
+		</div>
+	</div>
+{/if}
 
 <!-- Modal -->
 {#if view || edit || createCategoryBoolean}

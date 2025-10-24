@@ -26,6 +26,42 @@ export async function getAllProductCategories() {
   }
 }
 
+// Get product categories page
+/**
+ * @param {Number} pageNo
+ * @param {Number} size
+ * @param {String} sortBy
+ * @param {String} sortDirection
+ */
+export async function getProductCategoriesPage(pageNo, size, sortBy, sortDirection) {
+  try {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+
+    const params = new URLSearchParams({ pageNo: pageNo.toString(), size: size.toString(), sortBy: sortBy, sortDirection: sortDirection });
+
+    const res = await fetch(`${API_BASE_URL}/product-categories?` + params.toString(), {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || `Getting product categories page failed: ${res.status} ${res.statusText}`);
+    }
+
+    const result = await res.json();
+
+    return result;
+
+  } catch (err) {
+    console.error("getProductCategoriesPage error:", err);
+    throw err; // Re-throw to let the calling code handle the error
+  }
+}
+
 /**
  * Create a new product category.
  *
