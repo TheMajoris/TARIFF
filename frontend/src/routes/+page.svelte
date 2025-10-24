@@ -450,6 +450,11 @@
 					</div>
 
 					<div class="mb-2 flex justify-between text-sm">
+						<span>Tariff Type:</span>
+						<span class="font-medium text-blue-600">{calculationResult.tariffType}</span>
+					</div>
+
+					<div class="mb-2 flex justify-between text-sm">
 						<span>Tariff Rate:</span>
 						<span class="font-medium text-blue-600"
 							>{calculationResult.tariffType == 'specific' ? '$' : ''}{parseFloat(
