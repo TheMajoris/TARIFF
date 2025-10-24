@@ -88,7 +88,7 @@ class CalculationHistoryControllerTest {
                                 "Test notes",
                                 "US",
                                 "CN",
-                                123);
+                                123456);
 
                 // Create expected response
                 SavedCalculationDto savedDto = new SavedCalculationDto();
@@ -106,7 +106,7 @@ class CalculationHistoryControllerTest {
                 savedDto.setUserId(1L);
                 savedDto.setImportingCountryCode("US");
                 savedDto.setExportingCountryCode("CN");
-                savedDto.setProductCategoryCode(123);
+                savedDto.setProductCategoryCode(123456);
 
                 GenericResponse<SavedCalculationDto> response = new GenericResponse<>(
                                 HttpStatus.CREATED,
@@ -133,7 +133,7 @@ class CalculationHistoryControllerTest {
                                 .andExpect(jsonPath("$.data.userId").value(1))
                                 .andExpect(jsonPath("$.data.importingCountryCode").value("US"))
                                 .andExpect(jsonPath("$.data.exportingCountryCode").value("CN"))
-                                .andExpect(jsonPath("$.data.productCategoryCode").value(123))
+                                .andExpect(jsonPath("$.data.productCategoryCode").value(123456))
                                 .andExpect(jsonPath("$.message").value("Calculation saved successfully"));
         }
 
@@ -156,7 +156,7 @@ class CalculationHistoryControllerTest {
                 calculation1.setUserId(1L);
                 calculation1.setImportingCountryCode("US");
                 calculation1.setExportingCountryCode("CN");
-                calculation1.setProductCategoryCode(123);
+                calculation1.setProductCategoryCode(123455);
 
                 SavedCalculationDto calculation2 = new SavedCalculationDto();
                 calculation2.setId(2L);
@@ -173,7 +173,7 @@ class CalculationHistoryControllerTest {
                 calculation2.setUserId(1L);
                 calculation2.setImportingCountryCode("DE");
                 calculation2.setExportingCountryCode("FR");
-                calculation2.setProductCategoryCode(456);
+                calculation2.setProductCategoryCode(123456);
 
                 List<SavedCalculationDto> calculations = Arrays.asList(calculation1, calculation2);
 
@@ -250,7 +250,7 @@ class CalculationHistoryControllerTest {
                                 "Test notes",
                                 "US",
                                 "CN",
-                                123);
+                                123456);
 
                 mockMvc.perform(post("/api/v1/calculation-history")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -273,7 +273,7 @@ class CalculationHistoryControllerTest {
                                 "Test notes",
                                 "US",
                                 "CN",
-                                123);
+                                123456);
 
                 mockMvc.perform(post("/api/v1/calculation-history")
                                 .contentType(MediaType.APPLICATION_JSON)

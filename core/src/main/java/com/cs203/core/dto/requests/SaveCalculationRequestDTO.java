@@ -2,6 +2,8 @@ package com.cs203.core.dto.requests;
 
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -31,5 +33,7 @@ public record SaveCalculationRequestDTO(
     @NotBlank
     String exportingCountryCode,
     @NotNull
+    @Min(value = 100000)
+    @Max(value = 999999)
     Integer productCategoryCode) {
 }
