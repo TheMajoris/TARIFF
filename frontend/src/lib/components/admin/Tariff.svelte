@@ -217,7 +217,7 @@
 		try {
 			const result = await editTariff(payload);
 
-			success = '✅ ' + result.message;
+			success = result.message;
 			close();
 			fetchTariffs();
 			error = '';
