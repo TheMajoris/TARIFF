@@ -25,13 +25,14 @@ export async function calculateTariffCost(
 
         console.log("Request body:", requestBody);
 
-        const res = await fetch(`${API_BASE_URL}/tariff-rate/calculate`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestBody),
-        });
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/calculation`, {
+      method: "POST",
+      credentials: "include",
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(requestBody)
+    });
 
         if (!res.ok) {
             const errorText = await res.text();
@@ -131,7 +132,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:number, categoryName:string, description?:string}} payload.productCategory
+ * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
  */
 export async function createTariff(payload) {
     try {
@@ -179,7 +180,7 @@ export async function createTariff(payload) {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{id:number, categoryCode:number, categoryName:string, description?:string}} payload.productCategory
+ * @param {{id:number, categoryCode:string, categoryName:string, description?:string}} payload.productCategory
  */
 export async function editTariff(payload) {
     try {

@@ -9,7 +9,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 @ControllerAdvice
@@ -62,5 +63,22 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.UNAUTHORIZED.value());
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatchException(TypeMismatchException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("message", "Invalid parameter type: " + ex.getValue() + 
+                   " cannot be converted to " + ex.getRequiredType().getSimpleName());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("message", "Something went wrong. Please contact an administrator");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

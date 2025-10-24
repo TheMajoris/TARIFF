@@ -5,18 +5,19 @@ import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.TariffRateDto;
 import com.cs203.core.dto.requests.TariffCalculatorRequestDto;
 import com.cs203.core.dto.responses.TariffCalculatorResponseDto;
+import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.service.TariffRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Tariff Rate")
 @RestController
@@ -44,10 +45,14 @@ public class TariffRateController {
 
     @Operation(summary = "Create a new tariff rate with the response body")
     @ApiResponse(responseCode = "201", description = "Tariff rate created")
-    @ApiResponse(responseCode = "400", description = "Create request is invalid")
+    @ApiResponse(responseCode = "400", description = "Data is invalid")
+    @ApiResponse(responseCode = "404", description = "Importing Country code does not exist")
+    @ApiResponse(responseCode = "404", description = "Exporting Country code does not exist")
+    @ApiResponse(responseCode = "404", description = "HS code does not exist")
     @PostMapping
-    public ResponseEntity<TariffRateDto> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
-        return new ResponseEntity<>(tariffRateService.createTariffRate(createTariffRateDto), HttpStatus.CREATED);
+    public ResponseEntity<GenericResponse<TariffRateDto>> createTariffRate(@Valid @RequestBody CreateTariffRateDto createTariffRateDto) {
+        GenericResponse<TariffRateDto> response = tariffRateService.createTariffRate(createTariffRateDto);
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @Operation(summary = "Update tariff rate by id")
@@ -77,22 +82,33 @@ public class TariffRateController {
     @Operation(summary = "Calculate the tariff cost given tariff and price")
     @ApiResponse(responseCode = "200", description = "Request successful")
     @ApiResponse(responseCode = "400", description = "Calculate request is invalid")
-    @PostMapping("/calculate")
+    @PostMapping("/calculation")
     public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
             @Valid @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
-        BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
-                requestBodyDTO.importingCountryId(),
+        Optional<TariffRateEntity> tariffRate = tariffRateService.getLowestActiveTariff(requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
                 requestBodyDTO.initialPrice(),
                 requestBodyDTO.date());
+        if (tariffRate.isEmpty()) {
+            return ResponseEntity.ok(new TariffCalculatorResponseDto(
+                    BigDecimal.ZERO,
+                    "N/A",
+                    "N/A",
+                    requestBodyDTO.quantity(),
+                    BigDecimal.ZERO,
+                    requestBodyDTO.initialPrice()
+            ));
+        }
+
         BigDecimal finalPrice = tariffRateService.getFinalPrice(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
                 requestBodyDTO.initialPrice(),
+                requestBodyDTO.quantity(),
                 requestBodyDTO.date());
         BigDecimal tariffCost = tariffRateService.getTariffCost(finalPrice, requestBodyDTO.initialPrice());
-        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate, tariffCost, finalPrice));
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate.get().getTariffRate(), tariffRate.get().getTariffType(), tariffRate.get().getRateUnit(), requestBodyDTO.quantity(), tariffCost, finalPrice));
     }
 }

@@ -44,8 +44,8 @@ public class AuthServiceImpl implements AuthService {
         String userEmail = loginRequestDTO.email();
 
         UserEntity userEntity = userRepository.findByEmail(userEmail)
-        .orElseThrow(() -> new InvalidUserCredentials("User does not exist"));
-        
+                .orElseThrow(() -> new InvalidUserCredentials("User does not exist"));
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userEmail, loginRequestDTO.password())
         );

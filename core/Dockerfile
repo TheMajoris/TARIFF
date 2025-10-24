@@ -1,48 +1,43 @@
-# =================
-# Stage 1: The "Build" Stage
-# Use a Gradle image to build the application JAR
-# =================
-FROM gradle:jdk17 AS builder
+# Stage 1: Build the Spring Boot JAR
+FROM eclipse-temurin:17-jdk-jammy AS build
 
 WORKDIR /app
 
-# Copy only the necessary build files to leverage layer caching
-COPY build.gradle gradlew settings.gradle ./
-COPY gradle/ ./gradle/
+# Copy Gradle wrapper and build files first (for better caching)
+COPY gradlew .
+COPY gradle ./gradle
+COPY build.gradle .
 
-# Copy the application source code
-COPY src/ ./src/
+# Make Gradle wrapper executable
+RUN chmod +x ./gradlew
 
-# Run the Gradle build command to produce the JAR file
-# New command - skips tests
-RUN ./gradlew build -x test --no-daemon
+# Download dependencies first (this layer will be cached if dependencies don't change)
+RUN ./gradlew dependencies --no-daemon || true
 
+# Copy source code last (changes most frequently)
+COPY src ./src
 
-# =================
-# Stage 2: The "Runtime" Stage
-# Use your preferred lightweight image for the final container
-# =================
+# Build the JAR and skip tests
+RUN ./gradlew clean bootJar -x test --no-daemon
+
+# Stage 2: Run the JAR
 FROM eclipse-temurin:17-jre-jammy
 
-# Add non-root user and install curl for the healthcheck
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-RUN groupadd -r spring && useradd -r -g spring spring
-
 WORKDIR /app
 
-# --- THIS IS THE KEY CHANGE ---
-# Copy the JAR file FROM THE "builder" STAGE
-COPY --from=builder /app/build/libs/core-0.0.1-SNAPSHOT.jar core.jar
+# Add non-root user
+RUN groupadd -r spring && useradd -r -g spring spring
+
+# Copy JAR from the build stage
+COPY --from=build /app/build/libs/*.jar core.jar
 
 # Set ownership to non-root user
 RUN chown -R spring:spring /app
-
-# Switch to the non-root user
 USER spring
 
 EXPOSE 8081
 
-# Your healthcheck remains the same
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD curl -f http://localhost:8081/actuator/health || exit 1
 

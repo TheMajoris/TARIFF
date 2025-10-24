@@ -2,48 +2,22 @@
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Calculator</h1>
 	<p class="text-sm text-gray-500">
-		Enter product details, select countries, and calculate the cost of importing goods.
+		Enter HS Code, select countries, and calculate the cost of importing goods.
 	</p>
 
   	<!-- Two-column layout -->
   	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
     	<!-- Tariff Calculator Card -->
-		<div class="card bg-base-100 p-6 shadow-md">
+		<div class="card bg-base-100 p-6 shadow-md relative">
+			{#if isCalculating}
+				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<span class="loading loading-spinner loading-lg text-primary"></span>
+				</div>
+			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Tariff Calculator</h2>
-			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing a product</p>
+			<p class="mb-4 text-xs text-gray-500">Calculate the cost of importing goods</p>
 
 			<form class="space-y-4" on:submit|preventDefault={calculateCost}>
-				<!-- Product with Search -->
-				<div class="form-control relative">
-					<label class="label text-sm font-medium hidden">Product</label>
-					<input
-						type="text"
-						placeholder="Search product..."
-						bind:value={productSearch}
-						class="input input-bordered w-full text-sm mb-2"
-						on:focus={() => (showProductDropdown = true)}
-						hidden
-					/>
-					{#if showProductDropdown && filteredProducts.length > 0}
-						<ul class="menu bg-base-100 border border-base-300 rounded-md shadow max-h-40 overflow-y-auto absolute w-full z-10">
-						{#each filteredProducts as item}
-							<li>
-							<a
-								class="text-sm"
-								on:click={() => {
-								product = item;
-								productSearch = item;
-								showProductDropdown = false;
-								}}
-							>
-								{item}
-							</a>
-							</li>
-						{/each}
-						</ul>
-					{/if}
-				</div>
-
 				<!-- HS Code Input -->
 				<div class="form-control">
 					<label class="label text-sm font-medium">HS Code</label>
@@ -52,6 +26,7 @@
 						placeholder="Enter HS Code (e.g., 850110)"
 						bind:value={hsCode}
 						class="input input-bordered w-full text-sm"
+						disabled={isCalculating}
 						required
 					/>
 					<label class="label">
@@ -66,8 +41,8 @@
 					<label class="label text-sm font-medium">Importing To</label>
 					<div class="relative">
 						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
-							on:click={() => (showImportToDropdown = !showImportToDropdown)}
+							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between {isCalculating ? 'opacity-50 cursor-not-allowed' : ''}"
+							on:click={() => !isCalculating && (showImportToDropdown = !showImportToDropdown)}
 							on:blur={(e) => {
 								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
 									setTimeout(() => (showImportToDropdown = false), 200);
@@ -233,7 +208,14 @@
 
 				<!-- Submit -->
 				<div class="form-control">
-					<button type="submit" class="btn btn-primary btn-sm w-full">Calculate Cost</button>
+					<button type="submit" class="btn btn-primary btn-sm w-full" disabled={isCalculating}>
+						{#if isCalculating}
+							<span class="loading loading-spinner loading-sm text-primary-content"></span>
+							Calculating...
+						{:else}
+							Calculate Cost
+						{/if}
+					</button>
 				</div>
 			</form>
 			
@@ -277,21 +259,73 @@
 
 		<!-- Related News Card -->
 		<div class="card bg-base-100 p-6 shadow-md">
-		<h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
-		<p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
+			<h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
+			<p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
 
-		<ul class="space-y-4">
-			{#each news as article}
-				<li
-					class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
-					on:click={() => (selectedArticle = article)}
-					>
-					<h3 class="text-base font-medium">{article.title}</h3>
-					<p class="text-xs text-gray-500">{article.date}</p>
-					<p class="mt-1 text-sm">{article.summary}</p>
-				</li>
-			{/each}
-		</ul>
+			{#if newsLoading}
+				<div class="flex items-center justify-center py-8">
+					<span class="loading loading-spinner loading-md text-primary"></span>
+					<span class="ml-2 text-sm text-gray-500">Loading latest news...</span>
+				</div>
+			{:else if newsError}
+				<div class="alert alert-warning">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+					</svg>
+					<span>{newsError}</span>
+					<button class="btn btn-sm btn-outline" on:click={loadNews}>Retry</button>
+				</div>
+			{:else if news.length === 0}
+				<div class="text-center py-8">
+					<p class="text-gray-500">No news articles available at the moment.</p>
+					<button class="btn btn-sm btn-outline mt-2" on:click={loadNews}>Refresh</button>
+				</div>
+			{:else}
+				<ul class="space-y-4">
+					{#each displayNews as article}
+						<li
+							class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
+							on:click={() => (selectedArticle = article)}
+						>
+							<h3 class="text-base font-medium">{article.title}</h3>
+							<p class="text-xs text-gray-500">{article.date || 'Date unavailable'}</p>
+							<p class="mt-1 text-sm">{article.summary}</p>
+							{#if article.tags && article.tags.length > 0}
+								<div class="mt-2 flex flex-wrap gap-1">
+									{#each article.tags as tag}
+										<span class="badge badge-outline badge-sm">{tag}</span>
+									{/each}
+								</div>
+							{/if}
+						</li>
+					{/each}
+				</ul>
+				
+				<!-- Pagination Controls -->
+				{#if news.length > pageSize}
+					<div class="flex items-center justify-between mt-4 pt-4 border-t border-base-300">
+						<div class="text-sm text-gray-500">
+							Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, news.length)} of {news.length} articles
+						</div>
+						<div class="flex gap-2">
+							<button 
+								class="btn btn-sm btn-outline" 
+								disabled={currentPage === 1}
+								on:click={() => currentPage = Math.max(1, currentPage - 1)}
+							>
+								Previous
+							</button>
+							<button 
+								class="btn btn-sm btn-outline" 
+								disabled={currentPage * pageSize >= news.length}
+								on:click={() => currentPage = currentPage + 1}
+							>
+								Next
+							</button>
+						</div>
+					</div>
+				{/if}
+			{/if}
 		</div>
   </div>
 </div>
@@ -299,10 +333,25 @@
 <!-- Modal -->
 {#if selectedArticle}
 	<div class="modal modal-open">
+		<!-- Background which will close the modal -->
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={() => {
+				selectedArticle = null;
+			}}>close</button
+		>
+
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-2 text-lg font-semibold">{selectedArticle.title}</h3>
 			<p class="mb-4 text-xs text-gray-500">{selectedArticle.date}</p>
-			<p class="mb-4 text-sm">{selectedArticle.details}</p>
+			<p class="mb-4 text-sm">{selectedArticle.summary}</p>
+			{#if selectedArticle.tags && selectedArticle.tags.length > 0}
+				<div class="mb-4 flex flex-wrap gap-1">
+					{#each selectedArticle.tags as tag}
+						<span class="badge badge-outline badge-sm">{tag}</span>
+					{/each}
+				</div>
+			{/if}
 			<a href={selectedArticle.link} target="_blank" class="link link-primary text-sm">
 				Read full article →
 			</a>
@@ -313,22 +362,18 @@
 	</div>
 {/if}
 
-<!-- Product and Calculator Logic-->
+<!-- Calculator Logic-->
 <script>
 	import { fetchCountries } from "$lib/api/countries.js";
+	import { fetchNews } from "$lib/api/news.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
 	import { onMount } from "svelte";
 
-	let product = '';
 	let hsCode = '';
 	let exportFrom = '';
 	let importTo = '';
 	let calculationDate = new Date().toISOString().split("T")[0]; // Set the Calculation Date
 	let goodsValue = '';
-
-	// Search state for product
-  	let productSearch = "";
-  	let showProductDropdown = false;
 
 	// Search state for countries
 	let exportFromSearch = "";
@@ -336,24 +381,7 @@
 	let showExportFromDropdown = false;
 	let showImportToDropdown = false;
 
-	/* Jiajun - 14/9/2025
-	This is a placeholder as data have not been done yet. 
-	This will be replaced with a function to fetch the real 
-	product data in the next sprint when the necessary 
-	dependancies are finished.
-	*/
-	const products = [
-		"Electronics",
-		"Textiles",
-		"Automobiles",
-		"Agricultural Goods",
-		"Chemicals",
-		"Machinery",
-		"Pharmaceuticals",
-		"Food Products",
-		"Metals",
-		"Plastics"
-	];
+	
 
 	let countries = [];
 	onMount(async () => {
@@ -362,10 +390,7 @@
 		console.log('Countries loaded:', countries);
   	});
 
-	$: filteredProducts = products.filter((p) =>
-    	p.toLowerCase().includes(productSearch.toLowerCase())
-  	);
-
+	
 	// Filter countries for search
 	$: filteredExportFromCountries = countries.filter((country) =>
 		country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
@@ -389,18 +414,21 @@
 	let calculationResult = null;
 	let calculationError = null;
 	let showErrorAlert = false;
+	let isCalculating = false;
 	
 	async function calculateCost() {
 		// Clear previous results and errors
 		calculationResult = null;
 		calculationError = null;
 		showErrorAlert = false;
+		isCalculating = true;
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
 			// Validate HS Code format (basic validation)
 			if (!/^\d{6}$/.test(hsCode)) {
 				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
 				showErrorAlert = true;
+				isCalculating = false;
 				return;
 			}
 			
@@ -440,43 +468,57 @@
 			calculationError = "Please fill in all fields before calculating.";
 			showErrorAlert = true;
 		}
+		
+		isCalculating = false;
 	}
 	// End: Tariff Calculation Section 
 
 
-	// Start: Related News Section 
+	// Start: Related News Section
 	let selectedArticle = null;
+	let news = [];
+	let newsLoading = false;
+	let newsError = null;
+	
+	// Pagination state
+	let currentPage = 1;
+	let pageSize = 2; // Changed to 2 for testing
+	let displayNews = [];
+	
+	// Calculate displayed news based on pagination
+	$: {
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+		displayNews = news.slice(startIndex, endIndex);
+	}
+	
+	// Reset to first page when news changes
+	$: if (news.length > 0) {
+		currentPage = 1;
+	}
 
-	// Dummy news
-	let news = [
-		{
-			id: 1,
-			title: 'Singapore updates tariff on electronics',
-			date: '2025-09-01',
-			summary: 'New tariff rates apply to imported electronic devices.',
-			details:
-				'The Ministry of Trade has announced that tariffs on electronic imports will increase by 5% starting October 2025. This aims to protect local manufacturers.',
-			link: 'https://example.com/news/singapore-electronics'
-		},
-		{
-			id: 2,
-			title: 'USA-China trade agreement reduces textile tariffs',
-			date: '2025-08-28',
-			summary: 'Major tariff cuts expected in textile trade.',
-			details:
-				'The USA and China signed a trade agreement lowering tariffs on textiles. This benefits small and medium traders.',
-			link: 'https://example.com/news/usa-china-textiles'
-		},
-		{
-			id: 3,
-			title: 'Japan introduces environmental tariff policies',
-			date: '2025-08-20',
-			summary: 'Green taxes applied to high-carbon industries.',
-			details:
-				'Japan announced new tariffs on high-carbon imports to align with climate commitments.',
-			link: 'https://example.com/news/japan-green-tariffs'
+	// Fetch news from API
+	async function loadNews() {
+		newsLoading = true;
+		newsError = null;
+		
+		try {
+			news = await fetchNews();
+			console.log('News loaded:', news);
+		} catch (error) {
+			console.error('Failed to load news:', error);
+			newsError = 'Failed to load news. Please try again later.';
+			// Fallback to empty array
+			news = [];
+		} finally {
+			newsLoading = false;
 		}
-	];
+	}
+
+	// Load news on component mount
+	onMount(() => {
+		loadNews();
+	});
 	// End: Related News Section
 </script>
 

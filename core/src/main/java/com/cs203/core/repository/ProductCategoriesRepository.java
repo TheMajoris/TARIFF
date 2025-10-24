@@ -2,6 +2,7 @@ package com.cs203.core.repository;
 
 import com.cs203.core.entity.ProductCategoriesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
 
     // Find all categories ordered by name
     List<ProductCategoriesEntity> findAllByOrderByCategoryNameAsc();
+
+    boolean existsByCategoryCodeAndIdNot(int categoryCode, long id);
 }

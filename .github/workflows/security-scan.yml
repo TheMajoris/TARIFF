@@ -1,0 +1,116 @@
+name: Security Scan
+
+on:
+  pull_request:
+    paths:
+      - core/**
+  push:
+    paths:
+      - core/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  VERSION: latest
+
+jobs:
+  build:
+    environment: security-scan-envt
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db'}}
+          POSTGRES_USER: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        working-directory: core
+        run: chmod +x ./gradlew
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Clean database
+        env:
+          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+        run: |
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h localhost -p 5432 -U ${{ secrets.DATABASE_USERNAME || 'admin' }}; do
+            sleep 1
+          done
+          # Drop and recreate database to ensure clean state
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME || 'admin' }} -d postgres -c "DROP DATABASE IF EXISTS tariff_db;"
+          psql -h localhost -U ${{ secrets.DATABASE_USERNAME || 'admin'}} -d postgres -c "CREATE DATABASE tariff_db;"
+          echo "Database recreated successfully"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Code vulnerability scanning
+        uses: anchore/scan-action@v6
+        id: scan
+        with:
+          path: '.'
+          fail-build: false
+          severity-cutoff: high
+          output-format: sarif
+          output-file: anchore.sarif
+
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/gradle-jdk17@master
+#        with:
+#          path: 'core'
+#          args: --severity-threshold=high --sarif-file-output=snyk.sarif
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload Anchore vulnerability report
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: anchore.sarif
+
+#      - name: Upload Snyk vulnerability report
+#        uses: github/codeql-action/upload-sarif@v3
+#        if: success() || failure()
+#        with:
+#          sarif_file: snyk.sarif
+
+      - name: Inspect action SARIF report
+        run: cat anchore.sarif
+
