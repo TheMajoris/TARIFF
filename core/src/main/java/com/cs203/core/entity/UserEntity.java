@@ -68,13 +68,13 @@ public class UserEntity {
     private LocalDateTime createdAt;
 
     // Relationship mappings for cascade operations
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "user", cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     private List<SavedCalculationsEntity> savedCalculations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "createdBy", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "createdBy", cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     private List<NationalTariffLinesEntity> createdTariffLines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "updatedBy", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "updatedBy", cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     private List<NationalTariffLinesEntity> updatedTariffLines = new ArrayList<>();
 
     // Getters and Setters

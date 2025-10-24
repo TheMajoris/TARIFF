@@ -50,20 +50,20 @@ public class ProductCategoriesEntity {
     @OneToMany(mappedBy = "parentHsCode", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NationalTariffLinesEntity> nationalTariffLines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productCategory", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "productCategory", cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     private List<SavedCalculationsEntity> savedCalculations = new ArrayList<>();
 
     // Constructors
     public ProductCategoriesEntity() {
     }
 
-    public ProductCategoriesEntity(Long id, Integer categoryCode, String categoryName, String description, Boolean isActive) {
+    public ProductCategoriesEntity(Long id, Integer categoryCode, String categoryName, String description,
+            Boolean isActive) {
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
         this.description = description;
         this.isActive = isActive;
     }
-
 
     public ProductCategoriesEntity(Integer categoryCode, String categoryName, String description, Boolean isActive) {
         this.categoryCode = categoryCode;
