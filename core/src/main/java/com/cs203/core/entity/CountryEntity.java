@@ -2,6 +2,8 @@ package com.cs203.core.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "country")
@@ -29,6 +31,22 @@ public class CountryEntity {
     @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
     private String currencyCode;
 
+    // Relationship mappings for cascade operations
+    @OneToMany(mappedBy = "importingCountry", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<SavedCalculationsEntity> importingCalculations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exportingCountry", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<SavedCalculationsEntity> exportingCalculations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "importingCountry", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<TariffRateEntity> importingTariffRates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exportingCountry", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<TariffRateEntity> exportingTariffRates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "country", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<NationalTariffLinesEntity> nationalTariffLines = new ArrayList<>();
+
     // Constructors
     public CountryEntity() {}
 
@@ -54,4 +72,19 @@ public class CountryEntity {
 
     public String getCurrencyCode() { return currencyCode; }
     public void setCurrencyCode(String currencyCode) { this.currencyCode = currencyCode; }
+
+    public List<SavedCalculationsEntity> getImportingCalculations() { return importingCalculations; }
+    public void setImportingCalculations(List<SavedCalculationsEntity> importingCalculations) { this.importingCalculations = importingCalculations; }
+
+    public List<SavedCalculationsEntity> getExportingCalculations() { return exportingCalculations; }
+    public void setExportingCalculations(List<SavedCalculationsEntity> exportingCalculations) { this.exportingCalculations = exportingCalculations; }
+
+    public List<TariffRateEntity> getImportingTariffRates() { return importingTariffRates; }
+    public void setImportingTariffRates(List<TariffRateEntity> importingTariffRates) { this.importingTariffRates = importingTariffRates; }
+
+    public List<TariffRateEntity> getExportingTariffRates() { return exportingTariffRates; }
+    public void setExportingTariffRates(List<TariffRateEntity> exportingTariffRates) { this.exportingTariffRates = exportingTariffRates; }
+
+    public List<NationalTariffLinesEntity> getNationalTariffLines() { return nationalTariffLines; }
+    public void setNationalTariffLines(List<NationalTariffLinesEntity> nationalTariffLines) { this.nationalTariffLines = nationalTariffLines; }
 }

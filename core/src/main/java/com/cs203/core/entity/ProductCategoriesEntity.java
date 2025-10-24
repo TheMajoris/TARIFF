@@ -50,6 +50,9 @@ public class ProductCategoriesEntity {
     @OneToMany(mappedBy = "parentHsCode", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NationalTariffLinesEntity> nationalTariffLines = new ArrayList<>();
 
+    @OneToMany(mappedBy = "productCategory", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<SavedCalculationsEntity> savedCalculations = new ArrayList<>();
+
     // Constructors
     public ProductCategoriesEntity() {
     }
@@ -123,6 +126,14 @@ public class ProductCategoriesEntity {
 
     public void setNationalTariffLines(List<NationalTariffLinesEntity> nationalTariffLines) {
         this.nationalTariffLines = nationalTariffLines;
+    }
+
+    public List<SavedCalculationsEntity> getSavedCalculations() {
+        return savedCalculations;
+    }
+
+    public void setSavedCalculations(List<SavedCalculationsEntity> savedCalculations) {
+        this.savedCalculations = savedCalculations;
     }
 
     public Boolean getIsActive() {

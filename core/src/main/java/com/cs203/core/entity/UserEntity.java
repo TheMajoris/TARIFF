@@ -1,6 +1,8 @@
 package com.cs203.core.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -14,6 +16,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -62,6 +66,16 @@ public class UserEntity {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // Relationship mappings for cascade operations
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<SavedCalculationsEntity> savedCalculations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "createdBy", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<NationalTariffLinesEntity> createdTariffLines = new ArrayList<>();
+
+    @OneToMany(mappedBy = "updatedBy", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private List<NationalTariffLinesEntity> updatedTariffLines = new ArrayList<>();
 
     // Getters and Setters
     public Long getId() {
@@ -134,6 +148,30 @@ public class UserEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<SavedCalculationsEntity> getSavedCalculations() {
+        return savedCalculations;
+    }
+
+    public void setSavedCalculations(List<SavedCalculationsEntity> savedCalculations) {
+        this.savedCalculations = savedCalculations;
+    }
+
+    public List<NationalTariffLinesEntity> getCreatedTariffLines() {
+        return createdTariffLines;
+    }
+
+    public void setCreatedTariffLines(List<NationalTariffLinesEntity> createdTariffLines) {
+        this.createdTariffLines = createdTariffLines;
+    }
+
+    public List<NationalTariffLinesEntity> getUpdatedTariffLines() {
+        return updatedTariffLines;
+    }
+
+    public void setUpdatedTariffLines(List<NationalTariffLinesEntity> updatedTariffLines) {
+        this.updatedTariffLines = updatedTariffLines;
     }
 
     @Transient

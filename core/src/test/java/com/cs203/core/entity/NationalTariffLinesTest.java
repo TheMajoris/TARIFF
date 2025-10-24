@@ -5,7 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
 
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 @DisplayName("NationalTariffLines Tests")
 class NationalTariffLinesTest {
 
@@ -16,12 +22,16 @@ class NationalTariffLinesTest {
     @BeforeEach
     void setUp() {
         testCountry = new CountryEntity("US", "United States", "North America", "USD");
-        testCountry.setId(1L);
         testCategory = new ProductCategoriesEntity(850110, "Electric Motors", "Electric motors description");
-        testCategory.setId(1L);
-        testUser = new UserEntity(1L, "testuser", "test@example.com", "hashedpassword", false, "Test", "User", true,
-                null);
-        testUser.setId(1L);
+
+        testUser = new UserEntity();
+        testUser.setUsername("testuser");
+        testUser.setEmail("test@example.com");
+        testUser.setPasswordHash("hashedpassword");
+        testUser.setIsAdmin(false);
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
+        testUser.setEnabled(true);
     }
 
     @Test
@@ -45,13 +55,18 @@ class NationalTariffLinesTest {
     @DisplayName("Should handle relationships correctly")
     void shouldHandleRelationshipsCorrectly() {
         CountryEntity canadaCountry = new CountryEntity("CA", "Canada", "North America", "CAD");
-        canadaCountry.setId(2L);
         ProductCategoriesEntity otherCategory = new ProductCategoriesEntity(850120, "Electric Generators",
                 "Generator description");
-        otherCategory.setId(2L);
-        UserEntity otherUser = new UserEntity(2L, "adminuser", "admin@example.com", "adminpassword", true, "Admin",
-                "User", true, null);
-        otherUser.setId(2L);
+
+        UserEntity otherUser = new UserEntity();
+        otherUser.setUsername("adminuser");
+        otherUser.setEmail("admin@example.com");
+        otherUser.setPasswordHash("adminpassword");
+        otherUser.setIsAdmin(true);
+        otherUser.setFirstName("Admin");
+        otherUser.setLastName("User");
+        otherUser.setEnabled(true);
+
         NationalTariffLinesEntity tariffLine = new NationalTariffLinesEntity(
                 canadaCountry,
                 "8501.20.10",
