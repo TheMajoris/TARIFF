@@ -49,7 +49,8 @@ public class ProductCategoriesController {
     public ResponseEntity<Page<ProductCategoriesDto>> getProductCategories(
             @RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "40") Integer size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "ascending") String sortDirection) {
+            @RequestParam(defaultValue = "ascending") String sortDirection
+            ) {
         
         if (sortDirection.equals("ascending")) {
             Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).ascending());
