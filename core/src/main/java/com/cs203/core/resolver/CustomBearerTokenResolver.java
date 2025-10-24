@@ -1,12 +1,13 @@
 package com.cs203.core.resolver;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.stereotype.Component;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class CustomBearerTokenResolver implements BearerTokenResolver {
@@ -40,7 +41,10 @@ public class CustomBearerTokenResolver implements BearerTokenResolver {
     }
 
     private boolean requiresAuthentication(String path, String method) {
-        if (path.startsWith("/api/v1/tariff-rate") || path.equals("/api/v1/auth/logout") || path.equals("/api/v1/auth/refresh")) {
+        if (path.startsWith("/api/v1/tariff-rate") || 
+            path.startsWith("/api/v1/calculation-history") ||
+            path.equals("/api/v1/auth/logout") || 
+            path.equals("/api/v1/auth/refresh")) {
             return true;
         }
 
