@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +20,9 @@ import com.cs203.core.repository.ProductCategoriesRepository;
 import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.ProductCategoriesService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 @Service
 @Transactional
 public class ProductCategoriesServiceImpl implements ProductCategoriesService {
@@ -31,6 +33,9 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     TariffRateRepository tariffRateRepository;
     @Autowired
     NationalTariffLinesRepository nationalTariffLinesRepository;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     @Override
     
     public List<ProductCategoriesDto> getProductCategories() {
@@ -77,12 +82,35 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
             return new GenericResponse<ProductCategoriesDto>(HttpStatus.NOT_FOUND, "Product category not found with id", dto);
         }
 
+        // Check if new HS Code already exists (for a different category)
         if (productCategoriesRepository.existsByCategoryCodeAndIdNot(dto.getCategoryCode(), entity.get().getId())) {
             return new GenericResponse<ProductCategoriesDto>(HttpStatus.CONFLICT, "Product category's code already exists", dto);
         }
 
+        Integer oldHsCode = entity.get().getCategoryCode();
+        Integer newHsCode = dto.getCategoryCode();
+
+        // If HS Code is being changed, the database will automatically cascade update
+        // all related records thanks to ON UPDATE CASCADE in foreign key constraints
+        if (!oldHsCode.equals(newHsCode)) {
+            // Simply update the product category - database handles the rest!
+            entity.get().setCategoryCode(newHsCode);
+            productCategoriesRepository.saveAndFlush(entity.get());
+            
+            // Clear persistence context to avoid stale entities
+            entityManager.clear();
+            
+            // Log the update
+            System.out.println("HS Code updated from " + oldHsCode + " to " + newHsCode + 
+                             ". Related tariff rates and national tariff lines automatically updated by database CASCADE.");
+        }
+
+        // Update other fields
         ProductCategoriesEntity updatedEntity = entity.get();
-        updatedEntity.setCategoryCode(dto.getCategoryCode());
+        if (oldHsCode.equals(newHsCode)) {
+            // HS Code wasn't changed, so update it normally
+            updatedEntity.setCategoryCode(newHsCode);
+        }
         updatedEntity.setCategoryName(dto.getCategoryName());
         updatedEntity.setDescription(dto.getDescription());
         updatedEntity.setIsActive(dto.getIsActive());
