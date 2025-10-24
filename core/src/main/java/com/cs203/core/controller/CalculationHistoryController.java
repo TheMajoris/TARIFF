@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.SavedCalculationDto;
 import com.cs203.core.dto.requests.SaveCalculationRequestDTO;
+import com.cs203.core.entity.UserEntity;
 import com.cs203.core.service.CalculationHistoryService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,18 +33,32 @@ public class CalculationHistoryController {
     @PostMapping
     public ResponseEntity<GenericResponse<SavedCalculationDto>> saveCalculation(
         @Valid @RequestBody SaveCalculationRequestDTO requestDto, Authentication authentication) {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            Long userId = Long.parseLong(jwt.getSubject());
+            Long userId = extractUserId(authentication);
             GenericResponse<SavedCalculationDto> response = calculationHistoryService.saveCalculation(requestDto,userId);
         return new ResponseEntity<>(response, response.getStatus());
     }
 
     @GetMapping
     public ResponseEntity<GenericResponse<List<SavedCalculationDto>>> getCalculationsByUserId(Authentication authentication) {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            Long userId = Long.parseLong(jwt.getSubject());
+            Long userId = extractUserId(authentication);
             GenericResponse<List<SavedCalculationDto>> response = calculationHistoryService.getCalculationsByUserId(userId);
         return new ResponseEntity<>(response, response.getStatus());
-    }    
+    }
+    
+    private Long extractUserId(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        
+        if (principal instanceof Jwt) {
+            // Production environment - JWT token
+            Jwt jwt = (Jwt) principal;
+            return Long.parseLong(jwt.getSubject());
+        } else if (principal instanceof UserEntity) {
+            // Test environment - UserEntity
+            UserEntity user = (UserEntity) principal;
+            return user.getId();
+        } else {
+            throw new IllegalArgumentException("Unsupported principal type: " + principal.getClass());
+        }
+    }
     
 }
