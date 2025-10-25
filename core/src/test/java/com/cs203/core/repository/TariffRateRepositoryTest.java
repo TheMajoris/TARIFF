@@ -3,6 +3,8 @@ package com.cs203.core.repository;
 import com.cs203.core.entity.CountryEntity;
 import com.cs203.core.entity.ProductCategoriesEntity;
 import com.cs203.core.entity.TariffRateEntity;
+import com.cs203.core.enums.TariffType;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:postgresql://localhost:5432/tariff_db",
@@ -181,7 +184,7 @@ class TariffRateRepositoryTest {
                 .findByTariffType("AD_VALOREM");
 
         assertEquals(3, rates.size());
-        rates.forEach(rate -> assertEquals("AD_VALOREM", rate.getTariffType()));
+        rates.forEach(rate -> assertEquals(TariffType.AD_VALOREM, rate.getTariffTypeEnum()));
     }
 
     @Test
@@ -295,13 +298,13 @@ class TariffRateRepositoryTest {
     void shouldUpdateTariffRate() {
         TariffRateEntity rateToUpdate = tariffRateRepository.findById(currentRate.getId()).get();
         rateToUpdate.setTariffRate(new BigDecimal("6.00"));
-        rateToUpdate.setTariffType("SPECIFIC");
+        rateToUpdate.setTariffTypeEnum(TariffType.SPECIFIC);
         rateToUpdate.setRateUnit("USD_PER_UNIT");
 
         TariffRateEntity updatedRate = tariffRateRepository.save(rateToUpdate);
 
         assertEquals(0, new BigDecimal("6.00").compareTo(updatedRate.getTariffRate()));
-        assertEquals("SPECIFIC", updatedRate.getTariffType());
+        assertEquals(TariffType.SPECIFIC, updatedRate.getTariffTypeEnum());
         assertEquals("USD_PER_UNIT", updatedRate.getRateUnit());
     }
 
