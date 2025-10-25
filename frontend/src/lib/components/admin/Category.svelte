@@ -435,6 +435,7 @@
 							id="product_category_code"
 							bind:value={selectedCategory.categoryCode}
 							class="input-bordered input w-full"
+							disabled = {edit && !createCategoryBoolean}
 						/>
 					</div>
 
