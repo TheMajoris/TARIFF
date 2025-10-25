@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,7 +35,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     @Override
     
     public List<ProductCategoriesDto> getProductCategories() {
-        return productCategoriesRepository.findAll().stream()
+        return productCategoriesRepository.findAll(Sort.by("categoryCode").ascending()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

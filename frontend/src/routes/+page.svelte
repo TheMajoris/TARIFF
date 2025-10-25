@@ -1,178 +1,19 @@
-<!-- Calculator Logic-->
-<script>
-	import { fetchCountries } from '$lib/api/countries.js';
-	import { fetchNews } from '$lib/api/news.js';
-	import { calculateTariffCost } from '$lib/api/tariff.js';
-	import { onMount } from 'svelte';
-
-	let hsCode = '';
-	let exportFrom = '';
-	let importTo = '';
-	let calculationDate = new Date().toISOString().split('T')[0]; // Set the Calculation Date
-	let goodsValue = '';
-	let quantity = '';
-
-	// Search state for countries
-	let exportFromSearch = '';
-	let importToSearch = '';
-	let showExportFromDropdown = false;
-	let showImportToDropdown = false;
-
-	let countries = [];
-	onMount(async () => {
-		console.log('Fetching countries...');
-		countries = await fetchCountries();
-		console.log('Countries loaded:', countries);
-	});
-
-	// Filter countries for search
-	$: filteredExportFromCountries = countries.filter(
-		(country) =>
-			country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
-			country.code.toLowerCase().includes(exportFromSearch.toLowerCase())
-	);
-
-	$: filteredImportToCountries = countries.filter(
-		(country) =>
-			country.name.toLowerCase().includes(importToSearch.toLowerCase()) ||
-			country.code.toLowerCase().includes(importToSearch.toLowerCase())
-	);
-
-	// Format Currency
-	function formatCurrency() {
-		if (goodsValue) {
-			goodsValue = parseFloat(goodsValue).toFixed(2);
-		}
-	}
-
-	// Format Quantity
-	function formatQuantity() {
-		if (quantity) {
-			quantity = parseFloat(quantity).toFixed(2);
-		}
-	}
-
-	// Start: Tariff Calculation Section
-	let calculationResult = null;
-	let calculationError = null;
-	let showErrorAlert = false;
-	let isCalculating = false;
-
-	async function calculateCost() {
-		// Clear previous results and errors
-		calculationResult = null;
-		calculationError = null;
-		showErrorAlert = false;
-		isCalculating = true;
-
-		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
-			// Validate HS Code format (basic validation)
-			if (!/^\d{6}$/.test(hsCode)) {
-				calculationError = 'Please enter a valid HS Code format (6 digits, e.g., 850110)';
-				showErrorAlert = true;
-				isCalculating = false;
-				return;
-			}
-
-			try {
-				const result = await calculateTariffCost({
-					hsCode,
-					exportFrom,
-					importTo,
-					calculationDate,
-					goodsValue,
-					quantity
-				});
-
-				console.log('Calculation result:', result);
-
-				if (result === null) {
-					calculationError =
-						'No tariff data found for the specified countries and product. Please check your selection or contact support.';
-					showErrorAlert = true;
-				} else {
-					// Check if this is a "no data" case (tariff rate is -1)
-					const tariffRate = parseFloat(result.tariffRate);
-
-					if (tariffRate === -1) {
-						// No tariff data found in database
-						calculationError =
-							'No tariff data found for the specified countries and product. Please check your selection or contact support.';
-						showErrorAlert = true;
-					} else {
-						// Valid tariff data (including 0% tariff)
-						calculationResult = result;
-					}
-				}
-			} catch (error) {
-				console.error('Calculation error:', error);
-				calculationError =
-					error.message || 'An error occurred while calculating the tariff. Please try again.';
-				showErrorAlert = true;
-			}
-		} else {
-			calculationError = 'Please fill in all fields before calculating.';
-			showErrorAlert = true;
-		}
-
-		isCalculating = false;
-	}
-	// End: Tariff Calculation Section
-
-	// Start: Related News Section
-	let selectedArticle = null;
-	let news = [];
-	let newsLoading = false;
-	let newsError = null;
-
-	// Pagination state
-	let currentPage = 1;
-	let pageSize = 2; // Changed to 2 for testing
-	let displayNews = [];
-
-	// Calculate displayed news based on pagination
-	$: {
-		const startIndex = (currentPage - 1) * pageSize;
-		const endIndex = startIndex + pageSize;
-		displayNews = news.slice(startIndex, endIndex);
-	}
-
-	// Reset to first page when news changes
-	$: if (news.length > 0) {
-		currentPage = 1;
-	}
-
-	// Fetch news from API
-	async function loadNews() {
-		newsLoading = true;
-		newsError = null;
-
-		try {
-			news = await fetchNews();
-			console.log('News loaded:', news);
-		} catch (error) {
-			console.error('Failed to load news:', error);
-			newsError = 'Failed to load news. Please try again later.';
-			// Fallback to empty array
-			news = [];
-		} finally {
-			newsLoading = false;
-		}
-	}
-
-	// Load news on component mount
-	onMount(() => {
-		loadNews();
-	});
-	// End: Related News Section
-</script>
-
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Calculator</h1>
 	<p class="text-sm text-gray-500">
 		Enter HS Code, select countries, and calculate the cost of importing goods.
 	</p>
+	
+	<!-- Global Alerts - Below page title -->
+	{#if showErrorAlert && calculationError}
+		<Alert 
+			type="error" 
+			message={calculationError} 
+			show={showErrorAlert}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -595,3 +436,173 @@
 		</div>
 	</div>
 {/if}
+
+<!-- Calculator Logic-->
+<script>
+	import { fetchCountries } from "$lib/api/countries.js";
+	import { fetchNews } from "$lib/api/news.js";
+	import { calculateTariffCost } from "$lib/api/tariff.js";
+	import Alert from "$lib/components/Alert.svelte";
+	import { onMount } from "svelte";
+
+	let hsCode = '';
+	let exportFrom = '';
+	let importTo = '';
+	let calculationDate = new Date().toISOString().split('T')[0]; // Set the Calculation Date
+	let goodsValue = '';
+	let quantity = '';
+
+	// Search state for countries
+	let exportFromSearch = "";
+	let importToSearch = "";
+	let showExportFromDropdown = false;
+	let showImportToDropdown = false;
+
+	
+
+	let countries = [];
+	onMount(async () => {
+		console.log('Fetching countries...');
+		countries = await fetchCountries();
+		console.log('Countries loaded:', countries);
+  	});
+
+	
+	// Filter countries for search
+	$: filteredExportFromCountries = countries.filter((country) =>
+		country.name.toLowerCase().includes(exportFromSearch.toLowerCase()) ||
+		country.code.toLowerCase().includes(exportFromSearch.toLowerCase())
+	);
+
+	$: filteredImportToCountries = countries.filter((country) =>
+		country.name.toLowerCase().includes(importToSearch.toLowerCase()) ||
+		country.code.toLowerCase().includes(importToSearch.toLowerCase())
+	);
+
+	// Format Currency
+	function formatCurrency() {
+		if (goodsValue) {
+			goodsValue = parseFloat(goodsValue).toFixed(2);
+		}
+	}
+
+	// Format Quantity
+	function formatQuantity() {
+		if (quantity) {
+			quantity = parseFloat(quantity).toFixed(2);
+		}
+	}
+
+	// Start: Tariff Calculation Section 
+	let calculationResult = null;
+	let calculationError = null;
+	let showErrorAlert = false;
+	let isCalculating = false;
+	
+	async function calculateCost() {
+		// Clear previous results and errors
+		calculationResult = null;
+		calculationError = null;
+		showErrorAlert = false;
+		isCalculating = true;
+		
+		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
+			// Validate HS Code format (basic validation)
+			if (!/^\d{6}$/.test(hsCode)) {
+				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
+				showErrorAlert = true;
+				isCalculating = false;
+				return;
+			}
+			
+			try {
+				const result = await calculateTariffCost({
+					hsCode,
+					exportFrom,
+					importTo,
+					calculationDate,
+					goodsValue,
+					quantity
+				});
+				
+				console.log('Calculation result:', result);
+				
+				if (result === null) {
+					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+					showErrorAlert = true;
+				} else {
+					// Check if this is a "no data" case (tariff rate is -1)
+					const tariffRate = parseFloat(result.tariffRate);
+					
+					if (tariffRate === -1) {
+						// No tariff data found in database
+						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+						showErrorAlert = true;
+					} else {
+						// Valid tariff data (including 0% tariff)
+						calculationResult = result;
+					}
+				}
+			} catch (error) {
+				console.error('Calculation error:', error);
+				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
+				showErrorAlert = true;
+			}
+		} else {
+			calculationError = "Please fill in all fields before calculating.";
+			showErrorAlert = true;
+		}
+		
+		isCalculating = false;
+	}
+	// End: Tariff Calculation Section 
+
+
+	// Start: Related News Section
+	let selectedArticle = null;
+	let news = [];
+	let newsLoading = false;
+	let newsError = null;
+	
+	// Pagination state
+	let currentPage = 1;
+	let pageSize = 2; // Changed to 2 for testing
+	let displayNews = [];
+	
+	// Calculate displayed news based on pagination
+	$: {
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+		displayNews = news.slice(startIndex, endIndex);
+	}
+	
+	// Reset to first page when news changes
+	$: if (news.length > 0) {
+		currentPage = 1;
+	}
+
+	// Fetch news from API
+	async function loadNews() {
+		newsLoading = true;
+		newsError = null;
+		
+		try {
+			news = await fetchNews();
+			console.log('News loaded:', news);
+		} catch (error) {
+			console.error('Failed to load news:', error);
+			newsError = 'Failed to load news. Please try again later.';
+			// Fallback to empty array
+			news = [];
+		} finally {
+			newsLoading = false;
+		}
+	}
+
+	// Load news on component mount
+	onMount(() => {
+		loadNews();
+	});
+	// End: Related News Section
+</script>
+

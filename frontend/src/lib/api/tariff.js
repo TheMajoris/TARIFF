@@ -118,7 +118,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
+ * @param {string} payload.hsCode
  */
 export async function createTariff(payload) {
   try {
@@ -150,7 +150,7 @@ export async function createTariff(payload) {
 }
 
 /**
- * Edit a new tariff rate.
+ * Edit a tariff rate.
  *
  * @param {Object} payload
  * @param {number} payload.id
@@ -188,7 +188,7 @@ export async function editTariff(payload) {
     // console.log('Updating tariff result:', result);
     return result;
   } catch (err) {
-    console.error("updateTariff error:", err);
+    console.error("editTariff error:", err);
     throw err; // Re-throw to let the calling code handle the error
   }
 }

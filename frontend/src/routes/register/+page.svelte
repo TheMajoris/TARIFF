@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { registerUser } from '$lib/api/users';
+	import Alert from '$lib/components/Alert.svelte';
 
 	let firstName = '';
 	let lastName = '';
@@ -62,17 +63,23 @@
 
 	async function register() {
 		if (!firstName || !lastName || !username || !email || !password || !password2) {
-			error = 'Please fill in all fields before registering.';
+			error = '⚠️ Please complete all required fields to create your account';
+			// Scroll to top to show error message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 			return;
 		}
 
 		if (!validateEmail()) {
-			error = 'The email is not in a valid format.';
+			error = '📧 Please enter a valid email address (e.g., user@example.com)';
+			// Scroll to top to show error message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 			return;
 		}
 
 		if (!checkPasswords()) {
-			return; // Error already set by checkPasswords()
+			// Scroll to top to show error message (error already set by checkPasswords)
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			return;
 		}
 
 		isLoading = true;
@@ -88,7 +95,10 @@
 				password
 			});
 
-			success = 'Registration successful! Redirecting to login...';
+			success = '🎉 Account created successfully! Welcome to TARIFF. Redirecting to login...';
+			
+			// Scroll to top to show success message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 			
 			// Redirect to login page after 2 seconds
 			setTimeout(() => {
@@ -96,8 +106,11 @@
 			}, 2000);
 
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+			error = err instanceof Error ? err.message : 'Registration failed. Please check your information and try again.';
 			console.error('Registration error:', err);
+			
+			// Scroll to top to show error message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		} finally {
 			isLoading = false;
 		}
@@ -107,6 +120,25 @@
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Dashboard</h1>
+	
+	<!-- Global Alerts - Below page title -->
+	{#if error}
+		<Alert 
+			type="error" 
+			message={error} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+
+	{#if success}
+		<Alert 
+			type="success" 
+			message={success} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
@@ -118,24 +150,6 @@
 			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Register</h2>
 
-			<!-- Error/Success Messages -->
-			{#if error}
-				<div class="alert alert-error">
-					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					<span>{error}</span>
-				</div>
-			{/if}
-
-			{#if success}
-				<div class="alert alert-success">
-					<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					<span>{success}</span>
-				</div>
-			{/if}
 
 			<form class="space-y-4"  on:submit|preventDefault={register}>
 				<!-- First Name -->
@@ -233,8 +247,14 @@
 				</div>
 
 				<!-- Submit -->
-				<div class="form-control flex justify-around">
-					<button class="btn btn-primary btn-sm invisible w-1/3" aria-label="Spacer button"></button>
+				<div class="form-control flex justify-around gap-4">
+					<button 
+						type="button"
+						class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800"
+						on:click={() => goto('/login')}
+					>
+						← Back to Login
+					</button>
 					<button 
 						type="submit" 
 						class="btn btn-primary btn-sm w-1/3"

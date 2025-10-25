@@ -163,6 +163,11 @@
 			</div>
 		{/if}
 
+		<!-- Global Alert Container - Below header, above content -->
+		<div id="global-alerts" class="px-4 pt-4">
+			<!-- This will be populated by individual pages -->
+		</div>
+
 		<!-- Page content -->
 		<main class="flex-1 p-6">
 			<slot />
@@ -184,7 +189,6 @@
 					<h3 class="mb-3 text-sm font-semibold text-gray-700">Quick Links</h3>
 					<ul class="space-y-2 text-sm">
 						<li><a href="/" class="link link-hover">Dashboard</a></li>
-						<li><a href="/tariff" class="link link-hover">Tariff Calculator</a></li>
 						<li><a href="/settings" class="link link-hover">Settings</a></li>
 					</ul>
 				</div>
