@@ -27,14 +27,7 @@ public class NationalTariffLinesEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "parent_hs_code", 
-        referencedColumnName = "hs_code",
-        foreignKey = @ForeignKey(
-            name = "fk_national_tariff_lines_product_category",
-            foreignKeyDefinition = "FOREIGN KEY (parent_hs_code) REFERENCES product_categories(hs_code) ON UPDATE CASCADE ON DELETE RESTRICT"
-        )
-    )
+    @JoinColumn(name = "parent_hs_code", referencedColumnName = "hs_code")
     private ProductCategoriesEntity parentHsCode;
 
     @Column(name = "level")

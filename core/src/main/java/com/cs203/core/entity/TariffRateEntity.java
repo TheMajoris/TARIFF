@@ -64,15 +64,7 @@ public class TariffRateEntity {
     private CountryEntity exportingCountry;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "hs_code", 
-        referencedColumnName = "hs_code", 
-        nullable = false,
-        foreignKey = @ForeignKey(
-            name = "fk_tariff_rate_product_category",
-            foreignKeyDefinition = "FOREIGN KEY (hs_code) REFERENCES product_categories(hs_code) ON UPDATE CASCADE ON DELETE RESTRICT"
-        )
-    )
+    @JoinColumn(name = "hs_code", referencedColumnName = "hs_code", nullable = false)
     @NotNull(message = "HS code is required")
     private ProductCategoriesEntity productCategory;
 
