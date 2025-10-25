@@ -109,13 +109,40 @@
 		/>
 	{/if}
 
-	<!-- Two-column layout -->
-	<div class="grid grid-cols-1">
-		<!-- Tariffs Card -->
-		<div class="card bg-base-100 p-6 shadow-md relative">
-			{#if isBusy}
-				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
-					<span class="loading loading-spinner loading-lg text-primary"></span>
+		<!-- Two-column layout -->
+		<div class="grid grid-cols-1">
+			<!-- Tariffs Card -->
+			<div class="card relative bg-base-100 p-6 shadow-md">
+				{#if isBusy}
+					<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+						<span class="loading loading-lg loading-spinner text-primary"></span>
+					</div>
+				{/if}
+				<div class="flex items-center justify-between py-6">
+					<div class="flex">
+						<h2
+							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode == 'tariff'
+								? 'border-b-2'
+								: ''}"
+							on:click={() => {
+								mode = 'tariff';
+							}}
+						>
+							Tariffs
+						</h2>
+						<h2
+							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode ==
+							'category'
+								? 'border-b-2'
+								: ''}"
+							on:click={() => {
+								mode = 'category';
+							}}
+						>
+							Product Categories
+						</h2>
+					</div>
+					<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
 				</div>
 			{/if}
 			<div class="flex items-center justify-between py-6">
@@ -156,10 +183,10 @@
 				<TariffComponent bind:createTariffBoolean bind:isBusy/>
 			{/if}
 
-			{#if mode == 'category'}
-				<CategoryComponent bind:createCategoryBoolean bind:isBusy/>
-			{/if}
+				{#if mode == 'category'}
+					<CategoryComponent bind:createCategoryBoolean bind:isBusy />
+				{/if}
+			</div>
 		</div>
 	</div>
-</div>
 {/if}

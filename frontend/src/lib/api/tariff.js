@@ -16,7 +16,7 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
 
     console.log('Request body:', requestBody);
 
-    const res = await fetch(`${API_BASE_URL}/tariff-rate/calculate`, {
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/calculation`, {
       method: "POST",
       credentials: "include",
       headers: { 
@@ -111,7 +111,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
+ * @param {string} payload.hsCode
  */
 export async function createTariff(payload) {
   try {
