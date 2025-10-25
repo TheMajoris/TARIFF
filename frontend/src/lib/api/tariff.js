@@ -143,7 +143,7 @@ export async function createTariff(payload) {
 }
 
 /**
- * Edit a new tariff rate.
+ * Edit a tariff rate.
  *
  * @param {Object} payload
  * @param {number} payload.id
@@ -181,7 +181,7 @@ export async function editTariff(payload) {
     // console.log('Updating tariff result:', result);
     return result;
   } catch (err) {
-    console.error("updateTariff error:", err);
+    console.error("editTariff error:", err);
     throw err; // Re-throw to let the calling code handle the error
   }
 }
