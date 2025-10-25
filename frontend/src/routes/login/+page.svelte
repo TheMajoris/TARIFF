@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { loginUser } from '$lib/api/users';
+	import Alert from '$lib/components/Alert.svelte';
 
 
 	let email = '';
@@ -10,7 +11,7 @@
 	let error = '';
 	let success = '';
 	
-	$: error = $page.url.searchParams.get('reason') === "session_expired" ? "Your session expired. Please log in again." : "";
+	$: error = $page.url.searchParams.get('reason') === "session_expired" ? "🔒 Your session has expired for security reasons. Please log in again to continue." : "";
 
 	// Function that will use regex to validate the email
 	function validateEmail() {
@@ -38,23 +39,33 @@
 					localStorage.setItem('userId', result.message.userId);
 
 					error = '';
-					success = 'Login successful! Redirecting to dashboard...';
+					success = '🎉 Welcome back! Login successful. Redirecting to your dashboard...';
+
+					// Scroll to top to show success message
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 
 					// Redirect to login page after 2 seconds
 					setTimeout(() => {
 						goto('/');
 					}, 2000);
 				} catch (err) {
-					error = err instanceof Error ? err.message : 'Login failed. Please try again.';
+					error = err instanceof Error ? err.message : 'Login failed. Please check your email and password, then try again.';
 					console.error('Login error:', err);
+					
+					// Scroll to top to show error message
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 				} finally {
 					isLoading = false;
 				}
 			} else {
-				error = 'The email is not in a valid format.';
+				error = '📧 Please enter a valid email address (e.g., user@example.com)';
+				// Scroll to top to show error message
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
 		} else {
-			error = 'Please fill in all fields before logging in.';
+			error = '⚠️ Please fill in both email and password fields to continue';
+			// Scroll to top to show error message
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 	}
 </script>
@@ -62,6 +73,25 @@
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<h1 class="text-primary text-2xl font-semibold">Tariff Dashboard</h1>
+	
+	<!-- Global Alerts - Below page title -->
+	{#if error}
+		<Alert 
+			type="error" 
+			message={error} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+
+	{#if success}
+		<Alert 
+			type="success" 
+			message={success} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- One-column layout -->
 	<div class="flex justify-center pt-10">
@@ -73,44 +103,6 @@
 			{/if}
 			<h2 class="mb-1 text-lg font-semibold">Login</h2>
 
-			<!-- Error/Success Messages -->
-			{#if error}
-				<div class="alert alert-error">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{error}</span>
-				</div>
-			{/if}
-
-			{#if success}
-				<div class="alert alert-success">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{success}</span>
-				</div>
-			{/if}
 
 			<form class="space-y-4" on:submit|preventDefault={login}>
 				<!-- Email -->
@@ -140,8 +132,8 @@
 				</div>
 
 				<!-- Submit -->
-				<div class="form-control flex justify-around">
-					<a href="./register" class="btn btn-primary btn-sm w-1/3">Register</a>
+				<div class="form-control flex justify-around gap-4">
+					<a href="./register" class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800">Register →</a>
 					<button type="submit" class="btn btn-primary btn-sm w-1/3" disabled={isLoading}>
 						{#if isLoading}
 							<span class="loading loading-spinner loading-sm text-primary-content"></span>

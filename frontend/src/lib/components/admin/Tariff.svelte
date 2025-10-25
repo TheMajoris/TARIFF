@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
-	import { getAllProductCategories } from '$lib/api/productCategory';
 	import { beforeNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { fetchCountries } from '$lib/api/countries.js';
+	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
+	import Alert from '$lib/components/Alert.svelte';
+	import { onMount } from 'svelte';
 
 	let success = '';
 	let error = '';
@@ -120,16 +120,16 @@
 								if (selectedTariff.productCategory != null) {
 									return true;
 								} else {
-									error = 'Product Category cannot be null';
+									error = '⚠️ Please select a product category';
 								}
 							} else {
-								error = 'Exporting Country Code cannot be null';
+								error = '🌍 Please select an exporting country';
 							}
 						} else {
-							error = 'Importing Country Code cannot be null';
+							error = '🌍 Please select an importing country';
 						}
 					} else {
-						error = 'Effective Date cannot be null';
+						error = '📅 Please select an effective date';
 					}
 				} else {
 					error = 'Rate Unit can only be up to 20 characters';
@@ -162,13 +162,13 @@
 		try {
 			const result = await createTariff(payload);
 
-			success = 'Created Tariff id: ' + result.data.id;
+			success = 'Tariff rate created successfully! (ID: ' + result.id + ')';
 			close();
 			fetchTariffs();
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : 'Failed to create tariff rate. Please check your data and try again.';
 			console.error('Creating tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -206,7 +206,7 @@
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : 'Failed to update tariff rate. Please check your data and try again.';
 			console.error('Editing tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -218,13 +218,14 @@
 		isBusy = true;
 		try {
 			const result = await deleteSpecificTariff(id);
+			console.log('Delete result:', result);
 
-			success = result.message;
+			success = '🗑️ ' + (result.message || 'Tariff rate deleted successfully');
 			fetchTariffs();
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
+			error = err instanceof Error ? err.message : 'Failed to delete tariff rate. Please try again.';
 			console.error('Deleting tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -311,42 +312,23 @@
 	);
 </script>
 
+<!-- Global Alerts - Below component title -->
 {#if error}
-	<div class="alert alert-error">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 shrink-0 stroke-current"
-			fill="none"
-			viewBox="0 0 24 24"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-			/>
-		</svg>
-		<span>{error}</span>
-	</div>
+	<Alert 
+		type="error" 
+		message={error} 
+		show={true}
+		autoDismiss={true}
+	/>
 {/if}
 
 {#if success}
-	<div class="alert alert-success">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 shrink-0 stroke-current"
-			fill="none"
-			viewBox="0 0 24 24"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-			/>
-		</svg>
-		<span>{success}</span>
-	</div>
+	<Alert 
+		type="success" 
+		message={success} 
+		show={true}
+		autoDismiss={true}
+	/>
 {/if}
 
 <div class="overflow-x-auto">
@@ -419,8 +401,12 @@
 								</li>
 								<li>
 									<button
-										class="text-sm font-semibold text-error"
-										on:click={deleteTariffMethod(line.id)}>Delete</button
+										class="text-error text-sm font-semibold"
+										on:click={() => {
+											success = '';
+											error = '';
+											deleteTariffMethod(line.id);
+										}}>Delete</button
 									>
 								</li>
 							</ul>
