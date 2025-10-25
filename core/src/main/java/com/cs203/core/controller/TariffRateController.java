@@ -109,6 +109,6 @@ public class TariffRateController {
                 requestBodyDTO.quantity(),
                 requestBodyDTO.date());
         BigDecimal tariffCost = tariffRateService.getTariffCost(finalPrice, requestBodyDTO.initialPrice());
-        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate.get().getTariffRate(), tariffRate.get().getTariffType(), tariffRate.get().getRateUnit(), requestBodyDTO.quantity(), tariffCost, finalPrice));
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate.get().getTariffRate(), tariffRate.get().getTariffType(), tariffRate.get().getRateUnit(), tariffRate.get().getUnitQuantity(), tariffCost, finalPrice));
     }
 }

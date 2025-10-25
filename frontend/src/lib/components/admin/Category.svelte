@@ -10,6 +10,7 @@
 		getProductCategoriesPage
 	} from '$lib/api/productCategory';
 	import { page } from '$app/state';
+	import Alert from '$lib/components/Alert.svelte';
 
 	let success = '';
 	let error = '';
@@ -193,14 +194,16 @@
 				err.message.endsWith('Set request params flag to true to cascade delete')
 			) {
 				error =
-					err.message +
-					' Please click delete again to confirm deletion (inclusive of tariffs using it)';
-
+					err.message.split(".")[0] +
+					'. Please click delete again to confirm deletion (inclusive of tariffs using it)';
+				console.log(error);
 				confirmDelete = id;
+			} else {
+				error =
+					err instanceof Error
+						? err.message
+						: 'Deleting product category failed. Please try again.';
 			}
-
-			error =
-				err instanceof Error ? err.message : 'Deleting product category failed. Please try again.';
 			console.error('Deleting product category error:', err);
 		} finally {
 			isBusy = false;
@@ -260,21 +263,11 @@
 
 <!-- Global Alerts - Below component title -->
 {#if error}
-	<Alert 
-		type="error" 
-		message={error} 
-		show={true}
-		autoDismiss={true}
-	/>
+	<Alert type="error" message={error} show={true} autoDismiss={true} />
 {/if}
 
 {#if success}
-	<Alert 
-		type="success" 
-		message={success} 
-		show={true}
-		autoDismiss={true}
-	/>
+	<Alert type="success" message={success} show={true} autoDismiss={true} />
 {/if}
 
 <div class="overflow-x-auto">
@@ -416,7 +409,7 @@
 							id="product_category_code"
 							bind:value={selectedCategory.categoryCode}
 							class="input-bordered input w-full"
-							disabled = {edit && !createCategoryBoolean}
+							disabled={edit && !createCategoryBoolean}
 						/>
 					</div>
 

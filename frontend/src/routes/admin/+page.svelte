@@ -74,7 +74,6 @@
 		};
 	}
 
-	let create = false;
 
 	function createButton() {
 		if (mode == 'tariff') {
@@ -86,102 +85,67 @@
 </script>
 
 {#if authorized}
-<div class="space-y-6 p-6">
-	<!-- Page Title -->
-	<h1 class="text-primary text-2xl font-semibold">Admin</h1>
-	
-	<!-- Global Alerts - Below page title -->
-	{#if error}
-		<Alert 
-			type="error" 
-			message={error} 
-			show={true}
-			autoDismiss={true}
-		/>
-	{/if}
+	<div class="space-y-6 p-6">
+		<!-- Page Title -->
+		<h1 class="text-primary text-2xl font-semibold">Admin</h1>
 
-	{#if success}
-		<Alert 
-			type="success" 
-			message={success} 
-			show={true}
-			autoDismiss={true}
-		/>
-	{/if}
+		<!-- Global Alerts - Below page title -->
+		{#if error}
+			<Alert type="error" message={error} show={true} autoDismiss={true} />
+		{/if}
+
+		{#if success}
+			<Alert type="success" message={success} show={true} autoDismiss={true} />
+		{/if}
 
 		<!-- Two-column layout -->
 		<div class="grid grid-cols-1">
 			<!-- Tariffs Card -->
-			<div class="card relative bg-base-100 p-6 shadow-md">
+			<div class="card bg-base-100 relative p-6 shadow-md">
 				{#if isBusy}
-					<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+					<div class="bg-base-100/70 absolute inset-0 z-10 flex items-center justify-center">
 						<span class="loading loading-lg loading-spinner text-primary"></span>
 					</div>
 				{/if}
 				<div class="flex items-center justify-between py-6">
 					<div class="flex">
-						<h2
-							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode == 'tariff'
+						<button
+							class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
 								? 'border-b-2'
 								: ''}"
 							on:click={() => {
 								mode = 'tariff';
 							}}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									mode = 'tariff';
+								}
+							}}
 						>
 							Tariffs
-						</h2>
-						<h2
-							class="mb-1 cursor-pointer border-primary px-2 text-lg font-semibold {mode ==
+						</button>
+						<button
+							class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode ==
 							'category'
 								? 'border-b-2'
 								: ''}"
 							on:click={() => {
 								mode = 'category';
 							}}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									mode = 'category';
+								}
+							}}
 						>
 							Product Categories
-						</h2>
+						</button>
 					</div>
 					<button class="btn btn-primary" on:click={() => createButton()}>Create</button>
 				</div>
-			{/if}
-			<div class="flex items-center justify-between py-6">
-				<div class="flex">
-					<button
-						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'tariff'
-							? 'border-b-2'
-													: ''}"
-						on:click={() => {
-							mode = 'tariff';
-						}}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								mode = 'tariff';
-							}
-						}}
-					>
-						Tariffs
-					</button>
-					<button
-						class="border-primary mb-1 cursor-pointer px-2 text-lg font-semibold {mode == 'category'
-							? 'border-b-2'
-													: ''}"
-						on:click={() => {
-							mode = 'category';
-						}}
-						on:keydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								mode = 'category';
-							}
-						}}
-					>
-						Product Categories
-					</button>
-				</div>
-			</div>
-			{#if mode == 'tariff'}
-				<TariffComponent bind:createTariffBoolean bind:isBusy/>
-			{/if}
+				{#if mode == 'tariff'}
+					<TariffComponent bind:createTariffBoolean bind:isBusy />
+				{/if}
 
 				{#if mode == 'category'}
 					<CategoryComponent bind:createCategoryBoolean bind:isBusy />

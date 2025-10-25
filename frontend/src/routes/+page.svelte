@@ -15,12 +15,12 @@
 		/>
 	{/if}
 
-  	<!-- Two-column layout -->
-  	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-    	<!-- Tariff Calculator Card -->
-		<div class="card bg-base-100 p-6 shadow-md relative">
+	<!-- Two-column layout -->
+	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+		<!-- Tariff Calculator Card -->
+		<div class="card bg-base-100 relative p-6 shadow-md">
 			{#if isCalculating}
-				<div class="absolute inset-0 z-10 flex items-center justify-center bg-base-100/70">
+				<div class="bg-base-100/70 absolute inset-0 z-10 flex items-center justify-center">
 					<span class="loading loading-spinner loading-lg text-primary"></span>
 				</div>
 			{/if}
@@ -50,8 +50,10 @@
 				<div class="form-control mt-4">
 					<label class="label text-sm font-medium">Importing To</label>
 					<div class="relative">
-						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between {isCalculating ? 'opacity-50 cursor-not-allowed' : ''}"
+						<div
+							class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm {isCalculating
+								? 'cursor-not-allowed opacity-50'
+								: ''}"
 							on:click={() => !isCalculating && (showImportToDropdown = !showImportToDropdown)}
 							on:blur={(e) => {
 								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
@@ -63,7 +65,7 @@
 							<span class="truncate">
 								{#if importTo}
 									{(() => {
-										const selected = countries.find(c => c.id == importTo);
+										const selected = countries.find((c) => c.id == importTo);
 										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
 									})()}
 								{:else}
@@ -71,14 +73,14 @@
 								{/if}
 							</span>
 						</div>
-						
+
 						{#if showImportToDropdown}
-							<div 
-								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+							<div
+								class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
 								on:click={(e) => e.stopPropagation()}
 								on:mousedown={(e) => e.stopPropagation()}
 							>
-								<div class="p-2 border-b border-base-300">
+								<div class="border-base-300 border-b p-2">
 									<input
 										type="text"
 										placeholder="Type to search..."
@@ -94,7 +96,10 @@
 								<div class="max-h-60 overflow-y-auto">
 									{#each filteredImportToCountries as country}
 										<div
-											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {importTo == country.id ? 'bg-primary text-primary-content' : ''}"
+											class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {importTo ==
+											country.id
+												? 'bg-primary text-primary-content'
+												: ''}"
 											on:click={() => {
 												importTo = country.id;
 												importToSearch = '';
@@ -103,14 +108,18 @@
 										>
 											<span>({country.code}) {country.name}</span>
 											{#if importTo == country.id}
-												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+													<path
+														fill-rule="evenodd"
+														d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+														clip-rule="evenodd"
+													></path>
 												</svg>
 											{/if}
 										</div>
 									{/each}
 									{#if filteredImportToCountries.length === 0}
-										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+										<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
 									{/if}
 								</div>
 							</div>
@@ -122,8 +131,8 @@
 				<div class="form-control">
 					<label class="label text-sm font-medium">Exporting From</label>
 					<div class="relative">
-						<div 
-							class="select select-bordered w-full text-sm cursor-pointer flex items-center justify-between"
+						<div
+							class="select select-bordered flex w-full cursor-pointer items-center justify-between text-sm"
 							on:click={() => (showExportFromDropdown = !showExportFromDropdown)}
 							on:blur={(e) => {
 								if (!e.relatedTarget || !e.relatedTarget.closest('.dropdown-panel')) {
@@ -135,7 +144,7 @@
 							<span class="truncate">
 								{#if exportFrom}
 									{(() => {
-										const selected = countries.find(c => c.id == exportFrom);
+										const selected = countries.find((c) => c.id == exportFrom);
 										return selected ? `(${selected.code}) ${selected.name}` : 'Select country';
 									})()}
 								{:else}
@@ -143,14 +152,14 @@
 								{/if}
 							</span>
 						</div>
-						
+
 						{#if showExportFromDropdown}
-							<div 
-								class="dropdown-panel absolute top-full left-0 right-0 bg-base-100 border border-base-300 rounded-md shadow-lg z-20 mt-1"
+							<div
+								class="dropdown-panel bg-base-100 border-base-300 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
 								on:click={(e) => e.stopPropagation()}
 								on:mousedown={(e) => e.stopPropagation()}
 							>
-								<div class="p-2 border-b border-base-300">
+								<div class="border-base-300 border-b p-2">
 									<input
 										type="text"
 										placeholder="Type to search..."
@@ -166,7 +175,10 @@
 								<div class="max-h-60 overflow-y-auto">
 									{#each filteredExportFromCountries as country}
 										<div
-											class="px-3 py-2 text-sm hover:bg-base-200 cursor-pointer flex items-center justify-between {exportFrom == country.id ? 'bg-primary text-primary-content' : ''}"
+											class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {exportFrom ==
+											country.id
+												? 'bg-primary text-primary-content'
+												: ''}"
 											on:click={() => {
 												exportFrom = country.id;
 												exportFromSearch = '';
@@ -175,21 +187,25 @@
 										>
 											<span>({country.code}) {country.name}</span>
 											{#if exportFrom == country.id}
-												<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+												<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+													<path
+														fill-rule="evenodd"
+														d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+														clip-rule="evenodd"
+													></path>
 												</svg>
 											{/if}
 										</div>
 									{/each}
 									{#if filteredExportFromCountries.length === 0}
-										<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+										<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
 									{/if}
 								</div>
 							</div>
 						{/if}
 					</div>
 				</div>
-				
+
 				<!-- Calculation Date -->
 				<div class="form-control">
 					<label class="label text-sm font-medium">Calculation Date</label>
@@ -198,7 +214,7 @@
 						bind:value={calculationDate}
 						class="input input-bordered w-full text-sm"
 						required
-						/>
+					/>
 				</div>
 
 				<!-- Goods Value -->
@@ -216,6 +232,21 @@
 					/>
 				</div>
 
+				<!-- Goods Quantity -->
+				<div class="form-control">
+					<label class="label text-sm font-medium">Quantity of Goods (KG)</label>
+					<input
+						type="number"
+						bind:value={quantity}
+						min="0"
+						step="0.01"
+						class="input input-bordered w-full text-sm"
+						placeholder="Enter value"
+						on:blur={formatQuantity}
+						required
+					/>
+				</div>
+
 				<!-- Submit -->
 				<div class="form-control">
 					<button type="submit" class="btn btn-primary btn-sm w-full" disabled={isCalculating}>
@@ -228,31 +259,61 @@
 					</button>
 				</div>
 			</form>
-			
-			
+
+			<!-- Error Alert -->
+			{#if showErrorAlert && calculationError}
+				<div class="alert alert-error mt-6">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-6 shrink-0 stroke-current"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<span>{calculationError}</span>
+				</div>
+			{/if}
+
 			<!-- Calculation Result -->
 			{#if calculationResult && !showErrorAlert}
-				<div class="card bg-base-100 shadow-md mt-6 p-6">
-					<h2 class="text-lg font-semibold mb-4">Calculation Result</h2>
+				<div class="card bg-base-100 mt-6 p-6 shadow-md">
+					<h2 class="mb-4 text-lg font-semibold">Calculation Result</h2>
 
-					<div class="flex justify-between text-sm mb-2">
+					<div class="mb-2 flex justify-between text-sm">
 						<span>Base Value:</span>
 						<span class="font-medium">${calculationResult.baseValue}</span>
 					</div>
 
-					<div class="flex justify-between text-sm mb-2">
-						<span>Tariff Rate:</span>
-						<span class="text-blue-600 font-medium">{(parseFloat(calculationResult.tariffRate)).toFixed(1)}%</span>
+					<div class="mb-2 flex justify-between text-sm">
+						<span>Tariff Type:</span>
+						<span class="font-medium text-blue-600">{calculationResult.tariffType}</span>
 					</div>
 
-					<div class="flex justify-between text-sm mb-4">
+					<div class="mb-2 flex justify-between text-sm">
+						<span>Tariff Rate:</span>
+						<span class="font-medium text-blue-600"
+							>{calculationResult.tariffType == 'specific' ? '$' : ''}{parseFloat(
+								calculationResult.tariffRate
+							).toFixed(1)}{calculationResult.tariffType == 'specific'
+								? '/' + calculationResult.quantity + calculationResult.rateUnit
+								: '%'}</span
+						>
+					</div>
+
+					<div class="mb-4 flex justify-between text-sm">
 						<span>Tariff Amount:</span>
 						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
-					<div class="flex justify-between border-t border-base-300 pt-3">
+					<div class="border-base-300 flex justify-between border-t pt-3">
 						<span class="font-semibold">Total Cost:</span>
-						<span class="font-bold text-primary">${calculationResult.totalCost}</span>
+						<span class="text-primary font-bold">${calculationResult.totalCost}</span>
 					</div>
 				</div>
 			{/if}
@@ -269,17 +330,25 @@
 					<span class="ml-2 text-sm text-gray-500">Loading latest news...</span>
 				</div>
 			{:else if newsError}
-				<Alert 
-					type="warning" 
-					message={newsError} 
-					show={true}
-					autoDismiss={false}
-				/>
-				<div class="mt-2">
+				<div class="alert alert-warning">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-6 shrink-0 stroke-current"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+						></path>
+					</svg>
+					<span>{newsError}</span>
 					<button class="btn btn-sm btn-outline" on:click={loadNews}>Retry</button>
 				</div>
 			{:else if news.length === 0}
-				<div class="text-center py-8">
+				<div class="py-8 text-center">
 					<p class="text-gray-500">No news articles available at the moment.</p>
 					<button class="btn btn-sm btn-outline mt-2" on:click={loadNews}>Refresh</button>
 				</div>
@@ -303,25 +372,28 @@
 						</li>
 					{/each}
 				</ul>
-				
+
 				<!-- Pagination Controls -->
 				{#if news.length > pageSize}
-					<div class="flex items-center justify-between mt-4 pt-4 border-t border-base-300">
+					<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
 						<div class="text-sm text-gray-500">
-							Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, news.length)} of {news.length} articles
+							Showing {(currentPage - 1) * pageSize + 1}-{Math.min(
+								currentPage * pageSize,
+								news.length
+							)} of {news.length} articles
 						</div>
 						<div class="flex gap-2">
-							<button 
-								class="btn btn-sm btn-outline" 
+							<button
+								class="btn btn-sm btn-outline"
 								disabled={currentPage === 1}
-								on:click={() => currentPage = Math.max(1, currentPage - 1)}
+								on:click={() => (currentPage = Math.max(1, currentPage - 1))}
 							>
 								Previous
 							</button>
-							<button 
-								class="btn btn-sm btn-outline" 
+							<button
+								class="btn btn-sm btn-outline"
 								disabled={currentPage * pageSize >= news.length}
-								on:click={() => currentPage = currentPage + 1}
+								on:click={() => (currentPage = currentPage + 1)}
 							>
 								Next
 							</button>
@@ -330,7 +402,7 @@
 				{/if}
 			{/if}
 		</div>
-  </div>
+	</div>
 </div>
 
 <!-- Modal -->
@@ -376,8 +448,9 @@
 	let hsCode = '';
 	let exportFrom = '';
 	let importTo = '';
-	let calculationDate = new Date().toISOString().split("T")[0]; // Set the Calculation Date
+	let calculationDate = new Date().toISOString().split('T')[0]; // Set the Calculation Date
 	let goodsValue = '';
+	let quantity = '';
 
 	// Search state for countries
 	let exportFromSearch = "";
@@ -413,6 +486,12 @@
 		}
 	}
 
+	// Format Quantity
+	function formatQuantity() {
+		if (quantity) {
+			quantity = parseFloat(quantity).toFixed(2);
+		}
+	}
 
 	// Start: Tariff Calculation Section 
 	let calculationResult = null;
@@ -427,7 +506,7 @@
 		showErrorAlert = false;
 		isCalculating = true;
 		
-		if (hsCode && exportFrom && importTo && calculationDate && goodsValue) {
+		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
 			// Validate HS Code format (basic validation)
 			if (!/^\d{6}$/.test(hsCode)) {
 				calculationError = "Please enter a valid HS Code format (6 digits, e.g., 850110)";
@@ -442,7 +521,8 @@
 					exportFrom,
 					importTo,
 					calculationDate,
-					goodsValue
+					goodsValue,
+					quantity
 				});
 				
 				console.log('Calculation result:', result);

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import { fetchCountries } from '$lib/api/countries.js';
+	import { getAllProductCategories } from '$lib/api/productCategory';
 	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
 	import Alert from '$lib/components/Alert.svelte';
 	import { onMount } from 'svelte';
@@ -162,7 +163,7 @@
 		try {
 			const result = await createTariff(payload);
 
-			success = 'Tariff rate created successfully! (ID: ' + result.id + ')';
+			success = 'Tariff rate created successfully! (ID: ' + result.data.id + ')';
 			close();
 			fetchTariffs();
 			fetchProductCategories();
