@@ -111,7 +111,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
+ * @param {string} payload.hsCode
  */
 export async function createTariff(payload) {
   try {
