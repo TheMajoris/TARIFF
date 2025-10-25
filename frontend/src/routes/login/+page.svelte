@@ -49,7 +49,7 @@
 						goto('/');
 					}, 2000);
 				} catch (err) {
-					error = err instanceof Error ? err.message : '❌ Login failed. Please check your email and password, then try again.';
+					error = err instanceof Error ? err.message : 'Login failed. Please check your email and password, then try again.';
 					console.error('Login error:', err);
 					
 					// Scroll to top to show error message

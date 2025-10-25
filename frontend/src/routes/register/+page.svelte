@@ -106,7 +106,7 @@
 			}, 2000);
 
 		} catch (err) {
-			error = err instanceof Error ? err.message : '❌ Registration failed. Please check your information and try again.';
+			error = err instanceof Error ? err.message : 'Registration failed. Please check your information and try again.';
 			console.error('Registration error:', err);
 			
 			// Scroll to top to show error message
