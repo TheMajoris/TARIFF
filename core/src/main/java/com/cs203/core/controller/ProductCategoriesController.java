@@ -3,6 +3,7 @@ package com.cs203.core.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +47,19 @@ public class ProductCategoriesController {
     @ApiResponse(responseCode = "200", description = "Product categories successfuly retrieved.")
     @GetMapping
     public ResponseEntity<Page<ProductCategoriesDto>> getProductCategories(
-            @RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "40") Integer size) {
-        Pageable pageable = PageRequest.of(pageNo, size);
-        return ResponseEntity.ok(productCategoriesService.getProductCategories(pageable));
+            @RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "40") Integer size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "ascending") String sortDirection
+            ) {
+        
+        if (sortDirection.equals("ascending")) {
+            Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).ascending());
+            return ResponseEntity.ok(productCategoriesService.getProductCategories(pageable));
+        } else {
+            Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).descending());
+            return ResponseEntity.ok(productCategoriesService.getProductCategories(pageable));
+        }
+
     }
 
     @Operation(summary = "Get product categories by id")
