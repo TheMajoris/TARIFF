@@ -2,13 +2,19 @@
 	import { beforeNavigate } from '$app/navigation';
 	import { fetchCountries } from '$lib/api/countries.js';
 	import { getAllProductCategories } from '$lib/api/productCategory';
-	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
+	import { createTariff, deleteSpecificTariff, editTariff, getTariffPage } from '$lib/api/tariff';
 	import Alert from '$lib/components/Alert.svelte';
 	import { onMount } from 'svelte';
 
 	let success = '';
 	let error = '';
 	export let isBusy = false; // page-level busy indicator for create/edit flows
+
+	// variables for pagination
+	let pageNo = 0;
+	let totalPage = 0;
+	let totalTariffs = 0;
+	let size = 5;
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -58,13 +64,31 @@
 		};
 	}
 
-	async function fetchTariffs() {
+	async function fetchTariffs(sortKey: string, sortAsc: boolean) {
+		isBusy = true;
 		try {
-			const result = await getAllTariff();
-			allTariff = result;
+			let sortDirection;
+			if (sortAsc) {
+				sortDirection = 'ascending';
+			} else {
+				sortDirection = 'descending';
+			}
+
+			const result = await getTariffPage(pageNo, size, sortKey, sortDirection);
+			
+			allTariff = result.data.content;
+			totalPage = result.data.totalPages;
+			totalTariffs = result.data.totalElements;
+
+			if (pageNo + 1 > totalPage && totalPage > 0) {
+				pageNo = totalPage - 1;
+				fetchTariffs(sortKey, sortAsc);
+			}
 		} catch (err) {
 			console.error('Getting all tariff error:', err);
 			error = err instanceof Error ? err.message : 'Viewing tariff failed. Please try again.';
+		} finally {
+			isBusy = false;
 		}
 	}
 
@@ -81,13 +105,13 @@
 
 	// Update when any page -> admin
 	beforeNavigate(() => {
-		fetchTariffs();
+		fetchTariffs(sortKey, sortAsc);
 		fetchProductCategories();
 	});
 
 	// Update on page load/refresh
 	onMount(() => {
-		fetchTariffs();
+		fetchTariffs(sortKey, sortAsc);
 		fetchProductCategories();
 	});
 
@@ -165,11 +189,14 @@
 
 			success = 'Tariff rate created successfully! (ID: ' + result.data.id + ')';
 			close();
-			fetchTariffs();
+			fetchTariffs(sortKey, sortAsc);
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to create tariff rate. Please check your data and try again.';
+			error =
+				err instanceof Error
+					? err.message
+					: 'Failed to create tariff rate. Please check your data and try again.';
 			console.error('Creating tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -203,11 +230,14 @@
 
 			success = result.message;
 			close();
-			fetchTariffs();
+			fetchTariffs(sortKey, sortAsc);
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to update tariff rate. Please check your data and try again.';
+			error =
+				err instanceof Error
+					? err.message
+					: 'Failed to update tariff rate. Please check your data and try again.';
 			console.error('Editing tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -222,11 +252,12 @@
 			console.log('Delete result:', result);
 
 			success = '🗑️ ' + (result.message || 'Tariff rate deleted successfully');
-			fetchTariffs();
+			fetchTariffs(sortKey, sortAsc);
 			fetchProductCategories();
 			error = '';
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to delete tariff rate. Please try again.';
+			error =
+				err instanceof Error ? err.message : 'Failed to delete tariff rate. Please try again.';
 			console.error('Deleting tariff error:', err);
 		} finally {
 			isBusy = false;
@@ -239,7 +270,7 @@
 		createTariffBoolean = false;
 		view = false;
 		selectedTariff = blankTariff();
-		fetchTariffs();
+		fetchTariffs(sortKey, sortAsc);
 		fetchProductCategories();
 	}
 
@@ -251,7 +282,7 @@
 
 	// Restrict TariffKey to only contain header values (TariffRecord)
 	type TariffKey = keyof TariffRecord;
-	let sortKey: TariffKey | null = null;
+	let sortKey: TariffKey = "id";
 	let sortAsc = true;
 
 	function sortBy(key: TariffKey) {
@@ -261,31 +292,9 @@
 			sortKey = key;
 			sortAsc = true;
 		}
+
+		fetchTariffs(sortKey, sortAsc);
 	}
-
-	// Need to give a new array
-	$: sortedTariffs =
-		// If not sorted then use default data, else sort
-		sortKey === null
-			? allTariff
-			: [...allTariff].sort((a, b) => {
-					const key = sortKey as TariffKey;
-					let valA = a[key];
-					let valB = b[key];
-
-					const numA = Number(valA);
-					const numB = Number(valB);
-
-					// If the data is a number
-					if (!isNaN(numA) && !isNaN(numB)) {
-						return sortAsc ? numA - numB : numB - numA;
-					}
-
-					// If it is not a number
-					return sortAsc
-						? String(valA).localeCompare(String(valB))
-						: String(valB).localeCompare(String(valA));
-				});
 
 	// Search state for countries
 	let exportFromSearch = '';
@@ -315,25 +324,15 @@
 
 <!-- Global Alerts - Below component title -->
 {#if error}
-	<Alert 
-		type="error" 
-		message={error} 
-		show={true}
-		autoDismiss={true}
-	/>
+	<Alert type="error" message={error} show={true} autoDismiss={true} />
 {/if}
 
 {#if success}
-	<Alert 
-		type="success" 
-		message={success} 
-		show={true}
-		autoDismiss={true}
-	/>
+	<Alert type="success" message={success} show={true} autoDismiss={true} />
 {/if}
 
 <div class="overflow-x-auto">
-	<table class="table static table-zebra">
+	<table class="table-zebra static table">
 		<thead class="bg-base-300 text-base font-semibold">
 			<tr>
 				<th on:click={() => sortBy('id')} class="cursor-pointer"
@@ -364,7 +363,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each sortedTariffs as line}
+			{#each allTariff as line}
 				<tr>
 					<td>{line.id}</td>
 					<td>{line.importingCountryCode}</td>
@@ -375,9 +374,9 @@
 					<td>{line.effectiveDate}</td>
 					<td>{line.expiryDate}</td>
 					<td class="p-0">
-						<div class="dropdown static dropdown-end">
-							<button class=" btn btn-circle text-xl btn-ghost">⋮</button>
-							<ul class="dropdown-content menu w-40 menu-sm rounded-box bg-base-100 p-2 shadow">
+						<div class="dropdown dropdown-end static">
+							<button class=" btn btn-circle btn-ghost text-xl">⋮</button>
+							<ul class="dropdown-content menu menu-sm rounded-box bg-base-100 w-40 p-2 shadow">
 								<li>
 									<button
 										class="text-sm"
@@ -418,6 +417,37 @@
 		</tbody>
 	</table>
 </div>
+
+{#if totalPage > 1}
+	<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
+		<div class="text-sm text-gray-500">
+			Showing {size * pageNo + 1}-{size * pageNo + allTariff.length} of
+			{totalTariffs} tariffs
+		</div>
+		<div class="flex gap-2">
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo === 0}
+				on:click={() => {
+					pageNo--;
+					fetchTariffs(sortKey, sortAsc);
+				}}
+			>
+				Previous
+			</button>
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo + 1 >= totalPage}
+				on:click={() => {
+					pageNo++;
+					fetchTariffs(sortKey, sortAsc);
+				}}
+			>
+				Next
+			</button>
+		</div>
+	</div>
+{/if}
 
 <!-- Modal -->
 {#if view || edit || createTariffBoolean}
@@ -480,14 +510,14 @@
 
 							{#if showImportToDropdown}
 								<div
-									class="dropdown-panel absolute top-full right-0 left-0 z-20 mt-1 rounded-md border border-base-300 bg-base-100 shadow-lg"
+									class="dropdown-panel border-base-300 bg-base-100 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
 									on:click={(e) => {
 										e.stopPropagation();
 										console.log(selectedTariff.importingCountryCode);
 									}}
 									on:mousedown={(e) => e.stopPropagation()}
 								>
-									<div class="border-b border-base-300 p-2">
+									<div class="border-base-300 border-b p-2">
 										<input
 											type="text"
 											placeholder="Type to search..."
@@ -503,7 +533,7 @@
 									<div class="max-h-60 overflow-y-auto">
 										{#each filteredImportToCountries as country}
 											<div
-												class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm hover:bg-base-200 {selectedTariff.importingCountryCode ==
+												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.importingCountryCode ==
 												country.code
 													? 'bg-primary text-primary-content'
 													: ''}"
@@ -526,7 +556,7 @@
 											</div>
 										{/each}
 										{#if filteredImportToCountries.length === 0}
-											<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
 										{/if}
 									</div>
 								</div>
@@ -563,14 +593,14 @@
 
 							{#if showExportFromDropdown}
 								<div
-									class="dropdown-panel absolute top-full right-0 left-0 z-20 mt-1 rounded-md border border-base-300 bg-base-100 shadow-lg"
+									class="dropdown-panel border-base-300 bg-base-100 absolute left-0 right-0 top-full z-20 mt-1 rounded-md border shadow-lg"
 									on:click={(e) => {
 										e.stopPropagation();
 										console.log(selectedTariff.exportingCountryCode);
 									}}
 									on:mousedown={(e) => e.stopPropagation()}
 								>
-									<div class="border-b border-base-300 p-2">
+									<div class="border-base-300 border-b p-2">
 										<input
 											type="text"
 											placeholder="Type to search..."
@@ -586,7 +616,7 @@
 									<div class="max-h-60 overflow-y-auto">
 										{#each filteredExportFromCountries as country}
 											<div
-												class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm hover:bg-base-200 {selectedTariff.exportingCountryCode ==
+												class="hover:bg-base-200 flex cursor-pointer items-center justify-between px-3 py-2 text-sm {selectedTariff.exportingCountryCode ==
 												country.code
 													? 'bg-primary text-primary-content'
 													: ''}"
@@ -609,7 +639,7 @@
 											</div>
 										{/each}
 										{#if filteredExportFromCountries.length === 0}
-											<div class="px-3 py-2 text-sm text-base-content/60">No countries found</div>
+											<div class="text-base-content/60 px-3 py-2 text-sm">No countries found</div>
 										{/if}
 									</div>
 								</div>
