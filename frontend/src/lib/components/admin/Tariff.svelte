@@ -422,7 +422,7 @@
 	<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
 		<div class="text-sm text-gray-500">
 			Showing {size * pageNo + 1}-{size * pageNo + allTariff.length} of
-			{totalTariffs} articles
+			{totalTariffs} tariffs
 		</div>
 		<div class="flex gap-2">
 			<button
