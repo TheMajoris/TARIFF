@@ -63,7 +63,7 @@
 			totalPage = result.totalPages;
 			totalProductCategories = result.totalElements;
 
-			if (pageNo + 1 > totalPage) {
+			if (pageNo + 1 > totalPage && totalPage > 0) {
 				pageNo = totalPage - 1;
 				fetchProductCategories(sortKey, sortAsc);
 			}

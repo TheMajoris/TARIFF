@@ -80,7 +80,7 @@
 			totalPage = result.data.totalPages;
 			totalTariffs = result.data.totalElements;
 
-			if (pageNo + 1 > totalPage) {
+			if (pageNo + 1 > totalPage && totalPage > 0) {
 				pageNo = totalPage - 1;
 				fetchTariffs(sortKey, sortAsc);
 			}
