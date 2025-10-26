@@ -101,7 +101,7 @@ class TariffRateControllerTest {
 
         Mockito.when(tariffRateService.getAllTariffRates()).thenReturn(rates);
 
-        mockMvc.perform(get("/api/v1/tariff-rate")
+        mockMvc.perform(get("/api/v1/tariff-rate/all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 @ControllerAdvice
@@ -79,6 +80,14 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.BAD_REQUEST.value());
         response.put("message", "Something went wrong. Please contact an administrator");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<Map<String, Object>> handlePropertyReferenceException(PropertyReferenceException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("message", "Invalid property referenced.");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
