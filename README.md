@@ -43,7 +43,7 @@ TARIFF is an application designed to help international traders navigate current
 
 ### **Clone Repo**
 ```
-git clone https://github.com/TheMajoris/CS203 
+git clone https://github.com/TheMajoris/TARIFF
 ```
 ### **Backend Setup**
 1. **Navigate to the backend directory:**
@@ -52,16 +52,14 @@ cd core
 ```
 
 2. **Setup local instance of DB**
+This will build the Spring Boot JAR and start both the backend and PostgreSQL containers.
 ```bash
 docker compose up --build -d
 or
 docker compose up -f
 ```
+Backend by default will be available at http://localhost:8080
 
-3. **Setup the application:**
-```bash
-bash gradlew :bootRun
-```
 
 4. **[Optional] Run Tests:**
 ```bash
@@ -94,9 +92,8 @@ npm run test:unit
 npm run test:e2e
 ```
 
-### **Database Setup**
-Please ensure that you have completed the **backend setup** first.
-
+### **Database Setup** (Optional)
+If you're not using Docker and want to run PostgreSQL manually:
 ```bash
 #Setup an admin user in the database
 sudo -u postgres psql -c "CREATE USER admin WITH PASSWORD 'admin123';"
