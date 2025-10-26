@@ -82,7 +82,7 @@ export async function getAllTariff() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
     // console.log('Getting all tariffs at:', `${API_BASE_URL}/tariff-rate`);
 
-    const res = await fetch(`${API_BASE_URL}/tariff-rate`, {
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/all`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -102,6 +102,42 @@ export async function getAllTariff() {
 
   } catch (err) {
     console.error("getAllTariff error:", err);
+    throw err; // Re-throw to let the calling code handle the error
+  }
+}
+
+// Get tariff page
+/**
+ * @param {Number} pageNo
+ * @param {Number} size
+ * @param {String} sortBy
+ * @param {String} sortDirection
+ */
+export async function getTariffPage(pageNo, size, sortBy, sortDirection) {
+  try {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+
+    const params = new URLSearchParams({ pageNo: pageNo.toString(), size: size.toString(), sortBy: sortBy, sortDirection: sortDirection });
+
+    const res = await fetch(`${API_BASE_URL}/tariff-rate?` + params.toString(), {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || `Getting tariff page failed: ${res.status} ${res.statusText}`);
+    }
+
+    const result = await res.json();
+
+    return result;
+
+  } catch (err) {
+    console.error("getTariffPage error:", err);
     throw err; // Re-throw to let the calling code handle the error
   }
 }

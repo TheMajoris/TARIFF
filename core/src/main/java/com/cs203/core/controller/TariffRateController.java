@@ -60,6 +60,12 @@ public class TariffRateController {
             response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.BAD_REQUEST, "Invalid page size", null);
             return new ResponseEntity<>(response, response.getStatus());
         }
+
+        if(sortBy.equals("importingCountryCode")){
+            sortBy = "importingCountry.countryName";
+        }else if(sortBy.equals("exportingCountryCode")){
+            sortBy = "exportingCountry.countryName";
+        }
         
         if (sortDirection.equals("ascending")) {
             Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).ascending());

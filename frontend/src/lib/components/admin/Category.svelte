@@ -225,7 +225,6 @@
 	let sortAsc = true;
 
 	function sortBy(key: CategoryKey) {
-		console.log('A');
 		if (sortKey === key) {
 			sortAsc = !sortAsc;
 		} else {
@@ -236,29 +235,6 @@
 		fetchProductCategories(sortKey, sortAsc);
 	}
 
-	// // Need to give a new array
-	// $: sortedCategories =
-	// 	// If not sorted then use default data, else sort
-	// 	sortKey === null
-	// 		? allCategory
-	// 		: [...allCategory].sort((a, b) => {
-	// 				const key = sortKey as CategoryKey;
-	// 				let valA = a[key];
-	// 				let valB = b[key];
-
-	// 				const numA = Number(valA);
-	// 				const numB = Number(valB);
-
-	// 				// If the data is a number
-	// 				if (!isNaN(numA) && !isNaN(numB)) {
-	// 					return sortAsc ? numA - numB : numB - numA;
-	// 				}
-
-	// 				// If it is not a number
-	// 				return sortAsc
-	// 					? String(valA).localeCompare(String(valB))
-	// 					: String(valB).localeCompare(String(valA));
-	// 			});
 </script>
 
 <!-- Global Alerts - Below component title -->
