@@ -45,7 +45,7 @@ public class SecurityConfig {
                 // tariff, productCategories R stuff
                 .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/product-categories/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculate").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculation").authenticated()
 
                 // tariff CUD stuff
                 .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")

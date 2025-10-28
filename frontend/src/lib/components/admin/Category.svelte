@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { createTariff, deleteSpecificTariff, editTariff, getAllTariff } from '$lib/api/tariff';
 	import { beforeNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { fetchCountries } from '$lib/api/countries.js';
+	import {
+		createProductCategory,
+		deleteSpecificProductCategory,
+		editProductCategory,
+		forceDeleteSpecificProductCategory,
+		getAllProductCategories,
+		getProductCategoriesPage
+	} from '$lib/api/productCategory';
+	import { page } from '$app/state';
+	import Alert from '$lib/components/Alert.svelte';
 
 	let success = '';
 	let error = '';
@@ -11,6 +19,13 @@
 	let edit = false;
 	export let createCategoryBoolean = false;
 	export let isBusy = false; // page-level busy indicator for create/edit flows
+	let confirmDelete = -1;
+
+	// variables for pagination
+	let pageNo = 0;
+	let totalPage = 0;
+	let totalProductCategories = 0;
+	let size = 5;
 
 	type ProductCategory = {
 		categoryCode: string;
@@ -21,36 +36,7 @@
 	};
 
 	// test data
-	let allCategory: ProductCategory[] = [
-		{
-			categoryCode: '850110',
-			categoryName: 'Electric Motors ≤ 37.5W',
-			description: 'Electric motors of an output not exceeding 37.5 W',
-			id: 1,
-			isActive: true
-		},
-		{
-			categoryCode: '850120',
-			categoryName: 'Universal AC/DC Motors > 37.5W',
-			description: 'Universal AC/DC motors of an output exceeding 37.5 W',
-			id: 2,
-			isActive: true
-		},
-		{
-			categoryCode: '850131',
-			categoryName: 'DC Motors > 37.5W ≤ 750W',
-			description: 'DC motors of an output exceeding 37.5 W but not exceeding 750 W',
-			id: 3,
-			isActive: true
-		},
-		{
-			categoryCode: '850132',
-			categoryName: 'DC Motors > 750W ≤ 75kW',
-			description: 'DC motors of an output exceeding 750 W but not exceeding 75 kW',
-			id: 4,
-			isActive: true
-		}
-	];
+	let allCategory: ProductCategory[] = [];
 	let selectedCategory: ProductCategory = blankCategory();
 	function blankCategory() {
 		return {
@@ -62,211 +48,180 @@
 		};
 	}
 
-	// type TariffRecord = {
-	// 	id: number;
-	// 	createdAt: string; // ISO date string
-	// 	updatedAt: string; // ISO date string
-	// 	effectiveDate: string; // ISO date string
-	// 	expiryDate: string; // ISO date string
-	// 	exportingCountryCode: string;
-	// 	importingCountryCode: string;
-	// 	preferentialTariff: boolean;
-	// 	productCategory: ProductCategory;
-	// 	rateUnit: string;
-	// 	tariffRate: number;
-	// 	tariffType: string;
-	// };
-	// let allTariff: TariffRecord[] = [];
-	// let selectedCategory: TariffRecord = blankTariff();
-	// function blankTariff() {
-	// 	return {
-	// 		id: 0,
-	// 		createdAt: '',
-	// 		updatedAt: '',
-	// 		effectiveDate: '',
-	// 		expiryDate: '',
-	// 		exportingCountryCode: '',
-	// 		importingCountryCode: '',
-	// 		preferentialTariff: false,
-	// 		productCategory: {
-	// 			categoryCode: '',
-	// 			categoryName: '',
-	// 			description: '',
-	// 			id: 0,
-	// 			isActive: false
-	// 		},
-	// 		rateUnit: '',
-	// 		tariffRate: 0,
-	// 		tariffType: ''
-	// 	};
-	// }
+	async function fetchProductCategories(sortKey: string, sortAsc: boolean) {
+		isBusy = true;
+		try {
+			let sortDirection;
+			if (sortAsc) {
+				sortDirection = 'ascending';
+			} else {
+				sortDirection = 'descending';
+			}
 
-	// async function fetchTariffs() {
-	// isBusy = true;
-	// 	try {
-	// 		const result = await getAllTariff();
-	// 		allTariff = result;
-	// 	} catch (err) {
-	// 		console.error('Getting all tariff error:', err);
-	// 		error = err instanceof Error ? err.message : 'Viewing tariff failed. Please try again.';
-	// 	} finally {
-	// 	isBusy = false;
-	// }
-	// }
+			const result = await getProductCategoriesPage(pageNo, size, sortKey, sortDirection);
+			allCategory = result.content;
+			totalPage = result.totalPages;
+			totalProductCategories = result.totalElements;
 
-	// // Update when any page -> admin
-	// beforeNavigate(() => {
-	// 	fetchTariffs();
-	// });
+			if (pageNo + 1 > totalPage && totalPage > 0) {
+				pageNo = totalPage - 1;
+				fetchProductCategories(sortKey, sortAsc);
+			}
+		} catch (err) {
+			console.error('Getting all product categories:', err);
+			error =
+				err instanceof Error ? err.message : 'Viewing product categories failed. Please try again.';
+		} finally {
+			isBusy = false;
+		}
+	}
 
-	// // Update on page load/refresh
-	// onMount(() => {
-	// 	fetchTariffs();
-	// });
+	// Update when any page -> admin
+	beforeNavigate(() => {
+		fetchProductCategories(sortKey, sortAsc);
+	});
 
-	// // Function to validate & submit tariff
-	// function submitTariff() {
-	// 	if (CategoryValidation()) {
-	// 		if (createCategoryBoolean) {
-	// 			createTariffMethod();
-	// 		} else if (edit) {
-	// 			editTariffMethod();
-	// 		}
-	// 	}
-	// }
+	// Update on page load/refresh
+	onMount(() => {
+		fetchProductCategories(sortKey, sortAsc);
+	});
 
-	// // Function to validate Category
-	// function CategoryValidation() {
-	// 	if (
-	// 		selectedCategory.productCategory.categoryCode != null &&
-	// 		/^\d{6}$/.test(selectedCategory.productCategory.categoryCode)
-	// 	) {
-	// 		if (
-	// 			selectedCategory.productCategory.categoryName != '' &&
-	// 			selectedCategory.productCategory.categoryName.length <= 100
-	// 		) {
-	// 			if (selectedCategory.productCategory.description.length <= 500) {
-	// 				return true;
-	// 			} else {
-	// 				error = 'Category Description can only have up to 500 characters';
-	// 			}
-	// 		} else {
-	// 			error = 'Category Name can only have up to 100 characters';
-	// 		}
-	// 	} else {
-	// 		error = 'Category Code can only be from 100000 to 999999';
-	// 	}
+	// Function to validate & submit Category
+	function submitProductCategory() {
+		if (CategoryValidation()) {
+			if (createCategoryBoolean) {
+				createProductCategoryMethod();
+			} else if (edit) {
+				editProductCategoryMethod();
+			}
+		}
+	}
 
-	// 	return false;
-	// }
+	// Function to validate Category
+	function CategoryValidation() {
+		if (selectedCategory.categoryCode != null && /^\d{6}$/.test(selectedCategory.categoryCode)) {
+			if (selectedCategory.categoryName != '' && selectedCategory.categoryName.length <= 100) {
+				if (selectedCategory.description.length <= 500) {
+					return true;
+				} else {
+					error = 'Category Description can only have up to 500 characters';
+				}
+			} else {
+				error = 'Category Name can only have up to 100 characters';
+			}
+		} else {
+			error = 'Category Code can only be from 100000 to 999999';
+		}
 
-	// // Function to create tariff
-	// async function createTariffMethod() {
-	// isBusy = true;
-	// 	let payload = {
-	// 		tariffRate: selectedCategory.tariffRate,
-	// 		tariffType: selectedCategory.tariffType,
-	// 		rateUnit: selectedCategory.rateUnit,
-	// 		effectiveDate: selectedCategory.effectiveDate,
-	// 		expiryDate: selectedCategory.expiryDate,
-	// 		preferentialTariff: selectedCategory.preferentialTariff,
-	// 		importingCountryCode: selectedCategory.importingCountryCode,
-	// 		exportingCountryCode: selectedCategory.exportingCountryCode,
-	// 		productCategory: {
-	// 			categoryCode: selectedCategory.productCategory.categoryCode,
-	// 			categoryName: selectedCategory.productCategory.categoryName,
-	// 			description: selectedCategory.productCategory.description,
-	// 			isActive: selectedCategory.productCategory.isActive
-	// 		}
-	// 	};
+		return false;
+	}
 
-	// 	try {
-	// 		const result = await createTariff(payload);
+	// Function to create product category
+	async function createProductCategoryMethod() {
+		isBusy = true;
+		let payload = {
+			categoryCode: selectedCategory.categoryCode,
+			categoryName: selectedCategory.categoryName,
+			description: selectedCategory.description,
+			isActive: selectedCategory.isActive
+		};
 
-	// 		success = 'Created Tariff id: ' + result.id;
-	// 		close();
-	// 		fetchTariffs();
-	// 		error = '';
-	// 	} catch (err) {
-	// 		error = err instanceof Error ? err.message : 'Creating tariff failed. Please try again.';
-	// 		console.error('Creating tariff error:', err);
-	// 	} finally{
-	// isBusy = false;
-	// }
-	// }
+		try {
+			const result = await createProductCategory(payload);
 
-	// // Function to edit tariff
-	// async function editTariffMethod() {
-	// isBusy = true;
-	// 	let payload = {
-	// 		id: selectedCategory.id,
-	// 		tariffRate: selectedCategory.tariffRate,
-	// 		tariffType: selectedCategory.tariffType,
-	// 		rateUnit: selectedCategory.rateUnit,
-	// 		effectiveDate: selectedCategory.effectiveDate,
-	// 		expiryDate: selectedCategory.expiryDate,
-	// 		preferentialTariff: selectedCategory.preferentialTariff,
-	// 		importingCountryCode: selectedCategory.importingCountryCode,
-	// 		exportingCountryCode: selectedCategory.exportingCountryCode,
-	// 		productCategory: {
-	// 			id: selectedCategory.productCategory.id,
-	// 			categoryCode: selectedCategory.productCategory.categoryCode,
-	// 			categoryName: selectedCategory.productCategory.categoryName,
-	// 			description: selectedCategory.productCategory.description,
-	// 			isActive: selectedCategory.productCategory.isActive
-	// 		}
-	// 	};
+			success = 'Created product category id: ' + result.data.id;
+			close();
+			fetchProductCategories(sortKey, sortAsc);
+			error = '';
+		} catch (err) {
+			error =
+				err instanceof Error ? err.message : 'Creating product category failed. Please try again.';
+			console.error('Creating product category error:', err);
+		} finally {
+			isBusy = false;
+		}
+	}
 
-	// 	try {
-	// 		const result = await editTariff(payload);
+	// Function to edit product category
+	async function editProductCategoryMethod() {
+		isBusy = true;
+		let payload = {
+			id: selectedCategory.id,
+			categoryCode: selectedCategory.categoryCode,
+			categoryName: selectedCategory.categoryName,
+			description: selectedCategory.description,
+			isActive: selectedCategory.isActive
+		};
 
-	// 		success = result.message;
-	// 		close();
-	// 		fetchTariffs();
-	// 		error = '';
-	// 	} catch (err) {
-	// 		error = err instanceof Error ? err.message : 'Editing tariff failed. Please try again.';
-	// 		console.error('Editing tariff error:', err);
-	// 	} finally {
-	// isBusy = false;
-	// }
-	// }
+		try {
+			const result = await editProductCategory(payload);
 
-	// // Function to edit tariff
-	// async function deleteTariffMethod(id: number) {
-	// isBusy = true;
-	// 	try {
-	// 		const result = await deleteSpecificTariff(id);
+			success = result.message;
+			close();
+			fetchProductCategories(sortKey, sortAsc);
+			error = '';
+		} catch (err) {
+			error =
+				err instanceof Error ? err.message : 'Editing product category failed. Please try again.';
+			console.error('Editing product category error:', err);
+		} finally {
+			isBusy = false;
+		}
+	}
 
-	// 		success = result.message;
-	// 		fetchTariffs();
-	// 		error = '';
-	// 	} catch (err) {
-	// 		error = err instanceof Error ? err.message : 'Deleting tariff failed. Please try again.';
-	// 		console.error('Deleting tariff error:', err);
-	// 	}finally{
-	// isBusy = false;
-	// }
-	// }
+	// Function to delete product category
+	async function deleteProductCategoryMethod(id: number) {
+		isBusy = true;
+		try {
+			let result;
 
-	// Function used to close the popup and reset the tariff value
+			// force delete
+			if (confirmDelete == id) {
+				result = await forceDeleteSpecificProductCategory(id);
+			} else {
+				result = await deleteSpecificProductCategory(id);
+			}
+
+			success = result.message;
+			fetchProductCategories(sortKey, sortAsc);
+			error = '';
+		} catch (err) {
+			// request for force delete (there are tariffs using that HSCode)
+			console.log(err);
+			if (
+				err &&
+				err instanceof Error &&
+				err.message.endsWith('Set request params flag to true to cascade delete')
+			) {
+				error =
+					err.message.split(".")[0] +
+					'. Please click delete again to confirm deletion (inclusive of tariffs using it)';
+				console.log(error);
+				confirmDelete = id;
+			} else {
+				error =
+					err instanceof Error
+						? err.message
+						: 'Deleting product category failed. Please try again.';
+			}
+			console.error('Deleting product category error:', err);
+		} finally {
+			isBusy = false;
+		}
+	}
+
+	// Function used to close the popup and reset the product categories value
 	function close() {
 		edit = false;
 		createCategoryBoolean = false;
 		view = false;
 		selectedCategory = blankCategory();
-		// fetchTariffs();
-	}
-
-	// Function that will return a date time in a readable format
-	function readableDateTime(datetime) {
-		const date = new Date(datetime);
-		return date.toLocaleString();
+		fetchProductCategories(sortKey, sortAsc);
 	}
 
 	// Restrict CategoryKey to only contain header values (ProductCategory)
 	type CategoryKey = keyof ProductCategory;
-	let sortKey: CategoryKey | null = null;
+	let sortKey: CategoryKey = 'id';
 	let sortAsc = true;
 
 	function sortBy(key: CategoryKey) {
@@ -276,69 +231,19 @@
 			sortKey = key;
 			sortAsc = true;
 		}
+
+		fetchProductCategories(sortKey, sortAsc);
 	}
 
-	// Need to give a new array
-	$: sortedCategories =
-		// If not sorted then use default data, else sort
-		sortKey === null
-			? allCategory
-			: [...allCategory].sort((a, b) => {
-					const key = sortKey as CategoryKey;
-					let valA = a[key];
-					let valB = b[key];
-
-					const numA = Number(valA);
-					const numB = Number(valB);
-
-					// If the data is a number
-					if (!isNaN(numA) && !isNaN(numB)) {
-						return sortAsc ? numA - numB : numB - numA;
-					}
-
-					// If it is not a number
-					return sortAsc
-						? String(valA).localeCompare(String(valB))
-						: String(valB).localeCompare(String(valA));
-				});
 </script>
 
+<!-- Global Alerts - Below component title -->
 {#if error}
-	<div class="alert alert-error">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 shrink-0 stroke-current"
-			fill="none"
-			viewBox="0 0 24 24"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-			/>
-		</svg>
-		<span>{error}</span>
-	</div>
+	<Alert type="error" message={error} show={true} autoDismiss={true} />
 {/if}
 
 {#if success}
-	<div class="alert alert-success">
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 shrink-0 stroke-current"
-			fill="none"
-			viewBox="0 0 24 24"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-			/>
-		</svg>
-		<span>{success}</span>
-	</div>
+	<Alert type="success" message={success} show={true} autoDismiss={true} />
 {/if}
 
 <div class="overflow-x-auto">
@@ -361,7 +266,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each sortedCategories as line}
+			{#each allCategory as line}
 				<tr>
 					<td>{line.id}</td>
 					<td>{line.categoryCode}</td>
@@ -369,8 +274,8 @@
 					<td>{line.isActive ? 'Yes' : 'No'}</td>
 					<td class="p-0">
 						<div class="dropdown dropdown-end static">
-							<button class=" btn btn-ghost btn-circle text-xl">⋮</button>
-							<ul class="menu menu-sm dropdown-content bg-base-100 rounded-box w-40 p-2 shadow">
+							<button class=" btn btn-circle btn-ghost text-xl">⋮</button>
+							<ul class="dropdown-content menu menu-sm rounded-box bg-base-100 w-40 p-2 shadow">
 								<li>
 									<button
 										class="text-sm"
@@ -394,11 +299,10 @@
 									>
 								</li>
 								<li>
-									<button class="text-error text-sm font-semibold">Delete</button>
-									<!-- <button
+									<button
 										class="text-error text-sm font-semibold"
-										on:click={deleteTariffMethod(line.id)}>Delete</button
-									> -->
+										on:click={() => deleteProductCategoryMethod(line.id)}>Delete</button
+									>
 								</li>
 							</ul>
 						</div>
@@ -409,9 +313,40 @@
 	</table>
 </div>
 
+{#if totalPage > 1}
+	<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
+		<div class="text-sm text-gray-500">
+			Showing {size * pageNo + 1}-{size * pageNo + allCategory.length} of
+			{totalProductCategories} categories
+		</div>
+		<div class="flex gap-2">
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo === 0}
+				on:click={() => {
+					pageNo--;
+					fetchProductCategories(sortKey, sortAsc);
+				}}
+			>
+				Previous
+			</button>
+			<button
+				class="btn btn-sm btn-outline"
+				disabled={pageNo + 1 >= totalPage}
+				on:click={() => {
+					pageNo++;
+					fetchProductCategories(sortKey, sortAsc);
+				}}
+			>
+				Next
+			</button>
+		</div>
+	</div>
+{/if}
+
 <!-- Modal -->
 {#if view || edit || createCategoryBoolean}
-	<div class="modal modal-open">
+	<div class="modal-open modal">
 		<!-- Background which will close the modal -->
 		<button
 			class="modal-backdrop cursor-pointer"
@@ -427,8 +362,7 @@
 				{createCategoryBoolean ? 'Create' : edit ? 'Edit' : 'View'} Product Category
 			</h3>
 			{#if edit || createCategoryBoolean}
-				<form class="grid grid-cols-1 gap-4">
-					<!-- <form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitTariff}> -->
+				<form class="grid grid-cols-1 gap-4" on:submit|preventDefault={submitProductCategory}>
 					<div>
 						<label class="label" for="product_category_id">
 							<span class="label-text font-semibold">Product Category ID</span>
@@ -437,7 +371,7 @@
 							type="text"
 							id="product_category_id"
 							bind:value={selectedCategory.id}
-							class="input input-bordered w-full"
+							class="input-bordered input w-full"
 							disabled
 						/>
 					</div>
@@ -450,7 +384,8 @@
 							type="text"
 							id="product_category_code"
 							bind:value={selectedCategory.categoryCode}
-							class="input input-bordered w-full"
+							class="input-bordered input w-full"
+							disabled={edit && !createCategoryBoolean}
 						/>
 					</div>
 
@@ -462,7 +397,7 @@
 							type="text"
 							id="product_category_name"
 							bind:value={selectedCategory.categoryName}
-							class="input input-bordered w-full"
+							class="input-bordered input w-full"
 						/>
 					</div>
 
@@ -473,7 +408,7 @@
 						<textarea
 							id="product_category_description"
 							bind:value={selectedCategory.description}
-							class="textarea textarea-bordered w-full"
+							class="textarea-bordered textarea w-full"
 						></textarea>
 					</div>
 
@@ -488,7 +423,7 @@
 								on:change={(e) =>
 									(selectedCategory.isActive =
 										(e.currentTarget as HTMLSelectElement).value === 'true')}
-								class="select select-bordered w-full"
+								class="select-bordered select w-full"
 							>
 								<option value="true">Yes</option>
 								<option value="false">No</option>

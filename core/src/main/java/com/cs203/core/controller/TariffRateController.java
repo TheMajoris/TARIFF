@@ -5,18 +5,24 @@ import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.TariffRateDto;
 import com.cs203.core.dto.requests.TariffCalculatorRequestDto;
 import com.cs203.core.dto.responses.TariffCalculatorResponseDto;
+import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.service.TariffRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Tariff Rate")
 @RestController
@@ -28,9 +34,51 @@ public class TariffRateController {
 
     @Operation(summary = "Get all tariff rates")
     @ApiResponse(responseCode = "200", description = "All tariff rates successfuly fetched.")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<TariffRateDto>> getAllTariffRates() {
         return ResponseEntity.ok(tariffRateService.getAllTariffRates());
+    }
+
+    @Operation(summary = "Get tariff rates with page and limit")
+    @ApiResponse(responseCode = "200", description = "Tariff rates successfuly fetched.")
+    @ApiResponse(responseCode = "400", description = "Invalid page number")
+    @ApiResponse(responseCode = "400", description = "Invalid page size")
+    @ApiResponse(responseCode = "400", description = "Invalid property referenced")
+    @ApiResponse(responseCode = "400", description = "Invalid sort direction")
+    @GetMapping
+    public ResponseEntity<GenericResponse<Page<TariffRateDto>>> getTariffRates(
+            @RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "40") Integer size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "ascending") String sortDirection
+        ) {
+        GenericResponse<Page<TariffRateDto>> response;
+        if (pageNo < 0) {
+            response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.BAD_REQUEST, "Invalid page number", null);
+            return new ResponseEntity<>(response, response.getStatus());
+        }
+        if (size < 1) {
+            response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.BAD_REQUEST, "Invalid page size", null);
+            return new ResponseEntity<>(response, response.getStatus());
+        }
+
+        if(sortBy.equals("importingCountryCode")){
+            sortBy = "importingCountry.countryName";
+        }else if(sortBy.equals("exportingCountryCode")){
+            sortBy = "exportingCountry.countryName";
+        }
+        
+        if (sortDirection.equals("ascending")) {
+            Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).ascending());
+            response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.OK, "Tariff rates successfuly fetched.", tariffRateService.getTariffRates(pageable));
+            return new ResponseEntity<>(response, response.getStatus());
+        } else if (sortDirection.equals("descending")) {
+            Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sortBy).descending());
+            response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.OK, "Tariff rates successfuly fetched.", tariffRateService.getTariffRates(pageable));
+            return new ResponseEntity<>(response, response.getStatus());
+        } else {
+            response = new GenericResponse<Page<TariffRateDto>>(HttpStatus.BAD_REQUEST, "Invalid sort direction", null);
+            return new ResponseEntity<>(response, response.getStatus());
+        }
     }
 
     @Operation(summary = "Get tariff rate by id")
@@ -81,22 +129,33 @@ public class TariffRateController {
     @Operation(summary = "Calculate the tariff cost given tariff and price")
     @ApiResponse(responseCode = "200", description = "Request successful")
     @ApiResponse(responseCode = "400", description = "Calculate request is invalid")
-    @PostMapping("/calculate")
+    @PostMapping("/calculation")
     public ResponseEntity<TariffCalculatorResponseDto> getTariffCalculation(
             @Valid @RequestBody TariffCalculatorRequestDto requestBodyDTO) {
-        BigDecimal tariffRate = tariffRateService.getLowestActiveTariffRate(
-                requestBodyDTO.importingCountryId(),
+        Optional<TariffRateEntity> tariffRate = tariffRateService.getLowestActiveTariff(requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
                 requestBodyDTO.initialPrice(),
                 requestBodyDTO.date());
+        if (tariffRate.isEmpty()) {
+            return ResponseEntity.ok(new TariffCalculatorResponseDto(
+                    BigDecimal.ZERO,
+                    "N/A",
+                    "N/A",
+                    requestBodyDTO.quantity(),
+                    BigDecimal.ZERO,
+                    requestBodyDTO.initialPrice()
+            ));
+        }
+
         BigDecimal finalPrice = tariffRateService.getFinalPrice(
                 requestBodyDTO.importingCountryId(),
                 requestBodyDTO.exportingCountryId(),
                 requestBodyDTO.hsCode(),
                 requestBodyDTO.initialPrice(),
+                requestBodyDTO.quantity(),
                 requestBodyDTO.date());
         BigDecimal tariffCost = tariffRateService.getTariffCost(finalPrice, requestBodyDTO.initialPrice());
-        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate, tariffCost, finalPrice));
+        return ResponseEntity.ok(new TariffCalculatorResponseDto(tariffRate.get().getTariffRate(), tariffRate.get().getTariffType(), tariffRate.get().getRateUnit(), tariffRate.get().getUnitQuantity(), tariffCost, finalPrice));
     }
 }

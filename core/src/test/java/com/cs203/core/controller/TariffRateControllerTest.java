@@ -1,45 +1,58 @@
 package com.cs203.core.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.cs203.core.dto.CreateTariffRateDto;
+import com.cs203.core.dto.GenericResponse;
+import com.cs203.core.dto.ProductCategoriesDto;
+import com.cs203.core.dto.TariffRateDto;
+import com.cs203.core.entity.TariffRateEntity;
+import com.cs203.core.exception.GlobalExceptionHandler;
+import com.cs203.core.service.TariffRateService;
+import com.cs203.core.strategy.TariffCalculationStrategy;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.cs203.core.dto.CreateTariffRateDto;
-import com.cs203.core.dto.GenericResponse;
-import com.cs203.core.dto.ProductCategoriesDto;
-import com.cs203.core.dto.TariffRateDto;
-import com.cs203.core.exception.GlobalExceptionHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
-import com.cs203.core.service.TariffRateService;
-
+@SpringBootTest
+@AutoConfigureMockMvc
 class TariffRateControllerTest {
+    @Autowired
     private MockMvc mockMvc;
+    @MockitoBean
     private TariffRateService tariffRateService;
     private TariffRateController controller;
     private ObjectMapper objectMapper;
+    @Mock
+    private TariffCalculationStrategy adValoremStrategy;
+    @Mock
+    private TariffCalculationStrategy specificStrategy;
 
     @BeforeEach
     void setUp() throws Exception {
-        tariffRateService = Mockito.mock(TariffRateService.class);
         controller = new TariffRateController();
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules(); // This helps with LocalDate serialization
@@ -68,6 +81,7 @@ class TariffRateControllerTest {
         rate1.setId(1L);
         rate1.setTariffRate(new BigDecimal("0.1"));
         rate1.setTariffType("ad-valorem");
+        rate1.setUnitQuantity(new BigDecimal("1.0"));
         rate1.setRateUnit("percent");
         rate1.setEffectiveDate(LocalDate.now());
         rate1.setImportingCountryCode("US");
@@ -77,6 +91,7 @@ class TariffRateControllerTest {
         rate2.setId(2L);
         rate2.setTariffRate(new BigDecimal("0.20"));
         rate2.setTariffType("ad-valorem");
+        rate1.setUnitQuantity(new BigDecimal("1.0"));
         rate2.setRateUnit("percent");
         rate2.setEffectiveDate(LocalDate.now());
         rate2.setImportingCountryCode("US");
@@ -86,8 +101,8 @@ class TariffRateControllerTest {
 
         Mockito.when(tariffRateService.getAllTariffRates()).thenReturn(rates);
 
-        mockMvc.perform(get("/api/v1/tariff-rate")
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/tariff-rate/all")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].tariffRate").value("0.1"))
@@ -112,7 +127,7 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.getTariffRateById(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/tariff-rate/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.message").value("Tariff rate found"))
@@ -128,7 +143,7 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.getTariffRateById(999L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/tariff-rate/999")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Tariff rate not found"))
                 .andExpect(jsonPath("$.data").isEmpty());
@@ -169,8 +184,8 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/tariff-rate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.tariffRate").value("0.1"))
@@ -204,8 +219,8 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(1L))).thenReturn(response);
 
         mockMvc.perform(put("/api/v1/tariff-rate/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.tariffRate").value("0.15"))
                 .andExpect(jsonPath("$.message").value("Tariff rate updated"));
@@ -236,8 +251,8 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(999L))).thenReturn(response);
 
         mockMvc.perform(put("/api/v1/tariff-rate/999")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Tariff rate not found"));
     }
@@ -250,7 +265,7 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.deleteTariffRate(1L)).thenReturn(response);
 
         mockMvc.perform(delete("/api/v1/tariff-rate/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Tariff rate deleted"));
     }
@@ -263,53 +278,73 @@ class TariffRateControllerTest {
         Mockito.when(tariffRateService.deleteTariffRate(999L)).thenReturn(response);
 
         mockMvc.perform(delete("/api/v1/tariff-rate/999")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Tariff rate not found"));
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/calculate returns TariffCalculatorResponseDto with tariffRate, tariffCost, and finalPrice")
+    @DisplayName("POST /api/v1/tariff-rate/calculation returns TariffCalculatorResponseDto with tariffRate, tariffCost, and finalPrice")
     void post_calculate_returnsTariffCalculatorResponseDto() throws Exception {
-        // Mock the service methods to return expected values
+        // Create mock entity with all required fields
         LocalDate date = LocalDate.of(2025, 1, 1);
-        Mockito.when(tariffRateService.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")),
-                eq(date)))
-                .thenReturn(new BigDecimal("0.1"));
-        Mockito.when(tariffRateService.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        TariffRateEntity mockEntity = new TariffRateEntity();
+        mockEntity.setTariffRate(new BigDecimal("0.1"));
+        mockEntity.setTariffType("ad valorem");
+
+        // Mock getLowestActiveTariff to return the entity
+        Mockito.when(tariffRateService.getLowestActiveTariff(
+                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+                .thenReturn(Optional.of(mockEntity));
+
+        // Mock getFinalPrice
+        Mockito.when(tariffRateService.getFinalPrice(
+                        eq(1L), eq(2L), eq(123),
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("110.00"));
-        Mockito.when(tariffRateService.getTariffCost(eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
+
+        // Mock getTariffCost
+        Mockito.when(tariffRateService.getTariffCost(
+                        eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(new BigDecimal("10.00"));
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
-        mockMvc.perform(post("/api/v1/tariff-rate/calculate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
+        mockMvc.perform(post("/api/v1/tariff-rate/calculation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tariffRate").value(0.1))
-                .andExpect(jsonPath("$.tariffCost").value(10.00))
-                .andExpect(jsonPath("$.finalPrice").value(110.00));
+                .andExpect(jsonPath("$.finalPrice").value(110.00))
+                .andExpect(jsonPath("$.tariffCost").value(10.00));
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/calculate with zero tariff rate returns zero tariff cost")
+    @DisplayName("POST /api/v1/tariff-rate/calculation with zero tariff rate returns zero tariff cost")
     void post_calculate_zeroTariffRate_returnsZeroTariffCost() throws Exception {
-        // Mock the service methods to return expected values for zero tariff rate
         LocalDate date = LocalDate.of(2025, 1, 1);
-        Mockito.when(tariffRateService.getLowestActiveTariffRate(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")),
-                eq(date)))
-                .thenReturn(BigDecimal.ZERO);
-        Mockito.when(tariffRateService.getFinalPrice(eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        TariffRateEntity mockEntity = new TariffRateEntity();
+        mockEntity.setTariffRate(BigDecimal.ZERO);
+        mockEntity.setTariffType("ad valorem");
+
+        Mockito.when(tariffRateService.getLowestActiveTariff(
+                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+                .thenReturn(Optional.of(mockEntity));
+
+        Mockito.when(tariffRateService.getFinalPrice(
+                        eq(1L), eq(2L), eq(123),
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("100.00"));
-        Mockito.when(tariffRateService.getTariffCost(eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
+
+        Mockito.when(tariffRateService.getTariffCost(
+                        eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(BigDecimal.ZERO);
 
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
-        mockMvc.perform(post("/api/v1/tariff-rate/calculate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
+        mockMvc.perform(post("/api/v1/tariff-rate/calculation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tariffRate").value(0))
                 .andExpect(jsonPath("$.tariffCost").value(0))
@@ -323,8 +358,8 @@ class TariffRateControllerTest {
         // Missing required fields will trigger validation
 
         mockMvc.perform(post("/api/v1/tariff-rate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));
@@ -338,8 +373,8 @@ class TariffRateControllerTest {
         invalidDto.setId(1L); // Set ID but leave other required fields empty
 
         mockMvc.perform(put("/api/v1/tariff-rate/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));
@@ -359,34 +394,34 @@ class TariffRateControllerTest {
         invalidDto.setHsCode(123);
 
         mockMvc.perform(post("/api/v1/tariff-rate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/calculate returns 400 for invalid input")
+    @DisplayName("POST /api/v1/tariff-rate/calculation returns 400 for invalid input")
     void calculate_returnsBadRequest_whenInputInvalid() throws Exception {
         String invalidJson = "{\"hsCode\":123}"; // Missing required fields
 
-        mockMvc.perform(post("/api/v1/tariff-rate/calculate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidJson))
+        mockMvc.perform(post("/api/v1/tariff-rate/calculation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));
     }
 
     @Test
-    @DisplayName("POST /api/v1/tariff-rate/calculate returns 400 for negative price")
+    @DisplayName("POST /api/v1/tariff-rate/calculation returns 400 for negative price")
     void calculate_returnsBadRequest_whenPriceIsNegative() throws Exception {
-        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"date\":\"2025-01-01\"}";
+        String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":-100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
 
-        mockMvc.perform(post("/api/v1/tariff-rate/calculate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
+        mockMvc.perform(post("/api/v1/tariff-rate/calculation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));

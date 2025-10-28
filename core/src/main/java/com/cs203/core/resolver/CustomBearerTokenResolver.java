@@ -41,10 +41,7 @@ public class CustomBearerTokenResolver implements BearerTokenResolver {
     }
 
     private boolean requiresAuthentication(String path, String method) {
-        if (path.startsWith("/api/v1/tariff-rate") || 
-            path.startsWith("/api/v1/calculation-history") ||
-            path.equals("/api/v1/auth/logout") || 
-            path.equals("/api/v1/auth/refresh")) {
+        if (path.startsWith("/api/v1/product-categories") || path.startsWith("/api/v1/tariff-rate") || path.equals("/api/v1/auth/logout") || path.equals("/api/v1/auth/refresh") || path.startsWith("/api/v1/calculation-history")) {
             return true;
         }
 

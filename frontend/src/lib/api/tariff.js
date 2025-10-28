@@ -1,25 +1,26 @@
 // Calculate tariff cost
-export async function calculateTariffCost({ hsCode, exportFrom, importTo, calculationDate, goodsValue }) {
+export async function calculateTariffCost({ hsCode, exportFrom, importTo, calculationDate, goodsValue, quantity }) {
   try {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
     console.log('Calculating tariff cost:', { hsCode, exportFrom, importTo, calculationDate, goodsValue });
 
     const hsCodeInteger = parseInt(hsCode);
-    
+
     const requestBody = {
       importingCountryId: parseInt(importTo),
       exportingCountryId: parseInt(exportFrom),
       hsCode: hsCodeInteger,
       initialPrice: parseFloat(goodsValue),
-      date: calculationDate
+      date: calculationDate,
+      quantity: parseFloat(quantity)
     };
 
     console.log('Request body:', requestBody);
 
-    const res = await fetch(`${API_BASE_URL}/tariff-rate/calculate`, {
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/calculation`, {
       method: "POST",
       credentials: "include",
-      headers: { 
+      headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(requestBody)
@@ -28,7 +29,7 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API Error:', res.status, errorText);
-      
+
       // Handle specific error cases
       if (res.status === 404) {
         throw new Error('No tariff data found for the specified countries and product');
@@ -45,22 +46,28 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
     // Map the response to match frontend expectations
     const tariffRate = result.tariffRate ? parseFloat(result.tariffRate) : 0;
     const tariffCost = result.tariffCost ? parseFloat(result.tariffCost) : 0;
-    
+
     // Check if this is a "no data found" case (tariff rate is -1)
     if (tariffRate === -1) {
       return {
         baseValue: parseFloat(goodsValue).toFixed(2),
         tariffRate: "-1.00",
         tariffCost: "0.00",
-        totalCost: parseFloat(goodsValue).toFixed(2)
+        totalCost: parseFloat(goodsValue).toFixed(2),
+        quantity: result.quantity,
+        tariffType: result.tariffType,
+        rateUnit: result.rateUnit,
       };
     }
-    
+
     return {
       baseValue: parseFloat(goodsValue).toFixed(2),
       tariffRate: tariffRate.toFixed(2),
       tariffCost: tariffCost.toFixed(2),
-      totalCost: result.finalPrice ? parseFloat(result.finalPrice).toFixed(2) : goodsValue
+      totalCost: result.finalPrice ? parseFloat(result.finalPrice).toFixed(2) : goodsValue,
+      quantity: result.quantity,
+      tariffType: result.tariffType,
+      rateUnit: result.rateUnit,
     };
   } catch (err) {
     console.error("calculateTariffCost error:", err);
@@ -75,7 +82,7 @@ export async function getAllTariff() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
     // console.log('Getting all tariffs at:', `${API_BASE_URL}/tariff-rate`);
 
-    const res = await fetch(`${API_BASE_URL}/tariff-rate`, {
+    const res = await fetch(`${API_BASE_URL}/tariff-rate/all`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -99,6 +106,42 @@ export async function getAllTariff() {
   }
 }
 
+// Get tariff page
+/**
+ * @param {Number} pageNo
+ * @param {Number} size
+ * @param {String} sortBy
+ * @param {String} sortDirection
+ */
+export async function getTariffPage(pageNo, size, sortBy, sortDirection) {
+  try {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+
+    const params = new URLSearchParams({ pageNo: pageNo.toString(), size: size.toString(), sortBy: sortBy, sortDirection: sortDirection });
+
+    const res = await fetch(`${API_BASE_URL}/tariff-rate?` + params.toString(), {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || `Getting tariff page failed: ${res.status} ${res.statusText}`);
+    }
+
+    const result = await res.json();
+
+    return result;
+
+  } catch (err) {
+    console.error("getTariffPage error:", err);
+    throw err; // Re-throw to let the calling code handle the error
+  }
+}
+
 /**
  * Create a new tariff rate.
  *
@@ -111,7 +154,7 @@ export async function getAllTariff() {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
- * @param {{categoryCode:string, categoryName:string, description?:string}} payload.productCategory
+ * @param {string} payload.hsCode
  */
 export async function createTariff(payload) {
   try {
@@ -143,7 +186,7 @@ export async function createTariff(payload) {
 }
 
 /**
- * Edit a new tariff rate.
+ * Edit a tariff rate.
  *
  * @param {Object} payload
  * @param {number} payload.id
@@ -181,7 +224,7 @@ export async function editTariff(payload) {
     // console.log('Updating tariff result:', result);
     return result;
   } catch (err) {
-    console.error("updateTariff error:", err);
+    console.error("editTariff error:", err);
     throw err; // Re-throw to let the calling code handle the error
   }
 }
