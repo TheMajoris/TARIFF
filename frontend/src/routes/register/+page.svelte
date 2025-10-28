@@ -63,14 +63,14 @@
 
 	async function register() {
 		if (!firstName || !lastName || !username || !email || !password || !password2) {
-			error = '⚠️ Please complete all required fields to create your account';
+			error = 'Please complete all required fields to create your account';
 			// Scroll to top to show error message
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 			return;
 		}
 
 		if (!validateEmail()) {
-			error = '📧 Please enter a valid email address (e.g., user@example.com)';
+			error = 'Please enter a valid email address (e.g., user@example.com)';
 			// Scroll to top to show error message
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 			return;
@@ -95,7 +95,7 @@
 				password
 			});
 
-			success = '🎉 Account created successfully! Welcome to TARIFF. Redirecting to login...';
+			success = 'Account created successfully! Welcome to TARIFF. Redirecting to login...';
 			
 			// Scroll to top to show success message
 			window.scrollTo({ top: 0, behavior: 'smooth' });

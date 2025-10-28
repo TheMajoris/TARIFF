@@ -39,7 +39,7 @@
 					localStorage.setItem('userId', result.message.userId);
 
 					error = '';
-					success = '🎉 Welcome back! Login successful. Redirecting to your dashboard...';
+					success = 'Welcome back! Login successful. Redirecting to your dashboard...';
 
 					// Scroll to top to show success message
 					window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,12 +58,12 @@
 					isLoading = false;
 				}
 			} else {
-				error = '📧 Please enter a valid email address (e.g., user@example.com)';
+				error = 'Please enter a valid email address (e.g., user@example.com)';
 				// Scroll to top to show error message
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 			}
 		} else {
-			error = '⚠️ Please fill in both email and password fields to continue';
+			error = 'Please fill in both email and password fields to continue';
 			// Scroll to top to show error message
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
