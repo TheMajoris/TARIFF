@@ -80,24 +80,123 @@ INSERT INTO product_categories (hs_code, category_name, description, is_active) 
 -- NATIONAL TARIFF LINES DATA (Simplified)
 -- =====================================================
 
-INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, parent_hs_code, level, created_by, updated_by) VALUES
--- Singapore National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'SG'), '851713.10', 'Smartphones - Premium', 851713, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'SG'), '854231.10', 'Processors - ARM', 854231, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'SG'), '854232.10', 'Memory - DDR5', 854232, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, parent_hs_code, level, created_by, updated_by) 
+SELECT 
+    c.country_id,
+    '851713.10',
+    'Smartphones - Premium',
+    851713,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'SG' AND u.username = 'admin'
 
--- Malaysia National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'MY'), '851713.20', 'Smartphones - Mid-range', 851713, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
-((SELECT country_id FROM country WHERE country_code = 'MY'), '847141.20', 'Laptops - Consumer', 847141, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
+UNION ALL
 
--- China National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'CN'), '851713.30', 'Smartphones - Budget', 851713, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
-((SELECT country_id FROM country WHERE country_code = 'CN'), '854231.30', 'Processors - Mobile', 854231, 10, (SELECT user_id FROM users WHERE username = 'admin'), (SELECT user_id FROM users WHERE username = 'admin')),
+SELECT 
+    c.country_id,
+    '854231.10',
+    'Processors - ARM',
+    854231,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'SG' AND u.username = 'admin'
 
--- United States National Tariff Lines
-((SELECT country_id FROM country WHERE country_code = 'US'), '851713.40', 'Smartphones - iPhone', 851713, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe')),
-((SELECT country_id FROM country WHERE country_code = 'US'), '847141.40', 'Laptops - MacBook', 847141, 10, (SELECT user_id FROM users WHERE username = 'john.doe'), (SELECT user_id FROM users WHERE username = 'john.doe'))
-;
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '854232.10',
+    'Memory - DDR5',
+    854232,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'SG' AND u.username = 'admin'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '851713.20',
+    'Smartphones - Mid-range',
+    851713,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'MY' AND u.username = 'john.doe'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '847141.20',
+    'Laptops - Consumer',
+    847141,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'MY' AND u.username = 'john.doe'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '851713.30',
+    'Smartphones - Budget',
+    851713,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'CN' AND u.username = 'admin'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '854231.30',
+    'Processors - Mobile',
+    854231,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'CN' AND u.username = 'admin'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '851713.40',
+    'Smartphones - iPhone',
+    851713,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'US' AND u.username = 'john.doe'
+
+UNION ALL
+
+SELECT 
+    c.country_id,
+    '847141.40',
+    'Laptops - MacBook',
+    847141,
+    10,
+    u.user_id,
+    u.user_id
+FROM country c, users u 
+WHERE c.country_code = 'US' AND u.username = 'john.doe';
+
+-- Additional tariff lines created above using proper foreign key references
 
 -- =====================================================
 -- TARIFF RATE DATA (Essential rates only)
@@ -217,21 +316,33 @@ UNION ALL
 SELECT 'Tariff Rates:', COUNT(*) FROM tariff_rates;
 
 -- =====================================================
--- NEWS AI
+-- NEWS DATA (Articles and Tags)
 -- =====================================================
-ALTER SEQUENCE news_news_id_seq RESTART WITH 1;
+-- News articles will be inserted with auto-generated IDs
+-- Tags are stored in separate news_tags table via @ElementCollection mapping
+
 INSERT INTO news (headline, summary, url) VALUES
   ('US to impose tariffs on pharma imports, kitchen cabinets, furniture, heavy trucks', 'In a trio of posts on Truth Social on Thursday evening, President Trump said the US would impose a slew of tariffs starting Oct. 1. Trump said imported kitchen cabinets, bathroom vanities, pharmaceutical imports, and heavy trucks will be taxed in the latest move to try to force more manufacturing onto US soil.', 'https://finance.yahoo.com/news/live/trump-tariffs-live-updates-us-to-impose-tariffs-on-pharma-imports-kitchen-cabinets-furniture-heavy-trucks-175804095.html'),
   ('Tariff inflation has been later and less than expected', 'Fed Chair Powell said Tuesday that businesses passing higher costs from tariffs on to consumers has been "later and less than we expected."', 'https://spectrumlocalnews.com/us/snplus/business/2025/09/23/federal-reserve-chair-jerome-powell-speech'),
   ('South Korean president says US tariffs talks worrying FX market', 'South Korean President Lee Jae Myung said negotiations with the U.S. on tariffs have stirred concerns in the foreign exchange market but he was confident the two sides will reach a solution, a statement from Lees office said on Tuesday.', 'https://finance.yahoo.com/news/south-korean-president-says-us-032814927.html');
 
-INSERT INTO news_tags (news_id, tag) VALUES
- (1, 'trade'),
- (1, 'US'),
- (1, 'China'),
- (2, 'trade'),
- (2, 'US'),
- (2, 'inflation'),
- (3, 'energy'),
- (3, 'korea'),
- (3, 'south korea');
+-- News tags are inserted using the actual news_id values from the news table
+-- The @ElementCollection mapping creates the news_tags table automatically
+INSERT INTO news_tags (news_id, tag) 
+SELECT n.news_id, 'trade' FROM news n WHERE n.headline LIKE 'US to impose tariffs%'
+UNION ALL
+SELECT n.news_id, 'US' FROM news n WHERE n.headline LIKE 'US to impose tariffs%'
+UNION ALL
+SELECT n.news_id, 'China' FROM news n WHERE n.headline LIKE 'US to impose tariffs%'
+UNION ALL
+SELECT n.news_id, 'trade' FROM news n WHERE n.headline LIKE 'Tariff inflation%'
+UNION ALL
+SELECT n.news_id, 'US' FROM news n WHERE n.headline LIKE 'Tariff inflation%'
+UNION ALL
+SELECT n.news_id, 'inflation' FROM news n WHERE n.headline LIKE 'Tariff inflation%'
+UNION ALL
+SELECT n.news_id, 'energy' FROM news n WHERE n.headline LIKE 'South Korean president%'
+UNION ALL
+SELECT n.news_id, 'korea' FROM news n WHERE n.headline LIKE 'South Korean president%'
+UNION ALL
+SELECT n.news_id, 'south korea' FROM news n WHERE n.headline LIKE 'South Korean president%';
