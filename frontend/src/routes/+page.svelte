@@ -459,6 +459,12 @@
 <!-- Save Calculation Modal -->
 {#if showSaveModal}
 	<div class="modal modal-open">
+		<!-- Background which will close the modal -->
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={closeSaveModal}>close</button
+		>
+
 		<div class="modal-box">
 			<h3 class="text-lg font-bold">Save Calculation</h3>
 			<p class="py-2 text-sm text-gray-500">
