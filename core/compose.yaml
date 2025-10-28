@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -29,6 +29,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${JPA_DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${JPA_SHOW_SQL}
       PERPLEXITY_KEY: ${PERPLEXITY_KEY}
+      CORS_ORIGIN: "http://localhost:5173,http://localhost:5174,http://localhost:3000"
     ports:
       - "8080:8080"
 volumes:

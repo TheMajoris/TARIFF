@@ -6,6 +6,7 @@
 -- This script is disabled in test environment via application-test.properties
 
 -- Clear any existing data (Delete in correct order to avoid foreign key constraints)
+DELETE FROM saved_calculations; -- Delete saved calculations first
 DELETE FROM tariff_rates;
 DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
