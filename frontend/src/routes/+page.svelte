@@ -325,7 +325,7 @@
 					</div>
 
 					<div class="mb-4 flex justify-between text-sm">
-						<span>Tariff Amount:</span>
+						<span>Tariff Cost:</span>
 						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
