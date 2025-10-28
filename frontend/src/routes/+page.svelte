@@ -687,26 +687,32 @@
 			
 			console.log('Save result:', result);
 			
-			// Close modal and show success message
-			closeSaveModal();
-			saveSuccessMessage = 'Calculation saved successfully! View it in your calculation history.';
+		// Close modal and show success message
+		closeSaveModal();
+		saveSuccessMessage = 'Calculation saved successfully! View it in your calculation history.';
+		
+		// Scroll to top to show success message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear success message after 5 seconds
+		setTimeout(() => {
+			saveSuccessMessage = '';
+		}, 5000);
 			
-			// Clear success message after 5 seconds
-			setTimeout(() => {
-				saveSuccessMessage = '';
-			}, 5000);
-			
-		} catch (error) {
-			console.error('Error saving calculation:', error);
-			saveErrorMessage = error.message || 'Failed to save calculation. Please try again.';
-			
-			// Clear error message after 5 seconds
-			setTimeout(() => {
-				saveErrorMessage = '';
-			}, 5000);
-		} finally {
-			isSaving = false;
-		}
+	} catch (error) {
+		console.error('Error saving calculation:', error);
+		saveErrorMessage = error.message || 'Failed to save calculation. Please try again.';
+		
+		// Scroll to top to show error message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear error message after 5 seconds
+		setTimeout(() => {
+			saveErrorMessage = '';
+		}, 5000);
+	} finally {
+		isSaving = false;
+	}
 	}
 	// End: Save Calculation Section
 
