@@ -278,26 +278,6 @@
 				</div>
 			</form>
 
-			<!-- Error Alert -->
-			{#if showErrorAlert && calculationError}
-				<div class="alert alert-error mt-6">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{calculationError}</span>
-				</div>
-			{/if}
-
 			<!-- Calculation Result -->
 			{#if calculationResult && !showErrorAlert}
 				<div class="card bg-base-100 mt-6 p-6 shadow-md">
@@ -628,24 +608,15 @@
 					quantity
 				});
 				
-				console.log('Calculation result:', result);
-				
-				if (result === null) {
-					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-					showErrorAlert = true;
-				} else {
-					// Check if this is a "no data" case (tariff rate is -1)
-					const tariffRate = parseFloat(result.tariffRate);
-					
-					if (tariffRate === -1) {
-						// No tariff data found in database
-						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-						showErrorAlert = true;
-					} else {
-						// Valid tariff data (including 0% tariff)
-						calculationResult = result;
-					}
-				}
+			console.log('Calculation result:', result);
+			
+			if (result === null) {
+				calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+				showErrorAlert = true;
+			} else {
+				// Valid tariff data (including 0% tariff)
+				calculationResult = result;
+			}
 			} catch (error) {
 				console.error('Calculation error:', error);
 				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
