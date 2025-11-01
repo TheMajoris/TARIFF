@@ -37,6 +37,7 @@
 		rateUnit: string;
 		tariffRate: number;
 		tariffType: string;
+		unitQuantity: number | null;
 	};
 	let allProductCategories: ProductCategory[] = [];
 	let allTariff: TariffRecord[] = [];
@@ -60,7 +61,8 @@
 			},
 			rateUnit: '',
 			tariffRate: 0,
-			tariffType: ''
+			tariffType: '',
+			unitQuantity: null
 		};
 	}
 
@@ -75,7 +77,7 @@
 			}
 
 			const result = await getTariffPage(pageNo, size, sortKey, sortDirection);
-			
+
 			allTariff = result.data.content;
 			totalPage = result.data.totalPages;
 			totalTariffs = result.data.totalElements;
@@ -143,7 +145,24 @@
 						if (selectedTariff.importingCountryCode != null) {
 							if (selectedTariff.exportingCountryCode != null) {
 								if (selectedTariff.productCategory != null) {
-									return true;
+									if (
+										(selectedTariff.tariffType == 'specific' &&
+											selectedTariff.unitQuantity != null &&
+											selectedTariff.unitQuantity >= 0) ||
+										selectedTariff.tariffType == 'ad_valorem'
+									) {
+										if (
+											(selectedTariff.tariffType == 'specific' &&
+												(selectedTariff.rateUnit == 'kg' || selectedTariff.rateUnit == 'g')) ||
+											selectedTariff.tariffType == 'ad_valorem'
+										) {
+											return true;
+										} else {
+											error = '⚠️ Please select a unit';
+										}
+									} else {
+										error = '⚠️ Please insert the quantity';
+									}
 								} else {
 									error = '⚠️ Please select a product category';
 								}
@@ -172,6 +191,10 @@
 	// Function to create tariff
 	async function createTariffMethod() {
 		isBusy = true;
+		if (selectedTariff.tariffType == 'ad_valorem') {
+			selectedTariff.unitQuantity = null;
+			selectedTariff.rateUnit = 'percent';
+		}
 		let payload = {
 			tariffRate: selectedTariff.tariffRate,
 			tariffType: selectedTariff.tariffType,
@@ -181,7 +204,8 @@
 			preferentialTariff: selectedTariff.preferentialTariff,
 			importingCountryCode: selectedTariff.importingCountryCode,
 			exportingCountryCode: selectedTariff.exportingCountryCode,
-			hsCode: selectedTariff.productCategory.categoryCode
+			hsCode: selectedTariff.productCategory.categoryCode,
+			unitQuantity: selectedTariff.unitQuantity
 		};
 
 		try {
@@ -206,6 +230,11 @@
 	// Function to edit tariff
 	async function editTariffMethod() {
 		isBusy = true;
+		if (selectedTariff.tariffType == 'ad_valorem') {
+			selectedTariff.unitQuantity = null;
+			selectedTariff.rateUnit = 'percent';
+		}
+
 		let payload = {
 			id: selectedTariff.id,
 			tariffRate: selectedTariff.tariffRate,
@@ -216,6 +245,7 @@
 			preferentialTariff: selectedTariff.preferentialTariff,
 			importingCountryCode: selectedTariff.importingCountryCode,
 			exportingCountryCode: selectedTariff.exportingCountryCode,
+			unitQuantity: selectedTariff.unitQuantity,
 			productCategory: {
 				id: selectedTariff.productCategory.id,
 				categoryCode: selectedTariff.productCategory.categoryCode,
@@ -282,7 +312,7 @@
 
 	// Restrict TariffKey to only contain header values (TariffRecord)
 	type TariffKey = keyof TariffRecord;
-	let sortKey: TariffKey = "id";
+	let sortKey: TariffKey = 'id';
 	let sortAsc = true;
 
 	function sortBy(key: TariffKey) {
@@ -369,8 +399,12 @@
 					<td>{line.importingCountryCode}</td>
 					<td>{line.exportingCountryCode}</td>
 					<td>{line.preferentialTariff ? 'Yes' : 'No'}</td>
-					<td>{line.tariffType}</td>
-					<td>{line.tariffRate} {line.rateUnit}</td>
+					<td>{line.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}</td>
+					<td
+						>{line.tariffType == 'ad_valorem'
+							? line.tariffRate + '%'
+							: '$' + line.tariffRate + ' / ' + line.unitQuantity + line.rateUnit}</td
+					>
 					<td>{line.effectiveDate}</td>
 					<td>{line.expiryDate}</td>
 					<td class="p-0">
@@ -671,10 +705,26 @@
 						</select>
 					</div>
 
-					<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label class="label" for="tariff_type">
+							<span class="label-text font-semibold">Tariff Type</span>
+						</label>
+						<select
+							id="tariff_type"
+							bind:value={selectedTariff.tariffType}
+							class="select-bordered select w-full"
+						>
+							<option value="ad_valorem">Ad Valorem</option>
+							<option value="specific">Specific</option>
+						</select>
+					</div>
+
+					<div class="grid grid-cols-3 gap-4">
 						<div>
 							<label class="label" for="tariff_rate">
-								<span class="label-text font-semibold">Tariff Rate</span>
+								<span class="label-text font-semibold"
+									>Tariff {selectedTariff.tariffType == 'specific' ? 'Price per ' : 'Rate'}</span
+								>
 							</label>
 							<input
 								type="number"
@@ -683,31 +733,34 @@
 								class="input-bordered input w-full"
 							/>
 						</div>
-						<div>
-							<label class="label" for="rate_unit">
-								<span class="label-text font-semibold">Rate Unit</span>
-							</label>
-							<select
-								id="rate_unit"
-								bind:value={selectedTariff.rateUnit}
-								class="select-bordered select w-full"
-							>
-								<option></option>
-								<option>ad valorem</option>
-							</select>
-						</div>
-					</div>
 
-					<div>
-						<label class="label" for="tariff_type">
-							<span class="label-text font-semibold">Tariff Type</span>
-						</label>
-						<input
-							type="text"
-							id="tariff_type"
-							bind:value={selectedTariff.tariffType}
-							class="input-bordered input w-full"
-						/>
+						{#if selectedTariff.tariffType == 'specific'}
+							<div>
+								<label class="label" for="unit_quantity">
+									<span class="label-text font-semibold">Quantity</span>
+								</label>
+								<input
+									type="number"
+									id="unit_quantity"
+									bind:value={selectedTariff.unitQuantity}
+									class="input-bordered input w-full"
+								/>
+							</div>
+							<div>
+								<label class="label" for="rate_unit">
+									<span class="label-text font-semibold">Unit</span>
+								</label>
+
+								<select
+									id="tariff_type"
+									bind:value={selectedTariff.rateUnit}
+									class="select-bordered select w-full"
+								>
+									<option value="kg">kg</option>
+									<option value="g">g</option>
+								</select>
+							</div>
+						{/if}
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
@@ -845,20 +898,17 @@
 						</p>
 					</div>
 
-					<div class="grid grid-cols-2 gap-4">
+
 						<div>
 							<label class="label" for="tariff_rate">
-								<span class="label-text font-semibold">Tariff Rate</span>
+								<span class="label-text font-semibold"
+									>Tariff Rate</span
+								>
 							</label>
-							<p class="w-full">{selectedTariff.tariffRate}</p>
+							<p class="w-full">{selectedTariff.tariffType == 'ad_valorem'
+							? selectedTariff.tariffRate + '%'
+							: '$' + selectedTariff.tariffRate + ' / ' + selectedTariff.unitQuantity + selectedTariff.rateUnit}</p>
 						</div>
-						<div>
-							<label class="label" for="rate_unit">
-								<span class="label-text font-semibold">Rate Unit</span>
-							</label>
-							<p class="w-full">{selectedTariff.rateUnit}</p>
-						</div>
-					</div>
 
 					<div>
 						<label class="label" for="tariff_type">
