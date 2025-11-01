@@ -1,16 +1,10 @@
 package com.cs203.core.dto;
 
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
 
 @Data
 public class CreateTariffRateDto {
@@ -22,6 +16,9 @@ public class CreateTariffRateDto {
     @NotBlank(message = "Tariff type is required")
     @Size(max = 50, message = "Tariff type cannot exceed 50 characters")
     private String tariffType;
+
+    @DecimalMin(value = "0.0", message = "Unit quantity must be positive")
+    private BigDecimal unitQuantity;  // amt of unit that tariff applies to
 
     @Size(max = 20, message = "Rate unit cannot exceed 20 characters")
     private String rateUnit;

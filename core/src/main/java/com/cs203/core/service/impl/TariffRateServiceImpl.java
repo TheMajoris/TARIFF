@@ -90,6 +90,7 @@ public class TariffRateServiceImpl implements TariffRateService {
 
         entity.setTariffRate(dto.getTariffRate());
         entity.setTariffType(dto.getTariffType());
+        entity.setUnitQuantity(dto.getUnitQuantity());
         entity.setRateUnit(dto.getRateUnit());
         entity.setEffectiveDate(dto.getEffectiveDate());
         entity.setExpiryDate(dto.getExpiryDate());
@@ -140,6 +141,7 @@ public class TariffRateServiceImpl implements TariffRateService {
         // Update fields
         existingEntity.setTariffRate(dto.getTariffRate());
         existingEntity.setTariffType(dto.getTariffType());
+        existingEntity.setUnitQuantity(dto.getUnitQuantity());
         existingEntity.setRateUnit(dto.getRateUnit());
         existingEntity.setEffectiveDate(dto.getEffectiveDate());
         existingEntity.setExpiryDate(dto.getExpiryDate());
