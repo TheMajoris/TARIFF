@@ -1,12 +1,8 @@
 package com.cs203.core.service.impl;
 
-import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
-import com.cs203.core.entity.NewsArticleEntity;
-import com.cs203.core.repository.NewsRepository;
-import com.cs203.core.service.NewsService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.model.ChatModel;
@@ -18,8 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import com.cs203.core.dto.responses.NewsArticlesResponseDTO;
+import com.cs203.core.entity.NewsArticleEntity;
+import com.cs203.core.repository.NewsRepository;
+import com.cs203.core.service.NewsService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -39,51 +41,56 @@ public class NewsServiceImpl implements NewsService {
     // https://stackoverflow.com/questions/50342929/how-to-automatically-disable-a-spring-bean-when-running-a-unit-test
     // @Scheduled(cron = "0 0 0 * * ?")
     protected void scrapeNews() {
-        ChatResponse response = chatModel.call(
-                new Prompt(
-                        "You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
-                                "Output ONLY a valid JSON array. \n" +
-                                "Each element must have exactly these fields: \n" +
-                                "  - headline (string)\n" +
-                                "  - summary (string)\n" +
-                                "  - url (string)\n" +
-                                "  - tags (array of strings, e.g. ['tariff', 'US-China', 'steel']) \n" +
-                                "Do not include any other text.",
-                        OpenAiChatOptions.builder()
-                                .model("sonar")
-                                .maxTokens(500) // blast it once we ready
-                                .responseFormat(
-                                        ResponseFormat.builder()
-                                                .type(ResponseFormat.Type.JSON_SCHEMA)
-                                                .jsonSchema("""
-                                                        {
-                                                          "type": "array",
-                                                          "items": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                              "headline": {"type": "string"},
-                                                              "summary": {"type": "string"},
-                                                              "url": {"type": "string"},
-                                                              "tags": {
-                                                                "type": "array",
-                                                                "items": {"type": "string"}
+        try {
+            ChatResponse response = chatModel.call(
+                    new Prompt(
+                            "You are a helpful assistant. Provide exactly 2 of latest trade-related news (tariffs, trade agreements, exchange rates). \n" +
+                                    "Output ONLY a valid JSON array. \n" +
+                                    "Each element must have exactly these fields: \n" +
+                                    "  - headline (string)\n" +
+                                    "  - summary (string)\n" +
+                                    "  - url (string)\n" +
+                                    "  - tags (array of strings, e.g. ['tariff', 'US-China', 'steel']) \n" +
+                                    "Do not include any other text.",
+                            OpenAiChatOptions.builder()
+                                    .model("sonar")
+                                    .maxTokens(500) // blast it once we ready
+                                    .responseFormat(
+                                            ResponseFormat.builder()
+                                                    .type(ResponseFormat.Type.JSON_SCHEMA)
+                                                    .jsonSchema("""
+                                                            {
+                                                              "type": "array",
+                                                              "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                  "headline": {"type": "string"},
+                                                                  "summary": {"type": "string"},
+                                                                  "url": {"type": "string"},
+                                                                  "tags": {
+                                                                    "type": "array",
+                                                                    "items": {"type": "string"}
+                                                                  }
+                                                                },
+                                                                "required": ["headline","summary","url","tags"]
                                                               }
-                                                            },
-                                                            "required": ["headline","summary","url","tags"]
-                                                          }
-                                                        }
-                                                        """)
-                                                .build()
-                                )
-                                .build()
-                )
-        );
-        String responseText = response.getResult().getOutput().getText();
-        logger.info(responseText);
+                                                            }
+                                                            """)
+                                                    .build()
+                                    )
+                                    .build()
+                    )
+            );
+            String responseText = response.getResult().getOutput().getText();
+            logger.info(responseText);
 
-        List<NewsArticleEntity> newsArticleEntities = parseAIResponseJson(responseText);
-        newsRepository.saveAll(newsArticleEntities);
-
+            List<NewsArticleEntity> newsArticleEntities = parseAIResponseJson(responseText);
+            newsRepository.saveAll(newsArticleEntities);
+            logger.info("Successfully scraped {} news articles", newsArticleEntities.size());
+        } catch (Exception e) {
+            logger.warn("Failed to scrape news during application startup. This is not critical. Error: {}", e.getMessage());
+            // Don't rethrow - allow application to start even if news scraping fails
+        }
     }
 
     // remove truncated response entity in case token count cockblock us
