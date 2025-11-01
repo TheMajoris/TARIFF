@@ -898,23 +898,28 @@
 						</p>
 					</div>
 
-
-						<div>
-							<label class="label" for="tariff_rate">
-								<span class="label-text font-semibold"
-									>Tariff Rate</span
-								>
-							</label>
-							<p class="w-full">{selectedTariff.tariffType == 'ad_valorem'
-							? selectedTariff.tariffRate + '%'
-							: '$' + selectedTariff.tariffRate + ' / ' + selectedTariff.unitQuantity + selectedTariff.rateUnit}</p>
-						</div>
-
 					<div>
 						<label class="label" for="tariff_type">
 							<span class="label-text font-semibold">Tariff Type</span>
 						</label>
-						<p class="w-full">{selectedTariff.tariffType}</p>
+						<p class="w-full">
+							{selectedTariff.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}
+						</p>
+					</div>
+
+					<div>
+						<label class="label" for="tariff_rate">
+							<span class="label-text font-semibold">Tariff Rate</span>
+						</label>
+						<p class="w-full">
+							{selectedTariff.tariffType == 'ad_valorem'
+								? selectedTariff.tariffRate + '%'
+								: '$' +
+									selectedTariff.tariffRate +
+									' / ' +
+									selectedTariff.unitQuantity +
+									selectedTariff.rateUnit}
+						</p>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
