@@ -158,10 +158,10 @@
 										) {
 											return true;
 										} else {
-											error = '⚠️ Please select a unit';
+											error = 'Please select a unit';
 										}
 									} else {
-										error = '⚠️ Please insert the quantity';
+										error = 'Please insert the quantity';
 									}
 								} else {
 								error = 'Please select a product category';
