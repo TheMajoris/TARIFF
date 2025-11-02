@@ -142,6 +142,7 @@ export async function getTariffPage(pageNo, size, sortBy, sortDirection) {
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
  * @param {string} payload.hsCode
+ * @param {number} payload.unitQuantity
  */
 export async function createTariff(payload) {
   try {
@@ -185,6 +186,7 @@ export async function createTariff(payload) {
  * @param {boolean=} payload.preferentialTariff
  * @param {string} payload.importingCountryCode
  * @param {string} payload.exportingCountryCode
+ * @param {number} payload.unitQuantity
  * @param {{id:number, categoryCode:string, categoryName:string, description?:string}} payload.productCategory
  */
 export async function editTariff(payload) {
