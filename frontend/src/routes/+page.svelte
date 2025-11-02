@@ -14,6 +14,24 @@
 			autoDismiss={true}
 		/>
 	{/if}
+	
+	{#if saveSuccessMessage}
+		<Alert 
+			type="success" 
+			message={saveSuccessMessage} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+	
+	{#if saveErrorMessage}
+		<Alert 
+			type="error" 
+			message={saveErrorMessage} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -260,26 +278,6 @@
 				</div>
 			</form>
 
-			<!-- Error Alert -->
-			{#if showErrorAlert && calculationError}
-				<div class="alert alert-error mt-6">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{calculationError}</span>
-				</div>
-			{/if}
-
 			<!-- Calculation Result -->
 			{#if calculationResult && !showErrorAlert}
 				<div class="card bg-base-100 mt-6 p-6 shadow-md">
@@ -307,17 +305,38 @@
 					</div>
 
 					<div class="mb-4 flex justify-between text-sm">
-						<span>Tariff Amount:</span>
+						<span>Tariff Cost:</span>
 						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
-					<div class="border-base-300 flex justify-between border-t pt-3">
-						<span class="font-semibold">Total Cost:</span>
-						<span class="text-primary font-bold">${calculationResult.totalCost}</span>
-					</div>
+				<div class="border-base-300 flex justify-between border-t pt-3">
+					<span class="font-semibold">Total Cost:</span>
+					<span class="text-primary font-bold">${calculationResult.totalCost}</span>
 				</div>
-			{/if}
-		</div>
+				
+				<!-- Save Calculation Button -->
+				<div class="mt-4 flex justify-end">
+					<button class="btn btn-primary btn-sm" on:click={openSaveModal} type="button">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-4 w-4"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+							/>
+						</svg>
+						Save Calculation
+					</button>
+				</div>
+			</div>
+		{/if}
+	</div>
 
 		<!-- Related News Card -->
 		<div class="card bg-base-100 p-6 shadow-md">
@@ -437,8 +456,70 @@
 	</div>
 {/if}
 
+<!-- Save Calculation Modal -->
+{#if showSaveModal}
+	<div class="modal modal-open">
+		<!-- Background which will close the modal -->
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={closeSaveModal}>close</button
+		>
+
+		<div class="modal-box">
+			<h3 class="text-lg font-bold">Save Calculation</h3>
+			<p class="py-2 text-sm text-gray-500">
+				Give your calculation a name and optionally add notes for future reference.
+			</p>
+			
+			<form on:submit|preventDefault={performSave}>
+				<div class="form-control mt-4">
+					<label class="label">
+						<span class="label-text">Calculation Name *</span>
+					</label>
+					<input
+						type="text"
+						placeholder="e.g., Laptop Import US-CN"
+						bind:value={saveCalculationName}
+						class="input input-bordered w-full"
+						maxlength="100"
+						required
+					/>
+				</div>
+				
+				<div class="form-control mt-4">
+					<label class="label">
+						<span class="label-text">Notes (Optional)</span>
+					</label>
+					<textarea
+						placeholder="Add any additional notes..."
+						bind:value={saveCalculationNotes}
+						class="textarea textarea-bordered h-24"
+						maxlength="500"
+					></textarea>
+					<label class="label">
+						<span class="label-text-alt">{saveCalculationNotes.length}/500 characters</span>
+					</label>
+				</div>
+				
+				<div class="modal-action">
+					<button type="button" class="btn" on:click={closeSaveModal}>Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled={isSaving}>
+						{#if isSaving}
+							<span class="loading loading-spinner loading-sm"></span>
+							Saving...
+						{:else}
+							Save
+						{/if}
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{/if}
+
 <!-- Calculator Logic-->
 <script>
+	import { saveCalculation } from "$lib/api/calculationHistory.js";
 	import { fetchCountries } from "$lib/api/countries.js";
 	import { fetchNews } from "$lib/api/news.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
@@ -499,6 +580,14 @@
 	let showErrorAlert = false;
 	let isCalculating = false;
 	
+	// Save Calculation State
+	let showSaveModal = false;
+	let saveCalculationName = '';
+	let saveCalculationNotes = '';
+	let isSaving = false;
+	let saveSuccessMessage = '';
+	let saveErrorMessage = '';
+	
 	async function calculateCost() {
 		// Clear previous results and errors
 		calculationResult = null;
@@ -525,24 +614,15 @@
 					quantity
 				});
 				
-				console.log('Calculation result:', result);
-				
-				if (result === null) {
-					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-					showErrorAlert = true;
-				} else {
-					// Check if this is a "no data" case (tariff rate is -1)
-					const tariffRate = parseFloat(result.tariffRate);
-					
-					if (tariffRate === -1) {
-						// No tariff data found in database
-						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-						showErrorAlert = true;
-					} else {
-						// Valid tariff data (including 0% tariff)
-						calculationResult = result;
-					}
-				}
+			console.log('Calculation result:', result);
+			
+			if (result === null) {
+				calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+				showErrorAlert = true;
+			} else {
+				// Valid tariff data (including 0% tariff)
+				calculationResult = result;
+			}
 			} catch (error) {
 				console.error('Calculation error:', error);
 				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
@@ -557,6 +637,90 @@
 	}
 	// End: Tariff Calculation Section 
 
+	// Start: Save Calculation Section
+	function openSaveModal() {
+		// Clear previous values
+		saveCalculationName = '';
+		saveCalculationNotes = '';
+		saveSuccessMessage = '';
+		saveErrorMessage = '';
+		showSaveModal = true;
+	}
+	
+	function closeSaveModal() {
+		showSaveModal = false;
+		saveCalculationName = '';
+		saveCalculationNotes = '';
+	}
+	
+	async function performSave() {
+		if (!calculationResult) {
+			saveErrorMessage = 'No calculation result to save';
+			return;
+		}
+		
+		isSaving = true;
+		saveErrorMessage = '';
+		saveSuccessMessage = '';
+		
+		try {
+			// Get country codes from the selected countries
+			const importingCountry = countries.find(c => c.id == importTo);
+			const exportingCountry = countries.find(c => c.id == exportFrom);
+			
+			if (!importingCountry || !exportingCountry) {
+				throw new Error('Country information not found');
+			}
+			
+			// Prepare calculation data according to SaveCalculationRequestDTO
+			const calculationData = {
+				calculationName: saveCalculationName,
+				productValue: parseFloat(goodsValue),
+				currencyCode: 'USD', // Default currency, can be made configurable
+				tariffRate: parseFloat(calculationResult.tariffRate),
+				tariffType: calculationResult.tariffType,
+				calculatedTariffCost: parseFloat(calculationResult.tariffCost),
+				totalCost: parseFloat(calculationResult.totalCost),
+				notes: saveCalculationNotes || null,
+				importingCountryCode: importingCountry.code,
+				exportingCountryCode: exportingCountry.code,
+				productCategoryCode: parseInt(hsCode)
+			};
+			
+			console.log('Saving calculation:', calculationData);
+			
+			const result = await saveCalculation(calculationData);
+			
+			console.log('Save result:', result);
+			
+		// Close modal and show success message
+		closeSaveModal();
+		saveSuccessMessage = 'Calculation saved successfully! View it in your calculation history.';
+		
+		// Scroll to top to show success message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear success message after 5 seconds
+		setTimeout(() => {
+			saveSuccessMessage = '';
+		}, 5000);
+			
+	} catch (error) {
+		console.error('Error saving calculation:', error);
+		saveErrorMessage = error.message || 'Failed to save calculation. Please try again.';
+		
+		// Scroll to top to show error message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear error message after 5 seconds
+		setTimeout(() => {
+			saveErrorMessage = '';
+		}, 5000);
+	} finally {
+		isSaving = false;
+	}
+	}
+	// End: Save Calculation Section
 
 	// Start: Related News Section
 	let selectedArticle = null;

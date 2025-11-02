@@ -164,16 +164,16 @@
 										error = '⚠️ Please insert the quantity';
 									}
 								} else {
-									error = '⚠️ Please select a product category';
-								}
-							} else {
-								error = '🌍 Please select an exporting country';
+								error = 'Please select a product category';
 							}
 						} else {
-							error = '🌍 Please select an importing country';
+							error = 'Please select an exporting country';
 						}
 					} else {
-						error = '📅 Please select an effective date';
+						error = 'Please select an importing country';
+					}
+				} else {
+					error = 'Please select an effective date';
 					}
 				} else {
 					error = 'Rate Unit can only be up to 20 characters';
@@ -281,7 +281,7 @@
 			const result = await deleteSpecificTariff(id);
 			console.log('Delete result:', result);
 
-			success = '🗑️ ' + (result.message || 'Tariff rate deleted successfully');
+			success = result.message || 'Tariff rate deleted successfully';
 			fetchTariffs(sortKey, sortAsc);
 			fetchProductCategories();
 			error = '';

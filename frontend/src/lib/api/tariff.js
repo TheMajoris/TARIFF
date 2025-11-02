@@ -47,19 +47,6 @@ export async function calculateTariffCost({ hsCode, exportFrom, importTo, calcul
     const tariffRate = result.tariffRate ? parseFloat(result.tariffRate) : 0;
     const tariffCost = result.tariffCost ? parseFloat(result.tariffCost) : 0;
 
-    // Check if this is a "no data found" case (tariff rate is -1)
-    if (tariffRate === -1) {
-      return {
-        baseValue: parseFloat(goodsValue).toFixed(2),
-        tariffRate: "-1.00",
-        tariffCost: "0.00",
-        totalCost: parseFloat(goodsValue).toFixed(2),
-        quantity: result.quantity,
-        tariffType: result.tariffType,
-        rateUnit: result.rateUnit,
-      };
-    }
-
     return {
       baseValue: parseFloat(goodsValue).toFixed(2),
       tariffRate: tariffRate.toFixed(2),
