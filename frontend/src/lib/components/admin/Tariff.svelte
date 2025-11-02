@@ -403,7 +403,7 @@
 					<td
 						>{line.tariffType == 'ad_valorem'
 							? line.tariffRate + '%'
-							: '$' + line.tariffRate + ' / ' + line.unitQuantity + line.rateUnit}</td
+							: `$${line.tariffRate} / ${line.unitQuantity} ${line.rateUnit}`}</td
 					>
 					<td>{line.effectiveDate}</td>
 					<td>{line.expiryDate}</td>
@@ -752,7 +752,7 @@
 								</label>
 
 								<select
-									id="tariff_type"
+									id="rate_unit"
 									bind:value={selectedTariff.rateUnit}
 									class="select-bordered select w-full"
 								>
@@ -914,11 +914,7 @@
 						<p class="w-full">
 							{selectedTariff.tariffType == 'ad_valorem'
 								? selectedTariff.tariffRate + '%'
-								: '$' +
-									selectedTariff.tariffRate +
-									' / ' +
-									selectedTariff.unitQuantity +
-									selectedTariff.rateUnit}
+								: `$${selectedTariff.tariffRate} / ${selectedTariff.unitQuantity} ${selectedTariff.rateUnit}`}
 						</p>
 					</div>
 
