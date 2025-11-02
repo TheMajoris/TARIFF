@@ -3,7 +3,7 @@
 3. Single ALB module handles routing: default to frontend, path /api/* to backend.
 4. RDS module creates a PostgreSQL DB in the private subnet accessible only from backend SG.
 5. This setup avoids NAT Gateway since both Fargate tasks are public.
-6. For school/demo project, one private subnet for RDS is sufficient.
+6. For school project, one private subnet for RDS is sufficient.
 
 ## Future improvements:
 -  github actions workflow to build and push images to ECR repos 

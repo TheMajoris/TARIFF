@@ -1,0 +1,17 @@
+*.DS_Store
+*.idea
+*.env
+
+# Ignore Terraform state files and directories
+.terraform/
+.terraform/*
+
+# Ignore Terraform state files that might be in other directories
+**/.terraform/
+**/.terraform/*
+
+# Optionally ignore Terraform state and plan files
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.hcl
