@@ -1,10 +1,9 @@
-for my aws architecture, i have:
-1. public subnet: AWS Fargate: SvelteKit Frontend
-2. public subnet: AWS Fargate: Spring Boot Backend
-3. private subnet: RDS for postgresSQL
-
-The Fargate should pull images from AWS ECS, because i want my images to be pushed in via github actions on AWS ECR. Note that this is just a school project, does not have to be production ready. it just needs to be reachable from a public website.
-
+1. VPC module creates public & private subnets and exports vpc_id, public_subnet_ids, private_subnet_id.
+2. Fargate modules deploy ECS services in respective public subnets and register tasks with ALB target groups.
+3. Single ALB module handles routing: default to frontend, path /api/* to backend.
+4. RDS module creates a PostgreSQL DB in the private subnet accessible only from backend SG.
+5. This setup avoids NAT Gateway since both Fargate tasks are public.
+6. For school/demo project, one private subnet for RDS is sufficient.
 
 ## Future improvements:
 -  github actions workflow to build and push images to ECR repos 
