@@ -439,175 +439,108 @@
 		</div>
 	</div>
 
-	<!-- Optimized Route Card -->
-	{#if showAlternativeRoutes && optimizedRoute}
+	<!-- Optimized Routes Section -->
+	{#if showAlternativeRoutes && optimizedRoutes && optimizedRoutes.length}
 	<div class="card bg-base-100 mt-6 p-6 shadow-md border-2 border-success">
-	<div class="flex items-center gap-2 mb-4">
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-		</svg>
-		<h2 class="text-lg font-semibold">Optimized Route Found</h2>
-	</div>
-	<p class="mb-4 text-sm text-gray-500">We found a better route to save you money</p>
-
-	<div class="rounded-lg bg-success/5 p-4">
-		<!-- Route Path -->
-		<div class="mb-4">
-			<div class="text-xs text-gray-500 mb-2">Trade Route</div>
-			<div class="flex flex-wrap items-center gap-1">
-				{#each optimizedRoute.path as country, i}
-					<span class="font-semibold text-base">{country}</span>
-					{#if i < optimizedRoute.path.length - 1}
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-						</svg>
-					{/if}
-				{/each}
-			</div>
-		</div>
-	</div>
-
-	<!-- Cost Comparison -->
-	<div class="grid grid-cols-2 gap-4 mb-4">
-		<div class="text-center p-3 bg-base-100 rounded-lg">
-			<div class="text-xs text-gray-500">Original Cost</div>
-			<div class="text-lg font-bold text-gray-400 line-through">
-				${calculationResult.totalCost}
-			</div>
-		</div>
-		<div class="text-center p-3 bg-success/10 rounded-lg">
-			<div class="text-xs text-gray-500">Optimized Cost</div>
-			<div class="text-2xl font-bold text-success">
-				${optimizedRoute.totalCost.toFixed(2)}
-			</div>
-		</div>
-	</div>
-
-	<!-- Savings Badge -->
-	{#if optimizedRoute.savingsPercent > 0}
-		<div class="alert alert-success mb-4">
-			<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+		<div class="flex items-center gap-2 mb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 			</svg>
-			<span class="font-semibold">
-				You save ${optimizedRoute.savings.toFixed(2)} ({optimizedRoute.savingsPercent}% off)
-			</span>
+			<h2 class="text-lg font-semibold">Alternative Routes & Cost Comparison</h2>
 		</div>
-	{/if}
+		<p class="mb-4 text-sm text-gray-500">We found {optimizedRoutes.length} optimized {optimizedRoutes.length === 1 ? 'route' : 'routes'} for you</p>
 
-	<!-- Route Details -->
-	<div class="grid grid-cols-2 gap-4 text-sm">
-		<div class="flex items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-			</svg>
-			<div>
-				<span class="text-gray-500">Delivery:</span>
-				<span class="ml-1 font-medium">{optimizedRoute.estimatedDays} days</span>
-			</div>
-		</div>
-		<div class="flex items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-			</svg>
-			<div>
-				<span class="text-gray-500">Stops:</span>
-				<span class="ml-1 font-medium">{optimizedRoute.path.length - 2}</span>
-			</div>
-		</div>
-	</div>
-
-	<!-- View Details Button -->
-	<div class="mt-4">
-		<button 
-			class="btn btn-ghost btn-sm w-full"
-			on:click={toggleRouteDetails}
-			type="button"
-		>
-			{#if showRouteDetails}
-				Hide Details
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-				</svg>
-			{:else}
-				View Detailed Breakdown
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-				</svg>
-			{/if}
-		</button>
-	</div>
-
-	{#if showRouteDetails}
-		<div class="card bg-base-100 mt-4 p-6 shadow-md">
-			<h3 class="mb-4 text-lg font-semibold">Detailed Route Breakdown</h3>
-			
-			<!-- Route Path Summary -->
-			<div class="mb-6">
-				<div class="text-sm text-gray-500 mb-2">Complete Trade Route</div>
-				<div class="flex flex-wrap items-center gap-2 text-base font-medium">
-					{#each optimizedRoute.path as country, i}
-						<span>{country}</span>
-						{#if i < optimizedRoute.path.length - 1}
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-							</svg>
-						{/if}
-					{/each}
-				</div>
-			</div>
-
-			<!-- Cost Summary -->
-			<div class="bg-success/10 rounded-lg p-4 mb-6">
-				<div class="grid grid-cols-3 gap-4 text-center">
-					<div>
-						<div class="text-xs text-gray-500">Total Cost</div>
-						<div class="text-xl font-bold text-success">${optimizedRoute.totalCost.toFixed(2)}</div>
+		<div class="grid grid-cols-1 gap-4">
+			{#each optimizedRoutes as route, idx}
+				<div class="card bg-base-100 p-4 shadow border {idx === 0 ? 'border-success' : 'border-base-300'}">
+					<div class="flex items-center justify-between mb-2">
+						<div class="flex items-center gap-2">
+							<h3 class="text-base font-semibold">Route {idx + 1}</h3>
+							{#if idx === 0}
+								<span class="badge badge-success badge-sm">Cheapest</span>
+							{/if}
+						</div>
+						<div class="text-xs text-gray-500">{route.estimatedDays} days</div>
 					</div>
-					<div>
-						<div class="text-xs text-gray-500">You Save</div>
-						<div class="text-xl font-bold text-success">${optimizedRoute.savings.toFixed(2)}</div>
-					</div>
-					<div>
-						<div class="text-xs text-gray-500">Delivery Time</div>
-						<div class="text-xl font-bold">{optimizedRoute.estimatedDays} days</div>
-					</div>
-				</div>
-			</div>
 
-			<!-- Tariff Breakdown by Leg -->
-			<div class="mb-6">
-				<h4 class="text-sm font-semibold mb-3">Tariff Breakdown</h4>
-				<div class="space-y-3">
-					{#each optimizedRoute.tariffBreakdown as leg, index}
-						<div class="border border-base-300 rounded-lg p-3 hover:bg-base-200 transition-colors">
-							<div class="flex justify-between items-center mb-2">
-								<div class="flex items-center gap-2">
-									<span class="badge badge-sm">{index + 1}</span>
-									<span class="text-sm font-medium">{leg.from} → {leg.to}</span>
-								</div>
-								<span class="text-sm font-bold">${leg.tariffCost.toFixed(2)}</span>
+					<!-- Path -->
+					<div class="rounded-lg bg-success/5 p-3 mb-3">
+						<div class="text-xs text-gray-500 mb-1">Trade Route</div>
+						<div class="flex flex-wrap items-center gap-1">
+							{#each route.path as country, i}
+								<span class="font-semibold text-sm">{country}</span>
+								{#if i < route.path.length - 1}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+									</svg>
+								{/if}
+							{/each}
+						</div>
+					</div>
+
+					<!-- Cost Comparison -->
+					<div class="grid grid-cols-2 gap-3 mb-3">
+						<div class="text-center p-3 bg-base-100 rounded-lg">
+							<div class="text-xs text-gray-500">Original Cost</div>
+							<div class="text-lg font-bold text-gray-400 line-through">${calculationResult.totalCost}</div>
+						</div>
+						<div class="text-center p-3 bg-success/10 rounded-lg">
+							<div class="text-xs text-gray-500">Optimized Cost</div>
+							<div class="text-2xl font-bold text-success">${route.totalCost.toFixed(2)}</div>
+						</div>
+					</div>
+
+					{#if route.savingsPercent > 0}
+						<div class="alert alert-success mb-3 py-2 min-h-0">
+							<span class="font-semibold text-sm">You save ${route.savings.toFixed(2)} ({route.savingsPercent}% off)</span>
+						</div>
+					{/if}
+
+					<!-- Toggle Details -->
+					<div>
+						<button 
+							class="btn btn-ghost btn-sm w-full"
+							on:click={() => toggleRouteDetails(idx)}
+							type="button">
+							{#if expandedRouteIndex === idx}
+								Hide Details
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+								</svg>
+							{:else}
+								View Detailed Breakdown
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+								</svg>
+							{/if}
+						</button>
+					</div>
+
+					{#if expandedRouteIndex === idx}
+						<div class="card bg-base-100 mt-3 p-4 shadow">
+							<h4 class="mb-3 text-sm font-semibold">Tariff Breakdown</h4>
+							<div class="space-y-2">
+								{#each route.tariffBreakdown as leg, index}
+									<div class="border border-base-300 rounded p-2">
+										<div class="flex justify-between items-center mb-1">
+											<div class="flex items-center gap-2">
+												<span class="badge badge-sm">{index + 1}</span>
+												<span class="text-sm font-medium">{leg.from} → {leg.to}</span>
+											</div>
+											<span class="text-sm font-bold">${leg.tariffCost.toFixed(2)}</span>
+										</div>
+										<div class="text-xs text-gray-500">Tariff Rate: {leg.tariffRate}%</div>
+									</div>
+								{/each}
 							</div>
-							<div class="text-xs text-gray-500">
-								Tariff Rate: {leg.tariffRate}%
+							<div class="alert alert-info mt-3 py-2 min-h-0">
+								<div class="text-xs">This route takes advantage of trade agreements and preferential tariff rates.</div>
 							</div>
 						</div>
-					{/each}
+					{/if}
 				</div>
-			</div>
-
-			<!-- Additional Info -->
-			<div class="alert alert-info">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-				</svg>
-				<div>
-					<div class="text-sm">This route takes advantage of trade agreements and preferential tariff rates.</div>
-				</div>
-			</div>
+			{/each}
 		</div>
-	{/if}
 	</div>
 	{/if}
 </div>
@@ -781,8 +714,9 @@
 		calculationResult = null;
 		calculationError = null;
 		showErrorAlert = false;
-		showAlternativeRoutes = false; // Clear optimized route when recalculating
-		optimizedRoute = null;
+		showAlternativeRoutes = false; // Clear optimized routes when recalculating
+		optimizedRoutes = [];
+		expandedRouteIndex = null;
 		isCalculating = true;
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
