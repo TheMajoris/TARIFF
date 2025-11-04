@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5173/register'); 
+  await page.goto('/register'); 
   await page.getByRole('textbox', { name: 'First Name' }).waitFor({ state: 'visible' });
   await page.getByRole('textbox', { name: 'Last Name' }).waitFor({ state: 'visible' });
   await page.getByRole('textbox', { name: 'Username' }).waitFor({ state: 'visible' });
@@ -27,14 +27,14 @@ test('register successful', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Confirm Password' }).fill('testTEST@123');
   await page.getByRole('button', { name: 'Register' }).click();
   await expect(page.getByRole('main')).toContainText('Account created successfully');
-  await page.goto('http://localhost:5173/login');
+  await page.goto('/login');
 });
 
 test('register all empty fields', async ({ page }) => {
   await page.getByRole('button', { name: 'Register' }).click();
   // does not work as the for input has "required" which is blocking it
   // hence just check that its still on the correct page  
-  await expect(page).toHaveURL('http://localhost:5173/register');
+  await expect(page).toHaveURL('/register');
 });
 
 test('register invalid email', async ({ page }) => {
@@ -109,5 +109,5 @@ test('register password does not fulfil requirements', async ({ page }) => {
 
 test('register go back to login', async ({ page }) => {
   await page.getByRole('link', { name: '← Back to Login' }).click();
-  await expect(page).toHaveURL('http://localhost:5173/login');
+  await expect(page).toHaveURL('/login');
 });

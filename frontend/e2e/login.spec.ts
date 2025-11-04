@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-	await page.goto('http://localhost:5173/login');
+	await page.goto('/login');
 	await page.getByRole('textbox', { name: 'Email' }).waitFor({ state: 'visible' });
 	await page.getByRole('textbox', { name: 'Password' }).waitFor({ state: 'visible' });
 	await page.getByRole('button', { name: 'Login' }).waitFor({ state: 'visible' });
@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test('login go to register', async ({ page }) => {
 	await page.getByRole('link', { name: 'Register →' }).click();
-	await expect(page).toHaveURL('http://localhost:5173/register');
+	await expect(page).toHaveURL('/register');
 });
 
 test('login invalid email', async ({ page }) => {
@@ -28,7 +28,7 @@ test('login both empty fields', async ({ page }) => {
 	// does not work as the for input has "required" which is blocking it
 	// await expect(page.getByRole('main')).toContainText('Please fill in both email and password fields to continue');
 	// hence just check that its still on the correct page  
-	await expect(page).toHaveURL('http://localhost:5173/login');
+	await expect(page).toHaveURL('/login');
 });
 
 
@@ -39,7 +39,7 @@ test('login empty email fields', async ({ page }) => {
 	// does not work as the for input has "required" which is blocking it
 	// await expect(page.getByRole('main')).toContainText('Please fill in both email and password fields to continue');
 	// hence just check that its still on the correct page  
-	await expect(page).toHaveURL('http://localhost:5173/login');
+	await expect(page).toHaveURL('/login');
 });
 
 
@@ -50,7 +50,7 @@ test('login empty password fields', async ({ page }) => {
 	// does not work as the for input has "required" which is blocking it
 	// await expect(page.getByRole('main')).toContainText('Please fill in both email and password fields to continue');
 	// hence just check that its still on the correct page  
-	await expect(page).toHaveURL('http://localhost:5173/login');
+	await expect(page).toHaveURL('/login');
 });
 
 test('login successful', async ({ page }) => {
@@ -63,7 +63,7 @@ test('login successful', async ({ page }) => {
 		page.getByRole('button', { name: 'Login' }).click()
 	]);
 	await expect(page.getByRole('main')).toContainText('Welcome back! Login');
-	await expect(page).toHaveURL('http://localhost:5173/');
+	await expect(page).toHaveURL('/');
 });
 
 test('login wrong credentials', async ({ page }) => {
