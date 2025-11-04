@@ -52,11 +52,11 @@
 			if (passwordLength() && passwordNumber() && passwordSpecialCharacter() && passwordUpperLower()) {
 				return true;
 			} else {
-				alert('The password need to fulfil all of the requirements.');
+				error = 'The password need to fulfil all of the requirements.';
 				return false;
 			}
 		} else {
-			alert('The passwords provided are different.');
+			error = 'The passwords provided are different.';
 			return false;
 		}
 	}
@@ -248,13 +248,7 @@
 
 				<!-- Submit -->
 				<div class="form-control flex justify-around gap-4">
-					<button 
-						type="button"
-						class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800"
-						on:click={() => goto('/login')}
-					>
-						← Back to Login
-					</button>
+					<a href="./login" class="btn btn-ghost btn-sm w-1/3 text-gray-600 hover:text-gray-800">← Back to Login</a>
 					<button 
 						type="submit" 
 						class="btn btn-primary btn-sm w-1/3"
