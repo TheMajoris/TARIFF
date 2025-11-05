@@ -1,25 +1,35 @@
-name: Frontend Unit Tests
-
+name: Frontend Unit Test
 on:
-  push:
-    branches: [ main, develop ]
   pull_request:
+    paths:
+      - frontend/**
+  push:
+    paths:
+      - frontend/**
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  unit:
-    name: Unit (Node/Vitest)
+  run-unit-test:
+    environment: unit-test-envt
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
-      - run: npm run test:unit -- --run --project server
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests (Node/Vitest)
+        run: npm run test:unit -- --run --project server
 
 
