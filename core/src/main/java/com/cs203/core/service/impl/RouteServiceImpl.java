@@ -7,18 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cs203.core.dto.GenericResponse;
-import com.cs203.core.dto.ProductCategoriesDto;
 import com.cs203.core.dto.requests.RouteOptimizationRequestDto;
 import com.cs203.core.dto.responses.AlternativeRouteDto;
 import com.cs203.core.dto.responses.RouteDto;
-import com.cs203.core.entity.CountryEntity;
 import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.repository.CountryRepository;
 import com.cs203.core.repository.ProductCategoriesRepository;
@@ -26,8 +22,7 @@ import com.cs203.core.repository.SavedCalculationsRepository;
 import com.cs203.core.repository.TariffRateRepository;
 import com.cs203.core.service.RouteService;
 import com.cs203.core.service.TariffRateService;
-
-import com.cs203.core.utils.*;
+import com.cs203.core.utils.RouteNode;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -53,7 +48,8 @@ public class RouteServiceImpl implements RouteService {
 
         // Check for valid country codes
         if (!countryRepository.existsByCountryCode(dto.getExportingCountryCode())) {
-            return new GenericResponse<List<AlternativeRouteDto>>(HttpStatus.NOT_FOUND, "Source country code does not exist",
+            return new GenericResponse<List<AlternativeRouteDto>>(HttpStatus.NOT_FOUND,
+                    "Source country code does not exist",
                     null);
         }
         if (!countryRepository.existsByCountryCode(dto.getImportingCountryCode())) {
@@ -95,12 +91,15 @@ public class RouteServiceImpl implements RouteService {
                 continue; // reached max depth
             }
 
-            List<TariffRateEntity> neighbors = tariffRateRepository.findAllByExportingCountryIdAndHsCode(current.getCountryId(),
+            List<TariffRateEntity> neighbors = tariffRateRepository.findAllByExportingCountryIdAndHsCode(
+                    current.getCountryId(),
                     hsCode);
-            System.out.println("Current from countryId: " + current.getCountryId() + " neighbors count: " + neighbors.size());
+            System.out.println(
+                    "Current from countryId: " + current.getCountryId() + " neighbors count: " + neighbors.size());
             for (TariffRateEntity tre : neighbors) {
                 Long nextCountryId = tre.getImportingCountryId();
-                System.out.println(" -> To countryId: " + tre.getImportingCountryId() + " tariff " + tre.getTariffRate());
+                System.out
+                        .println(" -> To countryId: " + tre.getImportingCountryId() + " tariff " + tre.getTariffRate());
 
                 // Compute cost to next node
                 BigDecimal finalPrice = tariffRateService.getFinalPrice(

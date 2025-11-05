@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.cs203.core.dto.responses.RouteDto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class RouteNode implements Comparable<RouteNode> {
     private BigDecimal cost;
     private Long countryId;
@@ -15,10 +17,10 @@ public class RouteNode implements Comparable<RouteNode> {
     private int depth;
 
     public RouteNode(BigDecimal cost, Long countryId, List<RouteDto> path, int depth) {
-            this.cost = cost;
-            this.countryId = countryId;
-            this.path = path;
-            this.depth = depth;
+        this.cost = cost;
+        this.countryId = countryId;
+        this.path = path;
+        this.depth = depth;
     }
 
     @Override

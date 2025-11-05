@@ -20,7 +20,6 @@ public class RouteOptimizationRequestDto {
     @NotBlank(message = "Exporting country code is required")
     @Size(min = 2, max = 2, message = "Country code must be 2 characters")
     private String exportingCountryCode;
-
     
     @NotNull(message = "HS code is required")
     @Min(value = 100000, message = "HS code must be at least 6 digits")
