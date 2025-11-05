@@ -36,4 +36,6 @@ public interface TariffRateService {
                                                      BigDecimal initialPrice, LocalDate date);
 
     BigDecimal getTariffCost(BigDecimal finalPrice, BigDecimal initialPrice);
+
+    TariffRateDto convertToDto(TariffRateEntity entity); // Helper function to assist in Route Optimization
 }

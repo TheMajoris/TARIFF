@@ -31,7 +31,7 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
            "t.productCategory.categoryCode = :hsCode AND " +
            "t.effectiveDate <= :currentDate AND " +
            "(t.expiryDate IS NULL OR t.expiryDate >= :currentDate) " +
-           "ORDER BY t.effectiveDate DESC")
+           "ORDER BY t.effectiveDate DESC LIMIT 1")
     Optional<TariffRateEntity> findCurrentTariffRate(
         @Param("importingCountryId") Long importingCountryId,
         @Param("exportingCountryId") Long exportingCountryId,
@@ -165,4 +165,10 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
         @Param("importingCountryId") Long importingCountryId,
         @Param("hsCode") Integer hsCode,
         @Param("currentDate") LocalDate currentDate);
+
+
+    @Query("SELECT t FROM TariffRateEntity t WHERE " + 
+              "t.exportingCountry.id = :exportingCountryId AND " +
+              "t.productCategory.categoryCode = :hsCode")
+    List<TariffRateEntity> findAllByExportingCountryIdAndHsCode(Long exportingCountryId, Integer hsCode);
 }

@@ -60,6 +60,9 @@ public class SecurityConfig {
                 // calculation history - allow any authenticated user
                 .requestMatchers("/api/v1/calculation-history/**").authenticated()
 
+                // alternative routes - allow any authenticated user similar to calculation
+                .requestMatchers(HttpMethod.POST, "/api/v1/route/**").authenticated()
+
                 // auth stuff
                 .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
 
