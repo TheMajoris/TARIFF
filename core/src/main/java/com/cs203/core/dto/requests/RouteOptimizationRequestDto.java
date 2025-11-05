@@ -13,11 +13,11 @@ import lombok.Data;
 
 @Data
 public class RouteOptimizationRequestDto {
-    @NotBlank(message = "Country code is required")
+    @NotBlank(message = "Importing country code is required")
     @Size(min = 2, max = 2, message = "Country code must be 2 characters")
     private String importingCountryCode;
 
-    @NotBlank(message = "Country code is required")
+    @NotBlank(message = "Exporting country code is required")
     @Size(min = 2, max = 2, message = "Country code must be 2 characters")
     private String exportingCountryCode;
 
