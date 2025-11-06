@@ -35,15 +35,18 @@ jobs:
             -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
-
-      - name: Wait for DB to be ready
-        run: |
-          curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          chmod +x wait-for-it.sh
-          ./wait-for-it.sh localhost:5432 -t 60
       
+      - name: Start backend containers
+        working-directory: ./core
+        run: docker compose up -d --build
+
       - name: Install dependencies
         run: npm ci
 
       - name: Run end to end tests (Playwright)
         run: npm run test:e2e
+
+      - name: Stop backend containers
+        if: always()
+        working-directory: ./core
+        run: docker compose down -v
