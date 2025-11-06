@@ -40,6 +40,14 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Set default PERPLEXITY_KEY if not provided
+        run: |
+          if [ -z "${{ secrets.PERPLEXITY_KEY }}" ]; then
+            echo "PERPLEXITY_KEY=fake-key-for-e2e-testing" >> $GITHUB_ENV
+          else
+            echo "PERPLEXITY_KEY=${{ secrets.PERPLEXITY_KEY }}" >> $GITHUB_ENV
+          fi
+
       - name: Run end to end tests (Playwright)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -62,5 +70,5 @@ jobs:
           JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
           JWT_REFRESH_DURATION: 32400
           JWT_EXPIRATION_TIME: 240
-          PERPLEXITY_KEY: ${{ secrets.PERPLEXITY_KEY }}
+          PERPLEXITY_KEY: ${{ env.PERPLEXITY_KEY }}
         run: npm run test:e2e
