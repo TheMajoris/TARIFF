@@ -36,8 +36,33 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
       
-      - name: Start backend containers
-        working-directory: ./core
+      # - name: Start backend containers
+      #   working-directory: ./core
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed for PR decoration
+      #     SPRING_APP_NAME: core
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL || 'jdbc:postgresql://localhost:5432/tariff_db' }}
+      #     DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME || 'admin' }}
+      #     DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || 'admin123' }}
+      #     POSTGRES_DB: ${{ secrets.POSTGRES_DB || 'tariff_db' }}
+      #     JPA_DDL_AUTO: create-drop
+      #     JPA_SHOW_SQL: true
+      #     CORS_ORIGIN: http://localhost:5173,http://localhost:4173
+      #     HTTPS_ENABLED: false
+      #     JWT_ISSUER: http://localhost:8080/api/v1/auth
+      #     JWT_KEY_ID: 6f976ce0-4aad-47d7-a141-b7d40e44ea16
+      #     JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      #     JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+      #     JWT_REFRESH_DURATION: 32400
+      #     JWT_EXPIRATION_TIME: 240
+      #     PERPLEXITY_KEY: ${{ secrets.PERPLEXITY_KEY }}
+      #   run: docker compose up -d --build
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run end to end tests (Playwright)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed for PR decoration
@@ -57,15 +82,9 @@ jobs:
           JWT_REFRESH_DURATION: 32400
           JWT_EXPIRATION_TIME: 240
           PERPLEXITY_KEY: ${{ secrets.PERPLEXITY_KEY }}
-        run: docker compose up -d --build
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run end to end tests (Playwright)
         run: npm run test:e2e
 
-      - name: Stop backend containers
-        if: always()
-        working-directory: ./core
-        run: docker compose down -v
+      # - name: Stop backend containers
+      #   if: always()
+      #   working-directory: ./core
+      #   run: docker compose down -v
