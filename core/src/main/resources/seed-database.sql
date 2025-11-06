@@ -108,7 +108,7 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
                          importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
 
 -- Singapore importing from China
-(0.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
+(1.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'SG'), 
  (SELECT country_id FROM country WHERE country_code = 'CN'), 
  851713, NOW(), NOW()),
@@ -201,6 +201,12 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
 (2.00, 'specific', 400.00, 'g', '2023-01-01', '2023-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'IN'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- Australia importing from Singapore
+(20.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'), 
+ (SELECT country_id FROM country WHERE country_code = 'SG'), 
  851713, NOW(), NOW());
 
 -- =====================================================
@@ -236,3 +242,33 @@ INSERT INTO news_tags (news_id, tag) VALUES
  (3, 'energy'),
  (3, 'korea'),
  (3, 'south korea');
+
+-- Additional tariff rates creating multi-hop trade routes
+
+-- CN -> AU (direct, highest tariff)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, effective_date, expiry_date, preferential_tariff,                         
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
+(25.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW());
+
+-- CN -> MY (choose preferential 5%)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit,
+                         effective_date, expiry_date, preferential_tariff,
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at)
+VALUES
+(5.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW());
+
+-- MY -> AU (choose preferential 2.5%)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit,
+                         effective_date, expiry_date, preferential_tariff,
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at)
+VALUES
+(2.50, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ 851713, NOW(), NOW());

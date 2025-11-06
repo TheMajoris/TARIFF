@@ -218,7 +218,7 @@ public class TariffRateServiceImpl implements TariffRateService {
      * Helper section
      */
 
-    private TariffRateDto convertToDto(TariffRateEntity entity) {
+    public TariffRateDto convertToDto(TariffRateEntity entity) {
         TariffRateDto dto = new TariffRateDto();
         dto.setId(entity.getId());
         dto.setTariffRate(entity.getTariffRate());
