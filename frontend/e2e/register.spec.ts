@@ -55,7 +55,7 @@ test('register invalid email', async ({ page }) => {
   await expect(page.getByRole('main')).toContainText('Please enter a valid email address (e.g., user@example.com)');
 });
 
-test('register email already exist', async ({ page }) => {
+test('register with used email', async ({ page }) => {
   await page.getByRole('textbox', { name: 'First Name' }).click();
   await page.getByRole('textbox', { name: 'First Name' }).fill('test');
   await page.getByRole('textbox', { name: 'Last Name' }).click();
