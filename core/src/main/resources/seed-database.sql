@@ -6,6 +6,7 @@
 -- This script is disabled in test environment via application-test.properties
 
 -- Clear any existing data (Delete in correct order to avoid foreign key constraints)
+DELETE FROM saved_calculations; -- Delete saved calculations first (references users, countries, product_categories)
 DELETE FROM tariff_rates;
 DELETE FROM national_tariff_lines;
 DELETE FROM product_categories;
@@ -371,3 +372,33 @@ INSERT INTO news_tags (news_id, tag) VALUES
  (3, 'energy'),
  (3, 'korea'),
  (3, 'south korea');
+
+-- Additional tariff rates creating multi-hop trade routes
+
+-- CN -> AU (direct, highest tariff)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, effective_date, expiry_date, preferential_tariff,                         
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
+(25.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW());
+
+-- CN -> MY (choose preferential 5%)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit,
+                         effective_date, expiry_date, preferential_tariff,
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at)
+VALUES
+(5.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW());
+
+-- MY -> AU (choose preferential 2.5%)
+INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit,
+                         effective_date, expiry_date, preferential_tariff,
+                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at)
+VALUES
+(2.50, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ 851713, NOW(), NOW());

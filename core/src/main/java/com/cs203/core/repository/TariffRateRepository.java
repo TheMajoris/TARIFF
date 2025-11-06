@@ -165,4 +165,12 @@ public interface TariffRateRepository extends JpaRepository<TariffRateEntity, Lo
         @Param("importingCountryId") Long importingCountryId,
         @Param("hsCode") Integer hsCode,
         @Param("currentDate") LocalDate currentDate);
+
+
+    @Query("SELECT t FROM TariffRateEntity t WHERE " + 
+              "t.exportingCountry.id = :exportingCountryId AND " +
+              "t.productCategory.categoryCode = :hsCode")
+    List<TariffRateEntity> findAllByExportingCountryIdAndHsCode(
+       @Param("exportingCountryId") Long exportingCountryId, 
+       @Param("hsCode") Integer hsCode);
 }

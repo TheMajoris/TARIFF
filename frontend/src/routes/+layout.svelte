@@ -189,6 +189,7 @@
 					<h3 class="mb-3 text-sm font-semibold text-gray-700">Quick Links</h3>
 					<ul class="space-y-2 text-sm">
 						<li><a href="/" class="link link-hover">Dashboard</a></li>
+						<li><a href="/history" class="link link-hover">Calculation History</a></li>
 						<li><a href="/settings" class="link link-hover">Settings</a></li>
 					</ul>
 				</div>
@@ -264,6 +265,7 @@
 				<ul class="menu w-full px-2">
 					<li class="menu-title"><span>Main</span></li>
 					<li><a href="/" class:active={page.url.pathname === '/'}>Dashboard</a></li>
+					<li><a href="/history" class:active={page.url.pathname === '/history'}>Calculation History</a></li>
 					{#if role == 'ROLE_ADMIN'}
 						<li><a href="/admin" class:active={page.url.pathname === '/admin'}>Admin</a></li>
 					{/if}

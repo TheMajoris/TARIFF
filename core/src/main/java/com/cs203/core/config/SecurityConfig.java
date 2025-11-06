@@ -57,6 +57,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
 
+                // calculation history - allow any authenticated user
+                .requestMatchers("/api/v1/calculation-history/**").authenticated()
+
+                // alternative routes - allow any authenticated user similar to calculation
+                .requestMatchers(HttpMethod.POST, "/api/v1/route/**").authenticated()
+
                 // auth stuff
                 .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
 

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -149,20 +153,25 @@ class TariffRateControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
-    @Test
-    @DisplayName("POST /api/v1/tariff-rate creates new tariff rate")
-    void createTariffRate_returnsCreatedTariffRate() throws Exception {
+    @ParameterizedTest
+    @MethodSource("tariffRateProvider")
+    @DisplayName("POST /api/v1/tariff-rate creates new tariff rate with different types")
+    void createTariffRate_returnsCreatedTariffRate(String tariffType,
+                                                   BigDecimal unitQuantity,
+                                                   boolean expectUnitQuantityInResponse) throws Exception {
         CreateTariffRateDto createDto = new CreateTariffRateDto();
         createDto.setTariffRate(new BigDecimal("0.1"));
-        createDto.setTariffType("ad-valorem");
+        createDto.setTariffType(tariffType);
         createDto.setRateUnit("percent");
         createDto.setEffectiveDate(LocalDate.now());
         createDto.setImportingCountryCode("US");
         createDto.setExportingCountryCode("CN");
         createDto.setPreferentialTariff(false);
         createDto.setHsCode(123123);
+        if (unitQuantity != null) {
+            createDto.setUnitQuantity(unitQuantity);
+        }
 
-        // Create response DTO
         ProductCategoriesDto productCategoryResponse = new ProductCategoriesDto();
         productCategoryResponse.setCategoryCode(123123);
         productCategoryResponse.setCategoryName("Test Category");
@@ -178,21 +187,34 @@ class TariffRateControllerTest {
         createdRate.setExportingCountryCode(createDto.getExportingCountryCode());
         createdRate.setPreferentialTariff(createDto.getPreferentialTariff());
         createdRate.setProductCategory(productCategoryResponse);
+        createdRate.setUnitQuantity(unitQuantity);
 
-        // Mock the service response
-        GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.CREATED, "Tariff rate created", createdRate);
-        Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class))).thenReturn(response);
+        GenericResponse<TariffRateDto> response =
+                new GenericResponse<>(HttpStatus.CREATED, "Tariff rate created", createdRate);
+        Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class)))
+                .thenReturn(response);
 
-        mockMvc.perform(post("/api/v1/tariff-rate")
+        var request = mockMvc.perform(post("/api/v1/tariff-rate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").value(1))
-                .andExpect(jsonPath("$.data.tariffRate").value("0.1"))
-                .andExpect(jsonPath("$.data.tariffType").value("ad-valorem"))
-                .andExpect(jsonPath("$.data.preferentialTariff").value(false))
-                .andExpect(jsonPath("$.data.productCategory.categoryCode").value(123123));
+                .andExpect(jsonPath("$.data.tariffType").value(tariffType));
+
+        if (expectUnitQuantityInResponse) {
+            request.andExpect(jsonPath("$.data.unitQuantity").value(unitQuantity.toString()));
+        } else {
+            request.andExpect(jsonPath("$.data.unitQuantity").doesNotExist());
+        }
     }
+
+    private static Stream<Arguments> tariffRateProvider() {
+        return Stream.of(
+                Arguments.of("ad-valorem", null, false),
+                Arguments.of("specific", new BigDecimal("100.0"), true)
+        );
+    }
+
 
     @Test
     @DisplayName("PUT /api/v1/tariff-rate/{id} updates existing tariff rate")

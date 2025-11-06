@@ -14,6 +14,24 @@
 			autoDismiss={true}
 		/>
 	{/if}
+	
+	{#if saveSuccessMessage}
+		<Alert 
+			type="success" 
+			message={saveSuccessMessage} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
+	
+	{#if saveErrorMessage}
+		<Alert 
+			type="error" 
+			message={saveErrorMessage} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -260,26 +278,6 @@
 				</div>
 			</form>
 
-			<!-- Error Alert -->
-			{#if showErrorAlert && calculationError}
-				<div class="alert alert-error mt-6">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
-					<span>{calculationError}</span>
-				</div>
-			{/if}
-
 			<!-- Calculation Result -->
 			{#if calculationResult && !showErrorAlert}
 				<div class="card bg-base-100 mt-6 p-6 shadow-md">
@@ -307,102 +305,244 @@
 					</div>
 
 					<div class="mb-4 flex justify-between text-sm">
-						<span>Tariff Amount:</span>
+						<span>Tariff Cost:</span>
 						<span class="text-red-600">+ ${calculationResult.tariffCost}</span>
 					</div>
 
-					<div class="border-base-300 flex justify-between border-t pt-3">
-						<span class="font-semibold">Total Cost:</span>
-						<span class="text-primary font-bold">${calculationResult.totalCost}</span>
-					</div>
+				<div class="border-base-300 flex justify-between border-t pt-3">
+					<span class="font-semibold">Total Cost:</span>
+					<span class="text-primary font-bold">${calculationResult.totalCost}</span>
 				</div>
-			{/if}
-		</div>
-
-		<!-- Related News Card -->
-		<div class="card bg-base-100 p-6 shadow-md">
-			<h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
-			<p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
-
-			{#if newsLoading}
-				<div class="flex items-center justify-center py-8">
-					<span class="loading loading-spinner loading-md text-primary"></span>
-					<span class="ml-2 text-sm text-gray-500">Loading latest news...</span>
-				</div>
-			{:else if newsError}
-				<div class="alert alert-warning">
+				
+			<!-- Action Buttons -->
+			<div class="mt-4 flex gap-2">
+				<button 
+					class="btn btn-outline btn-primary btn-sm flex-1"
+					on:click={findOptimizedRoute}
+					disabled={isLoadingRoutes}
+					type="button"
+				>
+					{#if isLoadingRoutes}
+						<span class="loading loading-spinner loading-sm"></span>
+						Finding...
+					{:else}
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+						</svg>
+						Find Optimized Route
+					{/if}
+				</button>
+				<button class="btn btn-primary btn-sm" on:click={openSaveModal} type="button">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 shrink-0 stroke-current"
+						class="h-4 w-4"
 						fill="none"
 						viewBox="0 0 24 24"
+						stroke="currentColor"
 					>
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							stroke-width="2"
-							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-						></path>
+							d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+						/>
 					</svg>
-					<span>{newsError}</span>
-					<button class="btn btn-sm btn-outline" on:click={loadNews}>Retry</button>
-				</div>
-			{:else if news.length === 0}
-				<div class="py-8 text-center">
-					<p class="text-gray-500">No news articles available at the moment.</p>
-					<button class="btn btn-sm btn-outline mt-2" on:click={loadNews}>Refresh</button>
-				</div>
-			{:else}
-				<ul class="space-y-4">
-					{#each displayNews as article}
-						<li
-							class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
-							on:click={() => (selectedArticle = article)}
-						>
-							<h3 class="text-base font-medium">{article.title}</h3>
-							<p class="text-xs text-gray-500">{article.date || 'Date unavailable'}</p>
-							<p class="mt-1 text-sm">{article.summary}</p>
-							{#if article.tags && article.tags.length > 0}
-								<div class="mt-2 flex flex-wrap gap-1">
-									{#each article.tags as tag}
-										<span class="badge badge-outline badge-sm">{tag}</span>
-									{/each}
-								</div>
-							{/if}
-						</li>
-					{/each}
-				</ul>
+					Save
+				</button>
+			</div>
+		</div>
+	{/if}
+</div>
 
-				<!-- Pagination Controls -->
-				{#if news.length > pageSize}
-					<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
-						<div class="text-sm text-gray-500">
-							Showing {(currentPage - 1) * pageSize + 1}-{Math.min(
-								currentPage * pageSize,
-								news.length
-							)} of {news.length} articles
-						</div>
-						<div class="flex gap-2">
-							<button
-								class="btn btn-sm btn-outline"
-								disabled={currentPage === 1}
-								on:click={() => (currentPage = Math.max(1, currentPage - 1))}
-							>
-								Previous
-							</button>
-							<button
-								class="btn btn-sm btn-outline"
-								disabled={currentPage * pageSize >= news.length}
-								on:click={() => (currentPage = currentPage + 1)}
-							>
-								Next
-							</button>
-						</div>
+	<!-- Related News Card -->
+	<div class="card bg-base-100 p-6 shadow-md">
+		<h2 class="mb-1 text-lg font-semibold">Related News & Updates</h2>
+		<p class="mb-4 text-xs text-gray-500">Stay informed about policy changes and trade updates</p>
+
+		{#if newsLoading}
+			<div class="flex items-center justify-center py-8">
+				<span class="loading loading-spinner loading-md text-primary"></span>
+				<span class="ml-2 text-sm text-gray-500">Loading latest news...</span>
+			</div>
+		{:else if newsError}
+			<div class="alert alert-warning">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-6 w-6 shrink-0 stroke-current"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+					></path>
+				</svg>
+				<span>{newsError}</span>
+				<button class="btn btn-sm btn-outline" on:click={loadNews}>Retry</button>
+			</div>
+		{:else if news.length === 0}
+			<div class="py-8 text-center">
+				<p class="text-gray-500">No news articles available at the moment.</p>
+				<button class="btn btn-sm btn-outline mt-2" on:click={loadNews}>Refresh</button>
+			</div>
+		{:else}
+			<ul class="space-y-4">
+				{#each displayNews as article}
+					<li
+						class="border-base-300 hover:text-primary cursor-pointer border-b pb-3"
+						on:click={() => (selectedArticle = article)}
+					>
+						<h3 class="text-base font-medium">{article.title}</h3>
+						<p class="text-xs text-gray-500">{article.date || 'Date unavailable'}</p>
+						<p class="mt-1 text-sm">{article.summary}</p>
+						{#if article.tags && article.tags.length > 0}
+							<div class="mt-2 flex flex-wrap gap-1">
+								{#each article.tags as tag}
+									<span class="badge badge-outline badge-sm">{tag}</span>
+								{/each}
+							</div>
+						{/if}
+					</li>
+				{/each}
+			</ul>
+
+			<!-- Pagination Controls -->
+			{#if news.length > pageSize}
+				<div class="border-base-300 mt-4 flex items-center justify-between border-t pt-4">
+					<div class="text-sm text-gray-500">
+						Showing {(currentPage - 1) * pageSize + 1}-{Math.min(
+							currentPage * pageSize,
+							news.length
+						)} of {news.length} articles
 					</div>
-				{/if}
+					<div class="flex gap-2">
+						<button
+							class="btn btn-sm btn-outline"
+							disabled={currentPage === 1}
+							on:click={() => (currentPage = Math.max(1, currentPage - 1))}
+						>
+							Previous
+						</button>
+						<button
+							class="btn btn-sm btn-outline"
+							disabled={currentPage * pageSize >= news.length}
+							on:click={() => (currentPage = currentPage + 1)}
+						>
+							Next
+						</button>
+					</div>
+				</div>
 			{/if}
+		{/if}
 		</div>
 	</div>
+
+	<!-- Optimized Routes Section -->
+	{#if showAlternativeRoutes && optimizedRoutes && optimizedRoutes.length}
+	<div class="card bg-base-100 mt-6 p-6 shadow-md border-2 border-success">
+		<div class="flex items-center gap-2 mb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+			</svg>
+			<h2 class="text-lg font-semibold">Alternative Routes & Cost Comparison</h2>
+		</div>
+		<p class="mb-4 text-sm text-gray-500">We found {optimizedRoutes.length} optimized {optimizedRoutes.length === 1 ? 'route' : 'routes'} for you</p>
+
+		<div class="grid grid-cols-1 gap-4">
+			{#each optimizedRoutes as route, idx}
+				<div class="card bg-base-100 p-4 shadow border {idx === 0 ? 'border-success' : 'border-base-300'}">
+					<div class="flex items-center justify-between mb-2">
+						<div class="flex items-center gap-2">
+							<h3 class="text-base font-semibold">Route {idx + 1}</h3>
+							{#if idx === 0}
+								<span class="badge badge-success badge-sm">Cheapest</span>
+							{/if}
+						</div>
+						<div class="text-xs text-gray-500">{route.estimatedDays} days</div>
+					</div>
+
+					<!-- Path -->
+					<div class="rounded-lg bg-success/5 p-3 mb-3">
+						<div class="text-xs text-gray-500 mb-1">Trade Route</div>
+						<div class="flex flex-wrap items-center gap-1">
+							{#each route.path as country, i}
+								<span class="font-semibold text-sm">{country}</span>
+								{#if i < route.path.length - 1}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+									</svg>
+								{/if}
+							{/each}
+						</div>
+					</div>
+
+					<!-- Cost Comparison -->
+					<div class="grid grid-cols-2 gap-3 mb-3">
+						<div class="text-center p-3 bg-base-100 rounded-lg">
+							<div class="text-xs text-gray-500">Original Cost</div>
+							<div class="text-lg font-bold text-gray-400 line-through">${calculationResult.totalCost}</div>
+						</div>
+						<div class="text-center p-3 bg-success/10 rounded-lg">
+							<div class="text-xs text-gray-500">Optimized Cost</div>
+							<div class="text-2xl font-bold text-success">${route.totalCost.toFixed(2)}</div>
+						</div>
+					</div>
+
+					{#if route.savingsPercent > 0}
+						<div class="alert alert-success mb-3 py-2 min-h-0">
+							<span class="font-semibold text-sm">You save ${route.savings.toFixed(2)} ({route.savingsPercent}% off)</span>
+						</div>
+					{/if}
+
+					<!-- Toggle Details -->
+					<div>
+						<button 
+							class="btn btn-ghost btn-sm w-full"
+							on:click={() => toggleRouteDetails(idx)}
+							type="button">
+							{#if expandedRouteIndex === idx}
+								Hide Details
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+								</svg>
+							{:else}
+								View Detailed Breakdown
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+								</svg>
+							{/if}
+						</button>
+					</div>
+
+					{#if expandedRouteIndex === idx}
+						<div class="card bg-base-100 mt-3 p-4 shadow">
+							<h4 class="mb-3 text-sm font-semibold">Tariff Breakdown</h4>
+							<div class="space-y-2">
+								{#each route.tariffBreakdown as leg, index}
+									<div class="border border-base-300 rounded p-2">
+										<div class="flex justify-between items-center mb-1">
+											<div class="flex items-center gap-2">
+												<span class="badge badge-sm">{index + 1}</span>
+												<span class="text-sm font-medium">{leg.from} → {leg.to}</span>
+											</div>
+											<span class="text-sm font-bold">${leg.tariffCost.toFixed(2)}</span>
+										</div>
+										<div class="text-xs text-gray-500">Tariff Rate: {leg.tariffRate}%</div>
+									</div>
+								{/each}
+							</div>
+							<div class="alert alert-info mt-3 py-2 min-h-0">
+								<div class="text-xs">This route takes advantage of trade agreements and preferential tariff rates.</div>
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/each}
+		</div>
+	</div>
+	{/if}
 </div>
 
 <!-- Modal -->
@@ -437,8 +577,70 @@
 	</div>
 {/if}
 
+<!-- Save Calculation Modal -->
+{#if showSaveModal}
+	<div class="modal modal-open">
+		<!-- Background which will close the modal -->
+		<button
+			class="modal-backdrop cursor-pointer"
+			on:click={closeSaveModal}>close</button
+		>
+
+		<div class="modal-box">
+			<h3 class="text-lg font-bold">Save Calculation</h3>
+			<p class="py-2 text-sm text-gray-500">
+				Give your calculation a name and optionally add notes for future reference.
+			</p>
+			
+			<form on:submit|preventDefault={performSave}>
+				<div class="form-control mt-4">
+					<label class="label">
+						<span class="label-text">Calculation Name *</span>
+					</label>
+					<input
+						type="text"
+						placeholder="e.g., Laptop Import US-CN"
+						bind:value={saveCalculationName}
+						class="input input-bordered w-full"
+						maxlength="100"
+						required
+					/>
+				</div>
+				
+				<div class="form-control mt-4">
+					<label class="label">
+						<span class="label-text">Notes (Optional)</span>
+					</label>
+					<textarea
+						placeholder="Add any additional notes..."
+						bind:value={saveCalculationNotes}
+						class="textarea textarea-bordered h-24"
+						maxlength="500"
+					></textarea>
+					<label class="label">
+						<span class="label-text-alt">{saveCalculationNotes.length}/500 characters</span>
+					</label>
+				</div>
+				
+				<div class="modal-action">
+					<button type="button" class="btn" on:click={closeSaveModal}>Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled={isSaving}>
+						{#if isSaving}
+							<span class="loading loading-spinner loading-sm"></span>
+							Saving...
+						{:else}
+							Save
+						{/if}
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{/if}
+
 <!-- Calculator Logic-->
 <script>
+	import { saveCalculation } from "$lib/api/calculationHistory.js";
 	import { fetchCountries } from "$lib/api/countries.js";
 	import { fetchNews } from "$lib/api/news.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
@@ -499,11 +701,22 @@
 	let showErrorAlert = false;
 	let isCalculating = false;
 	
+	// Save Calculation State
+	let showSaveModal = false;
+	let saveCalculationName = '';
+	let saveCalculationNotes = '';
+	let isSaving = false;
+	let saveSuccessMessage = '';
+	let saveErrorMessage = '';
+	
 	async function calculateCost() {
 		// Clear previous results and errors
 		calculationResult = null;
 		calculationError = null;
 		showErrorAlert = false;
+		showAlternativeRoutes = false; // Clear optimized routes when recalculating
+		optimizedRoutes = [];
+		expandedRouteIndex = null;
 		isCalculating = true;
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
@@ -525,24 +738,15 @@
 					quantity
 				});
 				
-				console.log('Calculation result:', result);
-				
-				if (result === null) {
-					calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-					showErrorAlert = true;
-				} else {
-					// Check if this is a "no data" case (tariff rate is -1)
-					const tariffRate = parseFloat(result.tariffRate);
-					
-					if (tariffRate === -1) {
-						// No tariff data found in database
-						calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
-						showErrorAlert = true;
-					} else {
-						// Valid tariff data (including 0% tariff)
-						calculationResult = result;
-					}
-				}
+			console.log('Calculation result:', result);
+			
+			if (result === null) {
+				calculationError = "No tariff data found for the specified countries and product. Please check your selection or contact support.";
+				showErrorAlert = true;
+			} else {
+				// Valid tariff data (including 0% tariff)
+				calculationResult = result;
+			}
 			} catch (error) {
 				console.error('Calculation error:', error);
 				calculationError = error.message || "An error occurred while calculating the tariff. Please try again.";
@@ -557,6 +761,164 @@
 	}
 	// End: Tariff Calculation Section 
 
+	// Start: Optimized Route Section
+	let showAlternativeRoutes = false;
+	let isLoadingRoutes = false;
+	let optimizedRoutes = [];
+	let expandedRouteIndex = null;
+
+	async function findOptimizedRoute() {
+		isLoadingRoutes = true;
+		showAlternativeRoutes = false;
+		expandedRouteIndex = null; // Reset details view
+		
+		try {
+			// Simulate API call - replace with actual API later
+			await new Promise(resolve => setTimeout(resolve, 1500));
+			
+			// Get country names for display
+			const importingCountry = countries.find(c => c.id == importTo);
+			const exportingCountry = countries.find(c => c.id == exportFrom);
+			
+			// Mock 1-3 optimized routes
+			const originalCost = parseFloat(calculationResult.totalCost);
+			const candidates = [
+				{
+					path: [exportingCountry.name, "Malaysia", importingCountry.name],
+					totalCost: originalCost * 0.85,
+					estimatedDays: 12,
+					tariffBreakdown: [
+						{ from: exportingCountry.name, to: "Malaysia", tariffCost: originalCost * 0.85 * 0.3, tariffRate: 5.0 },
+						{ from: "Malaysia", to: importingCountry.name, tariffCost: originalCost * 0.85 * 0.2, tariffRate: 3.5 }
+					]
+				},
+				{
+					path: [exportingCountry.name, "Vietnam", importingCountry.name],
+					totalCost: originalCost * 0.88,
+					estimatedDays: 10,
+					tariffBreakdown: [
+						{ from: exportingCountry.name, to: "Vietnam", tariffCost: originalCost * 0.88 * 0.28, tariffRate: 4.2 },
+						{ from: "Vietnam", to: importingCountry.name, tariffCost: originalCost * 0.88 * 0.22, tariffRate: 3.0 }
+					]
+				},
+				{
+					path: [exportingCountry.name, "Thailand", importingCountry.name],
+					totalCost: originalCost * 0.9,
+					estimatedDays: 11,
+					tariffBreakdown: [
+						{ from: exportingCountry.name, to: "Thailand", tariffCost: originalCost * 0.9 * 0.3, tariffRate: 5.1 },
+						{ from: "Thailand", to: importingCountry.name, tariffCost: originalCost * 0.9 * 0.2, tariffRate: 3.4 }
+					]
+				}
+			];
+			// Randomly pick 1-3 options to mimic backend variability
+			const count = Math.floor(Math.random() * 3) + 1;
+			optimizedRoutes = candidates.slice(0, count)
+				.map(r => ({
+					...r,
+					savings: originalCost - r.totalCost,
+					savingsPercent: Math.round(((originalCost - r.totalCost) / originalCost) * 100)
+				}))
+				.sort((a, b) => a.totalCost - b.totalCost); // ensure cheapest first
+			showAlternativeRoutes = true;
+		} catch (error) {
+			console.error('Error finding optimized route:', error);
+			calculationError = 'Failed to find optimized routes. Please try again.';
+			showErrorAlert = true;
+		} finally {
+			isLoadingRoutes = false;
+		}
+	}
+
+	function toggleRouteDetails(index) {
+		expandedRouteIndex = expandedRouteIndex === index ? null : index;
+	}
+	// End: Optimized Route Section
+
+	// Start: Save Calculation Section
+	function openSaveModal() {
+		// Clear previous values
+		saveCalculationName = '';
+		saveCalculationNotes = '';
+		saveSuccessMessage = '';
+		saveErrorMessage = '';
+		showSaveModal = true;
+	}
+	
+	function closeSaveModal() {
+		showSaveModal = false;
+		saveCalculationName = '';
+		saveCalculationNotes = '';
+	}
+	
+	async function performSave() {
+		if (!calculationResult) {
+			saveErrorMessage = 'No calculation result to save';
+			return;
+		}
+		
+		isSaving = true;
+		saveErrorMessage = '';
+		saveSuccessMessage = '';
+		
+		try {
+			// Get country codes from the selected countries
+			const importingCountry = countries.find(c => c.id == importTo);
+			const exportingCountry = countries.find(c => c.id == exportFrom);
+			
+			if (!importingCountry || !exportingCountry) {
+				throw new Error('Country information not found');
+			}
+			
+			// Prepare calculation data according to SaveCalculationRequestDTO
+			const calculationData = {
+				calculationName: saveCalculationName,
+				productValue: parseFloat(goodsValue),
+				currencyCode: 'USD', // Default currency, can be made configurable
+				tariffRate: parseFloat(calculationResult.tariffRate),
+				tariffType: calculationResult.tariffType,
+				calculatedTariffCost: parseFloat(calculationResult.tariffCost),
+				totalCost: parseFloat(calculationResult.totalCost),
+				notes: saveCalculationNotes || null,
+				importingCountryCode: importingCountry.code,
+				exportingCountryCode: exportingCountry.code,
+				productCategoryCode: parseInt(hsCode)
+			};
+			
+			console.log('Saving calculation:', calculationData);
+			
+			const result = await saveCalculation(calculationData);
+			
+			console.log('Save result:', result);
+			
+		// Close modal and show success message
+		closeSaveModal();
+		saveSuccessMessage = 'Calculation saved successfully! View it in your calculation history.';
+		
+		// Scroll to top to show success message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear success message after 5 seconds
+		setTimeout(() => {
+			saveSuccessMessage = '';
+		}, 5000);
+			
+	} catch (error) {
+		console.error('Error saving calculation:', error);
+		saveErrorMessage = error.message || 'Failed to save calculation. Please try again.';
+		
+		// Scroll to top to show error message
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		
+		// Clear error message after 5 seconds
+		setTimeout(() => {
+			saveErrorMessage = '';
+		}, 5000);
+	} finally {
+		isSaving = false;
+	}
+	}
+	// End: Save Calculation Section
 
 	// Start: Related News Section
 	let selectedArticle = null;
