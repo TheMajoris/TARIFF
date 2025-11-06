@@ -1,15 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { registerPage } from './pageload';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/register'); 
-  await page.getByRole('textbox', { name: 'First Name' }).waitFor({ state: 'visible' });
-  await page.getByRole('textbox', { name: 'Last Name' }).waitFor({ state: 'visible' });
-  await page.getByRole('textbox', { name: 'Username' }).waitFor({ state: 'visible' });
-  await page.getByRole('textbox', { name: 'Email' }).waitFor({ state: 'visible' });
-  await page.getByRole('textbox', { name: 'Password', exact: true }).waitFor({ state: 'visible' });
-  await page.getByRole('textbox', { name: 'Confirm Password' }).waitFor({ state: 'visible' });
-  await page.getByRole('button', { name: 'Register' }).waitFor({ state: 'visible' });
-  await page.getByRole('link', { name: '← Back to Login' }).waitFor({ state: 'visible' });
+  await registerPage({ page });
 });
 
 test('register successful', async ({ page }) => {

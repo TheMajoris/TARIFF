@@ -134,17 +134,20 @@
 
 	// Function to validate Tariff
 	function TariffValidation() {
-		if (
-			selectedTariff.tariffRate != null &&
-			selectedTariff.tariffRate >= 0 &&
-			selectedTariff.tariffRate <= 999.9999
-		) {
-			if (selectedTariff.tariffType != '' && selectedTariff.tariffType.length <= 50) {
-				if (selectedTariff.rateUnit.length <= 20) {
-					if (selectedTariff.effectiveDate != null) {
-						if (selectedTariff.importingCountryCode != null) {
-							if (selectedTariff.exportingCountryCode != null) {
-								if (selectedTariff.productCategory != null) {
+		if (selectedTariff.importingCountryCode != '') {
+			if (selectedTariff.exportingCountryCode != '') {
+				if (selectedTariff.importingCountryCode != selectedTariff.exportingCountryCode) {
+					if (selectedTariff.productCategory.categoryCode != '') {
+						if (
+							selectedTariff.tariffType == 'specific' ||
+							selectedTariff.tariffType == 'ad_valorem'
+						) {
+							if (
+								selectedTariff.tariffRate != null &&
+								selectedTariff.tariffRate >= 0 &&
+								selectedTariff.tariffRate <= 999.9999
+							) {
+								if (selectedTariff.rateUnit.length <= 20) {
 									if (
 										(selectedTariff.tariffType == 'specific' &&
 											selectedTariff.unitQuantity != null &&
@@ -156,7 +159,11 @@
 												(selectedTariff.rateUnit == 'kg' || selectedTariff.rateUnit == 'g')) ||
 											selectedTariff.tariffType == 'ad_valorem'
 										) {
-											return true;
+											if (selectedTariff.effectiveDate != '') {
+												return true;
+											} else {
+												error = 'Please select an effective date';
+											}
 										} else {
 											error = 'Please select a unit';
 										}
@@ -164,25 +171,25 @@
 										error = 'Please insert the quantity';
 									}
 								} else {
-								error = 'Please select a product category';
+									error = 'Rate Unit can only be up to 20 characters';
+								}
+							} else {
+								error = 'Tariff Rate can only be from 0 to 999.9999';
 							}
 						} else {
-							error = 'Please select an exporting country';
+							error = 'Tariff Type must not be blank';
 						}
 					} else {
-						error = 'Please select an importing country';
+						error = 'Please select a product category (HSCode)';
 					}
 				} else {
-					error = 'Please select an effective date';
-					}
-				} else {
-					error = 'Rate Unit can only be up to 20 characters';
+					error = 'Importing and Exporting country must not be the same';
 				}
 			} else {
-				error = 'Tariff Type must not be blank and can only be up to 50 characters';
+				error = 'Please select an exporting country';
 			}
 		} else {
-			error = 'Tariff Type can only be from 0 to 999.9999';
+			error = 'Please select an importing country';
 		}
 
 		return false;

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 export default async () => {
-    console.log('🚀 Starting backend Docker container...');
+    console.log('Starting backend Docker container...');
     try {
         // Example using docker-compose
         const __filename = fileURLToPath(import.meta.url);
@@ -22,12 +22,12 @@ export default async () => {
             try {
                 const res = await fetch(BACKEND_URL);
                 if (res.status === 200) {
-                    console.log('✅ Backend is ready!');
+                    console.log('Backend is ready!');
                     return;
                 }
             } catch (error) {
                 // Backend not responding yet
-                console.log('⏳ Waiting for backend to be ready...');
+                console.log('Waiting for backend to be ready...');
             }
 
             // ⏸ Wait 1s before trying again
@@ -35,7 +35,7 @@ export default async () => {
         }
 
     } catch (err) {
-        console.error('❌ Failed to start Docker container', err);
+        console.error('Failed to start Docker container', err);
         process.exit(1);
     }
 };

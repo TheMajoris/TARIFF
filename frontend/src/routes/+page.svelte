@@ -290,7 +290,7 @@
 
 					<div class="mb-2 flex justify-between text-sm">
 						<span>Tariff Type:</span>
-						<span class="font-medium text-blue-600">{calculationResult.tariffType}</span>
+						<span class="font-medium text-blue-600">{calculationResult.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}</span>
 					</div>
 
 					<div class="mb-2 flex justify-between text-sm">

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 export default async () => {
-    console.log('🧹 Stopping backend Docker container...');
+    console.log('Stopping backend Docker container...');
     try {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
@@ -14,6 +14,6 @@ export default async () => {
         });
 
     } catch (err) {
-        console.error('❌ Failed to stop Docker container', err);
+        console.error('Failed to stop Docker container', err);
     }
 };

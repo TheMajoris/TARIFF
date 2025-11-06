@@ -103,7 +103,7 @@
 							<!-- Tariff Type -->
 							<div class="flex justify-between">
 								<span class="text-gray-500">Type:</span>
-								<span class="badge badge-info badge-sm">{calculation.tariffType}</span>
+								<span class="badge badge-info badge-sm">{calculation.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}</span>
 							</div>
 
 							<!-- Tariff Cost -->

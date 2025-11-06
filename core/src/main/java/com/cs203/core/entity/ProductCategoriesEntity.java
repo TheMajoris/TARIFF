@@ -50,6 +50,9 @@ public class ProductCategoriesEntity {
     @OneToMany(mappedBy = "parentHsCode", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NationalTariffLinesEntity> nationalTariffLines = new ArrayList<>();
 
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavedCalculationsEntity> savedCalculations = new ArrayList<>();
+
     // Constructors
     public ProductCategoriesEntity() {
     }
