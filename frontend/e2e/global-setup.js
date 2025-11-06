@@ -9,6 +9,11 @@ export default async () => {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
         const coreDir = path.resolve(__dirname, '../../core');
+        execSync('docker compose down -v', {
+            cwd: coreDir,        // run inside /core directory
+            stdio: 'inherit',    // print Docker logs directly
+        });
+
         execSync('docker compose up --build -d', {
             cwd: coreDir,        // run inside /core directory
             stdio: 'inherit',    // print Docker logs directly
