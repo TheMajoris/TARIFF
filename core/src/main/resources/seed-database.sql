@@ -108,13 +108,6 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
                          importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
 
 -- =====================================================
--- TARIFF RATE DATA (Using Specified HS Codes)
--- =====================================================
-
-INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, effective_date, expiry_date, preferential_tariff,
-                         importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
-
--- =====================================================
 -- CURRENT TARIFFS (2024-2025)
 -- =====================================================
 
