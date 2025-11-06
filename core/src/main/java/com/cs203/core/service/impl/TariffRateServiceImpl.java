@@ -117,15 +117,7 @@ public class TariffRateServiceImpl implements TariffRateService {
 
         // Verify country code exists
         CountryEntity importingCountry = getCountryEntityByCode(dto.getImportingCountryCode());
-        if (importingCountry == null) {
-            return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND,
-                    "Importing Country not found with code: " + dto.getImportingCountryCode(), null);
-        }
         CountryEntity exportingCountry = getCountryEntityByCode(dto.getExportingCountryCode());
-        if (exportingCountry == null) {
-            return new GenericResponse<TariffRateDto>(HttpStatus.NOT_FOUND,
-                    "Exporting Country not found with code: " + dto.getExportingCountryCode(), null);
-        }
 
         // Verify product category exists
         // User has to create new product category separately if tariff needs a new one.
