@@ -92,4 +92,15 @@ jobs:
           JWT_REFRESH_DURATION: 32400
           JWT_EXPIRATION_TIME: 240
           PERPLEXITY_KEY: ${{ secrets.PERPLEXITY_KEY }}
-        run: ./gradlew test
+        run: ./gradlew clean test jacocoTestReport
+
+      - name: Jacoco Coverage Report
+        uses: madrapps/jacoco-report@v1.6.1
+        if: github.event_name == 'pull_request'
+        with:
+          paths: core/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: 🧪 Code Coverage Report
+          update-comment: true
+          min-coverage-overall: 0
+          min-coverage-changed-files: 0
