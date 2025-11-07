@@ -4,8 +4,8 @@ import com.cs203.core.dto.requests.LoginRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;
 import com.cs203.core.entity.UserEntity;
 import com.cs203.core.repository.UserRepository;
-import com.cs203.core.service.impl.AuthServiceImpl;
 import com.cs203.core.utils.JwtUtil;
+import com.nimbusds.jose.jwk.RSAKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,13 +16,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceImplTest {
@@ -61,5 +64,32 @@ public class AuthServiceImplTest {
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         assertTrue(response.success());
         assertNotNull(response.timestamp());
+    }
+
+    @Test
+    void getJwkSet_shouldReturnStringContainingRsaKeyInfo() throws NoSuchAlgorithmException {
+        // Arrange
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
+        KeyPair keyPair = keyGen.generateKeyPair();
+
+        RSAKey rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+                .keyID("mock-key-id")
+                .build();
+
+        when(jwtUtil.getRsaKey()).thenReturn(rsaKey);
+
+        // Act
+        String jwkString = authService.getJwkSet();
+
+        // Assert — not valid JSON, so just check content
+        assertNotNull(jwkString);
+        assertTrue(jwkString.contains("mock-key-id"));
+        assertTrue(jwkString.contains("kty=RSA"));
+        verify(jwtUtil, times(1)).getRsaKey();
+
+        // Optional: sanity check it looks like a map-style string
+        assertTrue(jwkString.startsWith("{"));
+        assertTrue(jwkString.contains("keys=["));
     }
 }
