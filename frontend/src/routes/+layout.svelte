@@ -263,13 +263,11 @@
 
 				<!-- Navigation -->
 				<ul class="menu w-full px-2">
-					<li class="menu-title"><span>Main</span></li>
 					<li><a href="/" class:active={page.url.pathname === '/'}>Dashboard</a></li>
 					<li><a href="/history" class:active={page.url.pathname === '/history'}>Calculation History</a></li>
 					{#if role == 'ROLE_ADMIN'}
-						<li><a href="/admin" class:active={page.url.pathname === '/admin'}>Admin</a></li>
+						<li><a href="/admin" class:active={page.url.pathname === '/admin'}>Tariff Management</a></li>
 					{/if}
-					<li class="menu-title"><span>Settings</span></li>
 					<li><a href="/settings" class:active={page.url.pathname === '/settings'}>Settings</a></li>
 				</ul>
 
