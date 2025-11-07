@@ -310,4 +310,21 @@ class NewsServiceImplTest {
         assertTrue(result.articles().isEmpty());
         verify(newsRepository, times(1)).findNewsArticleEntitiesByTags(tags);
     }
+
+    @Test
+    void scrapeNews_shouldHandleExceptionGracefully() {
+        // Arrange: force chatModel.call() to throw
+        when(chatModel.call(any(Prompt.class)))
+                .thenThrow(new RuntimeException("Simulated failure"));
+
+        // Act & Assert: no exception should propagate
+        assertDoesNotThrow(() -> newsService.scrapeNews());
+
+        // Verify that repository was never called (since exception occurred)
+        verify(newsRepository, never()).saveAll(any());
+
+        // Optionally verify that chatModel.call() was still invoked
+        verify(chatModel, times(1)).call(any(Prompt.class));
+    }
+
 }
