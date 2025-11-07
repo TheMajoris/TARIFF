@@ -18,21 +18,94 @@ TARIFF is an application designed to help international traders navigate current
 ## Tech Stack
 
 ### Frontend
-- **Framework**: SvelteKit
-- **Styling**: TailwindCSS + daisyUI
-- **Language**: TypeScript
-- **Testing**: Vitest (unit), Playwright (E2E)
+- **Framework**: SvelteKit 2.22
+- **Language**: TypeScript 5.0
+- **Styling**: TailwindCSS 4.1 + daisyUI 5.1
+- **Testing**: Vitest 3.2 (unit), Playwright 1.49 (E2E)
+- **Build Tool**: Vite 7.0
+- **Code Quality**: ESLint, Prettier
 
 ### Backend
-- **Framework**: Spring Boot
-- **Language**: Java
-- **Database**: PostgreSQL
-- **Build Tool**: Gradle
-- **Testing**: JUnit
+- **Framework**: Spring Boot 3.5.5
+- **Language**: Java 17
+- **Database**: PostgreSQL 16
+- **ORM**: Spring Data JPA (Hibernate)
+- **Build Tool**: Gradle 8.14
+- **Testing**: JUnit 5, Spring Boot Test
+- **Security**: Spring Security + OAuth2 + JWT (Nimbus JOSE)
+- **API Documentation**: SpringDoc OpenAPI 2.8
+- **Object Mapping**: MapStruct 1.6
+- **AI Integration**: Spring AI 1.0 (OpenAI)
+- **Code Quality**: SonarQube/SonarCloud
+
+### DevOps & Tools
+- **Containerization**: Docker
+- **CI/CD**: GitHub Actions
+- **Code Analysis**: SonarCloud
+- **Issue Tracking**: JIRA
 
 ## Project Structure
 
-*Blank for now as this is subject to change
+```
+TARIFF/
+├── core/                          # Backend (Spring Boot)
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/cs203/core/
+│   │   │   │   ├── controller/    # REST API endpoints
+│   │   │   │   ├── service/       # Business logic
+│   │   │   │   ├── repository/    # Database access layer
+│   │   │   │   ├── model/         # Entity classes
+│   │   │   │   ├── dto/           # Data Transfer Objects
+│   │   │   │   ├── config/        # Configuration classes
+│   │   │   │   └── security/      # Authentication & authorization
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       └── seed-database.sql
+│   │   └── test/
+│   │       ├── java/com/cs203/core/
+│   │       │   ├── controller/    # Controller tests
+│   │       │   ├── service/       # Service tests
+│   │       │   └── repository/    # Repository tests
+│   │       └── resources/
+│   │           └── application-test.properties
+│   ├── build.gradle               # Gradle build configuration
+│   ├── Dockerfile                 # Docker configuration
+│   └── compose.yaml               # Docker Compose setup
+│
+├── frontend/                      # Frontend (SvelteKit)
+│   ├── src/
+│   │   ├── lib/
+│   │   │   ├── components/        # Svelte components
+│   │   │   ├── api/               # API client functions
+│   │   │   ├── stores/            # State management
+│   │   │   └── assets/            # Images, icons, etc.
+│   │   └── routes/                # SvelteKit routes (pages)
+│   │       ├── admin/             # Admin dashboard
+│   │       ├── history/           # Calculation history
+│   │       ├── login/             # Login page
+│   │       ├── register/          # Registration page
+│   │       └── settings/          # User settings
+│   ├── e2e/                       # Playwright E2E tests
+│   ├── static/                    # Static assets
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── playwright.config.ts
+│
+├── docs/                          # Documentation
+│   ├── api.json                   # API specification
+│   ├── api-guide.md               # API usage guide
+│   ├── sonarqube-setup.md         # SonarQube integration guide
+│   └── standups/                  # Team standup notes
+│
+├── .github/
+│   ├── workflows/                 # CI/CD pipelines
+│   │   ├── unit-test.yml          # Backend unit tests
+│   │   └── sonarqube.yml          # Code quality analysis
+│   └── pull_request_template.md   # PR template
+│
+└── README.md                      # README
+```
 
 ## Getting Started
 
@@ -51,7 +124,7 @@ git clone https://github.com/TheMajoris/TARIFF
 cd core
 ```
 
-2. **Setup local instance of DB**
+2. **Start the Backend Spring Boot Application**
 This will build the Spring Boot JAR and start both the backend and PostgreSQL containers.
 ```bash
 docker compose up --build -d
@@ -104,8 +177,6 @@ sudo docker exec -it core-db-1 psql -U admin -d tariff_db
 You guys should see something like this
 <img width="800" height="651" alt="image" src="https://github.com/user-attachments/assets/aa80d9c1-1bbe-4ec6-9a17-ecbd176704db" />
 
-
-
 6. **Tear Down**
 ```bash
 docker compose down -v
@@ -118,9 +189,10 @@ API documentation is available in [docs/api.json](docs/api.json).
 ## Development Workflow
 
 - **Issue Tracking**: Issues are tracked in JIRA
-- **Branch Naming**: Relevant 
+- **Branch Naming**: Relevant to the issue or named after the SCRUM task
 - **Pull Requests**: Use the provided [PR template](.github/pull_request_template.md)
 - **CI/CD**: Automated testing via GitHub Actions
+- **Code Review**: CodeRabbitAI for a first look, then shifted to manual review.
 
 ## Testing
 
