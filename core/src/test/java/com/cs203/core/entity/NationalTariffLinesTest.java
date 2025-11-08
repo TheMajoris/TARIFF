@@ -33,7 +33,9 @@ class NationalTariffLinesTest {
                 "DC motors not exceeding 37.5 W",
                 testCategory,
                 8);
+        tariffLine.setId(1L);
 
+        assertEquals(1L, tariffLine.getId());
         assertEquals(testCountry, tariffLine.getCountry());
         assertEquals("8501.10.10", tariffLine.getTariffLineCode());
         assertEquals("DC motors not exceeding 37.5 W", tariffLine.getDescription());
@@ -65,4 +67,36 @@ class NationalTariffLinesTest {
         assertEquals(testUser, tariffLine.getCreatedBy());
         assertEquals(otherUser, tariffLine.getUpdatedBy());
     }
+
+    @Test
+    @DisplayName("Should set and get all fields via setters")
+    void testSetters() {
+        NationalTariffLinesEntity entity = new NationalTariffLinesEntity();
+
+        CountryEntity country = new CountryEntity();
+        ProductCategoriesEntity parentHsCode = new ProductCategoriesEntity();
+        UserEntity createdBy = new UserEntity();
+        UserEntity updatedBy = new UserEntity();
+
+        // Set fields
+        entity.setId(1L);
+        entity.setCountry(country);
+        entity.setTariffLineCode("TL123");
+        entity.setDescription("Sample Tariff Line");
+        entity.setParentHsCode(parentHsCode);
+        entity.setLevel(2);
+        entity.setCreatedBy(createdBy);
+        entity.setUpdatedBy(updatedBy);
+
+        // Verify getters return what was set
+        assertEquals(1L, entity.getId());
+        assertEquals(country, entity.getCountry());
+        assertEquals("TL123", entity.getTariffLineCode());
+        assertEquals("Sample Tariff Line", entity.getDescription());
+        assertEquals(parentHsCode, entity.getParentHsCode());
+        assertEquals(2, entity.getLevel());
+        assertEquals(createdBy, entity.getCreatedBy());
+        assertEquals(updatedBy, entity.getUpdatedBy());
+    }
+
 }

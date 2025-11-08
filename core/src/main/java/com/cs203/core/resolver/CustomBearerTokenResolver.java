@@ -40,7 +40,7 @@ public class CustomBearerTokenResolver implements BearerTokenResolver {
         return token;
     }
 
-    private boolean requiresAuthentication(String path, String method) {
+    protected boolean requiresAuthentication(String path, String method) {
         if (path.startsWith("/api/v1/product-categories")
                 || path.startsWith("/api/v1/tariff-rate")
                 || path.startsWith("/api/v1/route")
