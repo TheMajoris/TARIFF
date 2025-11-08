@@ -139,7 +139,7 @@ Backend by default will be available at http://localhost:8080
 
 4. **[Optional] Run Tests:**
 ```bash
-bash gradlew test
+bash gradlew clean test jacocoTestReport
 ```
 
 ### **Frontend Setup**
@@ -187,7 +187,7 @@ docker compose down -v
 
 ## API Documentation
 
-API documentation is available in [docs/api.json](docs/api.json).
+API documentation is available on [our dedicated swagger page](http://localhost:8080/swagger-ui.html)
 
 ## Development Workflow
 
@@ -199,6 +199,6 @@ API documentation is available in [docs/api.json](docs/api.json).
 
 ## Testing
 
-- **Backend**: Unit tests with JUnit
+- **Backend**: Unit tests with JUnit; Generated code coverage report by JaCoCo can be found in this file: `core/build/reports/jacoco/test/html/index.html`
 - **Frontend**: Unit tests with Vitest, E2E tests with Playwright
 - **CI**: Automated testing on pull requests
