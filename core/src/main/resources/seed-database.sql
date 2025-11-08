@@ -101,113 +101,406 @@ INSERT INTO national_tariff_lines (country_id, tariff_line_code, description, pa
 ;
 
 -- =====================================================
--- TARIFF RATE DATA (Essential rates only)
+-- TARIFF RATE DATA (30+ Current, 20+ Expired)
 -- =====================================================
 
 INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, effective_date, expiry_date, preferential_tariff,
                          importing_country_id, exporting_country_id, hs_code, created_at, updated_at) VALUES
 
--- Singapore importing from China
-(1.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'SG'), 
- (SELECT country_id FROM country WHERE country_code = 'CN'), 
+-- =====================================================
+-- CURRENT TARIFFS (2024-2025)
+-- =====================================================
+
+-- 1. US importing Smartphones from China (High Rate)
+(54.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 2. US importing Microprocessors from China (Section 301)
+(50.00, 'ad_valorem', NULL, 'percent', '2025-01-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854231, NOW(), NOW()),
+
+-- 3. US importing Laptops from China
+(51.10, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847141, NOW(), NOW()),
+
+-- 4. US importing Desktop Computers from China
+(25.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847149, NOW(), NOW()),
+
+-- 5. US importing LED TVs from China
+(25.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 852872, NOW(), NOW()),
+
+-- 6. US importing LED Components from China
+(50.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854170, NOW(), NOW()),
+
+-- 7. US importing Computer Peripherals from China
+(25.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847160, NOW(), NOW()),
+
+-- 8. US importing Computer Monitors from China
+(25.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 852852, NOW(), NOW()),
+
+-- 9. China importing Microprocessors from US (Retaliatory)
+(32.60, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CN'), (SELECT country_id FROM country WHERE country_code = 'US'), 854231, NOW(), NOW()),
+
+-- 10. China importing Smartphones from US
+(32.60, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CN'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW()),
+
+-- 11. EU importing Laptops from US (Reciprocal)
+(15.00, 'ad_valorem', NULL, 'percent', '2025-07-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'US'), 847141, NOW(), NOW()),
+
+-- 12. EU importing Desktop Computers from US
+(15.00, 'ad_valorem', NULL, 'percent', '2025-07-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'US'), 847149, NOW(), NOW()),
+
+-- 13. US importing Memory Chips from Japan
+(24.00, 'ad_valorem', NULL, 'percent', '2025-08-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'JP'), 854232, NOW(), NOW()),
+
+-- 14. US importing Microprocessors from Japan
+(24.00, 'ad_valorem', NULL, 'percent', '2025-08-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'JP'), 854231, NOW(), NOW()),
+
+-- 15. US importing Smartphones from South Korea
+(25.00, 'ad_valorem', NULL, 'percent', '2025-08-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'KR'), 851713, NOW(), NOW()),
+
+-- 16. US importing Microprocessors from South Korea
+(25.00, 'ad_valorem', NULL, 'percent', '2025-08-01', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'KR'), 854231, NOW(), NOW()),
+
+-- 17. India importing Smartphones from China
+(30.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 18. India importing Memory Chips from China
+(8.50, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854232, NOW(), NOW()),
+
+-- 19. India importing Laptops from China
+(20.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847141, NOW(), NOW()),
+
+-- 20. Singapore importing Smartphones from Malaysia (ASEAN FTA)
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'SG'), (SELECT country_id FROM country WHERE country_code = 'MY'), 851713, NOW(), NOW()),
+
+-- 21. Malaysia importing Microprocessors from Singapore (ASEAN FTA)
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'MY'), (SELECT country_id FROM country WHERE country_code = 'SG'), 854231, NOW(), NOW()),
+
+-- 22. Vietnam importing Smartphones from China
+(3.70, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 23. US importing Smartphones from Vietnam (Exemption)
+(0.00, 'ad_valorem', NULL, 'percent', '2025-04-12', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'VN'), 851713, NOW(), NOW()),
+
+-- 24. US importing Microprocessors from Vietnam
+(0.00, 'ad_valorem', NULL, 'percent', '2025-04-12', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'VN'), 854231, NOW(), NOW()),
+
+-- 25. Japan importing Memory Chips from South Korea
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'JP'), (SELECT country_id FROM country WHERE country_code = 'KR'), 854232, NOW(), NOW()),
+
+-- 26. South Korea importing Microprocessors from Japan
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'KR'), (SELECT country_id FROM country WHERE country_code = 'JP'), 854231, NOW(), NOW()),
+
+-- 27. EU importing LED TVs from China
+(20.00, 'ad_valorem', NULL, 'percent', '2024-07-01', '2026-06-30', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'CN'), 852872, NOW(), NOW()),
+
+-- 28. Germany importing Smartphones from China (MFN)
+(4.80, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 29. Singapore importing Smartphones from US
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW()),
+
+-- 30. Malaysia importing Laptops from China
+(5.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847141, NOW(), NOW()),
+
+-- 31. Thailand importing Smartphones from China (ASEAN-China FTA)
+(0.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'TH'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 32. India importing Memory Chips from Vietnam
+(10.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'VN'), 854232, NOW(), NOW()),
+
+-- 33. US importing Semiconductor Diodes from China
+(50.00, 'ad_valorem', NULL, 'percent', '2024-09-27', '2026-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854110, NOW(), NOW()),
+
+-- =====================================================
+-- SPECIFIC TARIFFS (Per Unit/Weight) - CURRENT
+-- =====================================================
+
+-- 34. Singapore importing Smartphones from China (specific per kg)
+(3.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
  851713, NOW(), NOW()),
 
--- Singapore importing from US
-(5.00, 'ad_valorem', NULL, 'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'SG'), 
- (SELECT country_id FROM country WHERE country_code = 'US'), 
- 854231, NOW(), NOW()),
+-- 35. Singapore importing Laptops from China (specific per unit)
+(25.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
 
--- Malaysia importing from Singapore (FTA)
-(0.00, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', true,
- (SELECT country_id FROM country WHERE country_code = 'MY'), 
- (SELECT country_id FROM country WHERE country_code = 'SG'), 
+-- 36. Malaysia importing Smartphones from Vietnam (specific per kg)
+(2.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
  851713, NOW(), NOW()),
 
--- China importing from US
-(25.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'CN'), 
- (SELECT country_id FROM country WHERE country_code = 'US'), 
- 854231, NOW(), NOW()),
-
--- US importing from China
-(26.40, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'US'), 
- (SELECT country_id FROM country WHERE country_code = 'CN'), 
- 851713, NOW(), NOW()),
-
--- Germany importing from US
-(0.00, 'ad_valorem', NULL,'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'DE'), 
- (SELECT country_id FROM country WHERE country_code = 'US'), 
- 854231, NOW(), NOW()),
-
--- Japan importing from South Korea
-(0.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'JP'), 
- (SELECT country_id FROM country WHERE country_code = 'KR'), 
+-- 37. Thailand importing Memory Chips from China (specific per kg)
+(15.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'TH'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
  854232, NOW(), NOW()),
 
--- India importing from China
-(30.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
+-- 38. India importing Desktop Computers from China (specific per unit)
+(50.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847149, NOW(), NOW()),
+
+-- 39. Indonesia importing LED TVs from China (specific per unit)
+(75.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'ID'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852872, NOW(), NOW()),
+
+-- 40. Philippines importing Laptops from Taiwan (specific per kg)
+(12.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'PH'),
+ (SELECT country_id FROM country WHERE country_code = 'TW'),
+ 847141, NOW(), NOW()),
+
+-- 41. Vietnam importing Microprocessors from South Korea (specific per kg)
+(20.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
+ (SELECT country_id FROM country WHERE country_code = 'KR'),
+ 854231, NOW(), NOW()),
+
+-- 42. Brazil importing Smartphones from China (specific per kg)
+(8.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'BR'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 43. Mexico importing Computer Monitors from China (specific per unit)
+(18.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MX'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852852, NOW(), NOW()),
+
+-- 44. Australia importing LED Components from China (specific per kg)
+(35.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 854170, NOW(), NOW()),
+
+-- 45. Canada importing Semiconductor Diodes from Japan (specific per kg)
+(5.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CA'),
+ (SELECT country_id FROM country WHERE country_code = 'JP'),
+ 854110, NOW(), NOW()),
+
+-- 46. Russia importing Laptops from China (specific per unit)
+(40.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'RU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 47. Hong Kong importing Microprocessors from Taiwan (specific per kg)
+(0.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'HK'),
+ (SELECT country_id FROM country WHERE country_code = 'TW'),
+ 854231, NOW(), NOW()),
+
+-- 48. UK importing Desktop Computers from China (specific per unit)
+(30.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'GB'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847149, NOW(), NOW()),
+
+-- =====================================================
+-- EXPIRED TARIFFS (2023 and earlier)
+-- =====================================================
+
+-- 34. US importing Smartphones from China (Pre-escalation)
+(7.50, 'ad_valorem', NULL, 'percent', '2020-02-14', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 35. US importing Microprocessors from China (Pre-review)
+(25.00, 'ad_valorem', NULL, 'percent', '2019-05-10', '2024-01-01', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854231, NOW(), NOW()),
+
+-- 36. US importing Laptops from China (List 4A rate)
+(7.50, 'ad_valorem', NULL, 'percent', '2020-02-14', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847141, NOW(), NOW()),
+
+-- 37. US importing Desktop Computers from China (Old rate)
+(25.00, 'ad_valorem', NULL, 'percent', '2022-01-01', '2024-09-26', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847149, NOW(), NOW()),
+
+-- 38. US importing LED Components from China (Old rate)
+(25.00, 'ad_valorem', NULL, 'percent', '2018-07-06', '2024-09-26', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854170, NOW(), NOW()),
+
+-- 39. China importing Microprocessors from US (Pre-retaliation)
+(15.00, 'ad_valorem', NULL, 'percent', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CN'), (SELECT country_id FROM country WHERE country_code = 'US'), 854231, NOW(), NOW()),
+
+-- 40. China importing Smartphones from US (Initial rate)
+(10.00, 'ad_valorem', NULL, 'percent', '2018-07-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CN'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW()),
+
+-- 41. EU importing LED TVs from China (Old rate)
+(14.00, 'ad_valorem', NULL, 'percent', '2022-01-01', '2024-06-30', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'CN'), 852872, NOW(), NOW()),
+
+-- 42. Germany importing Smartphones from China (Pre-adjustment)
+(3.50, 'ad_valorem', NULL, 'percent', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 43. US importing Laptops from Japan (Pre-tariff era)
+(0.00, 'ad_valorem', NULL, 'percent', '2020-01-01', '2025-07-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'JP'), 847141, NOW(), NOW()),
+
+-- 44. US importing Memory Chips from Japan (MFN rate)
+(0.00, 'ad_valorem', NULL, 'percent', '2020-01-01', '2025-07-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'JP'), 854232, NOW(), NOW()),
+
+-- 45. US importing Smartphones from South Korea (KORUS FTA)
+(0.00, 'ad_valorem', NULL, 'percent', '2018-01-01', '2025-07-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'KR'), 851713, NOW(), NOW()),
+
+-- 46. US importing Microprocessors from South Korea (Pre-tariff)
+(0.00, 'ad_valorem', NULL, 'percent', '2018-01-01', '2025-07-31', true,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'KR'), 854231, NOW(), NOW()),
+
+-- 47. India importing Smartphones from China (Lower rate)
+(20.00, 'ad_valorem', NULL, 'percent', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 48. India importing Memory Chips from China (Old rate)
+(7.00, 'ad_valorem', NULL, 'percent', '2021-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854232, NOW(), NOW()),
+
+-- 49. Vietnam importing Smartphones from China (Higher rate)
+(5.00, 'ad_valorem', NULL, 'percent', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'), (SELECT country_id FROM country WHERE country_code = 'CN'), 851713, NOW(), NOW()),
+
+-- 50. Malaysia importing Laptops from China (Pre-adjustment)
+(10.00, 'ad_valorem', NULL, 'percent', '2021-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847141, NOW(), NOW()),
+
+-- 51. US importing Computer Peripherals from China (Initial rate)
+(10.00, 'ad_valorem', NULL, 'percent', '2018-03-23', '2024-09-26', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 847160, NOW(), NOW()),
+
+-- 52. US importing Computer Monitors from China (Initial rate)
+(7.50, 'ad_valorem', NULL, 'percent', '2018-03-23', '2024-09-26', false,
+ (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 852852, NOW(), NOW()),
+
+-- 53. China importing Semiconductor Diodes from US
+(2.50, 'ad_valorem', NULL, 'percent', '2018-07-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CN'), (SELECT country_id FROM country WHERE country_code = 'US'), 854110, NOW(), NOW()),
+
+-- 54. EU importing Smartphones from US (Pre-reciprocal rate)
+(4.80, 'ad_valorem', NULL, 'percent', '2020-01-01', '2025-07-26', false,
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW()),
+
+-- =====================================================
+-- SPECIFIC TARIFFS (Per Unit/Weight) - EXPIRED
+-- =====================================================
+
+-- 55. Singapore importing Smartphones from China (expired specific)
+(2.50, 'specific', 1.00, 'kg', '2021-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 56. Malaysia importing Laptops from China (expired specific)
+(8.00, 'specific', 1.00, 'unit', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 57. India importing Smartphones from China (expired specific)
+(5.00, 'specific', 1.00, 'kg', '2019-01-01', '2023-12-31', false,
  (SELECT country_id FROM country WHERE country_code = 'IN'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
  851713, NOW(), NOW()),
 
--- Singapore importing from China
-(3.00, 'specific', 1.00, 'kg', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'SG'),
+-- 58. Thailand importing Memory Chips from China (expired specific)
+(10.00, 'specific', 1.00, 'kg', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'TH'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 854232, NOW(), NOW()),
+
+-- 59. Vietnam importing Laptops from China (expired specific)
+(15.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 60. Indonesia importing Smartphones from China (expired specific)
+(4.00, 'specific', 1.00, 'kg', '2018-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'ID'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
  851713, NOW(), NOW()),
 
--- Singapore importing from US
-(5.00, 'specific', 1.00, 'kg', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'SG'),
- (SELECT country_id FROM country WHERE country_code = 'US'),
- 854231, NOW(), NOW()),
-
--- Malaysia importing from Singapore (FTA - 0 tariff)
-(0.00, 'specific', 1.00, 'kg', '2023-01-01', '2023-12-31', true,
- (SELECT country_id FROM country WHERE country_code = 'MY'),
- (SELECT country_id FROM country WHERE country_code = 'SG'),
- 851713, NOW(), NOW()),
-
--- China importing from US
-(2.50, 'specific', 400.00, 'g', '2023-01-01', '2023-12-31', false,
+-- 61. Philippines importing Desktop Computers from China (expired specific)
+(35.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'PH'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
- (SELECT country_id FROM country WHERE country_code = 'US'),
- 854231, NOW(), NOW()),
+ 847149, NOW(), NOW()),
 
--- US importing from China
-(4.00, 'specific',1.00, 'kg', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'US'),
+-- 62. Brazil importing Laptops from China (expired specific)
+(20.00, 'specific', 1.00, 'kg', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'BR'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
- 851713, NOW(), NOW()),
+ 847141, NOW(), NOW()),
 
--- Germany importing from US
-(0.00, 'specific', 1.00, 'kg', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'DE'),
- (SELECT country_id FROM country WHERE country_code = 'US'),
- 854231, NOW(), NOW()),
+-- 63. Mexico importing LED TVs from China (expired specific)
+(60.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MX'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852872, NOW(), NOW()),
 
--- Japan importing from South Korea
-(1.50, 'specific', 1.00, 'kg', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'JP'),
+-- 64. Australia importing Memory Chips from South Korea (expired specific)
+(8.00, 'specific', 1.00, 'kg', '2018-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
  (SELECT country_id FROM country WHERE country_code = 'KR'),
  854232, NOW(), NOW()),
 
--- India importing from China
-(2.00, 'specific', 400.00, 'g', '2023-01-01', '2023-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'IN'),
+-- 65. Canada importing Laptops from China (expired specific)
+(22.00, 'specific', 1.00, 'unit', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CA'),
  (SELECT country_id FROM country WHERE country_code = 'CN'),
- 851713, NOW(), NOW()),
+ 847141, NOW(), NOW()),
 
--- Australia importing from Singapore
-(20.00, 'ad_valorem',NULL, 'percent', '2024-01-01', '2024-12-31', false,
- (SELECT country_id FROM country WHERE country_code = 'AU'), 
- (SELECT country_id FROM country WHERE country_code = 'SG'), 
+-- 66. UK importing Smartphones from China (expired specific)
+(3.50, 'specific', 1.00, 'kg', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'GB'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
  851713, NOW(), NOW());
+
 
 -- =====================================================
 -- SEED SCRIPT COMPLETION VERIFICATION
