@@ -65,9 +65,12 @@ class CalculationHistoryImplTest {
         validRequestDto = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -105,9 +108,12 @@ class CalculationHistoryImplTest {
         savedEntity.setId(1L);
         savedEntity.setCalculationName("Test Calculation");
         savedEntity.setProductValue(new BigDecimal("1000.00"));
+        savedEntity.setProductQuantity(new BigDecimal("1000.00"));
         savedEntity.setCurrencyCode("USD");
         savedEntity.setTariffRate(new BigDecimal("0.10"));
         savedEntity.setTariffType("ad-valorem");
+        savedEntity.setUnitQuantity(null);
+        savedEntity.setRateUnit(null);
         savedEntity.setCalculatedTariffCost(new BigDecimal("100.00"));
         savedEntity.setTotalCost(new BigDecimal("1100.00"));
         savedEntity.setNotes("Test notes");
@@ -142,9 +148,12 @@ class CalculationHistoryImplTest {
         assertEquals(1L, savedDto.getId());
         assertEquals("Test Calculation", savedDto.getCalculationName());
         assertEquals(new BigDecimal("1000.00"), savedDto.getProductValue());
+        assertEquals(new BigDecimal("1000.00"), savedDto.getProductQuantity());
         assertEquals("USD", savedDto.getCurrencyCode());
         assertEquals(new BigDecimal("0.10"), savedDto.getTariffRate());
         assertEquals("ad-valorem", savedDto.getTariffType());
+        assertEquals(null, savedDto.getUnitQuantity());
+        assertEquals(null, savedDto.getRateUnit());
         assertEquals(new BigDecimal("100.00"), savedDto.getCalculatedTariffCost());
         assertEquals(new BigDecimal("1100.00"), savedDto.getTotalCost());
         assertEquals("Test notes", savedDto.getNotes());
@@ -245,9 +254,12 @@ class CalculationHistoryImplTest {
         entity1.setId(1L);
         entity1.setCalculationName("Calculation 1");
         entity1.setProductValue(new BigDecimal("1000.00"));
+        entity1.setProductQuantity(new BigDecimal("1000.00"));
         entity1.setCurrencyCode("USD");
         entity1.setTariffRate(new BigDecimal("0.10"));
         entity1.setTariffType("ad-valorem");
+        entity1.setUnitQuantity(null);
+        entity1.setRateUnit(null);
         entity1.setCalculatedTariffCost(new BigDecimal("100.00"));
         entity1.setTotalCost(new BigDecimal("1100.00"));
         entity1.setNotes("Notes 1");
@@ -262,9 +274,12 @@ class CalculationHistoryImplTest {
         entity2.setId(2L);
         entity2.setCalculationName("Calculation 2");
         entity2.setProductValue(new BigDecimal("2000.00"));
+        entity2.setProductQuantity(new BigDecimal("2000.00"));
         entity2.setCurrencyCode("EUR");
         entity2.setTariffRate(new BigDecimal("0.15"));
         entity2.setTariffType("specific");
+        entity2.setUnitQuantity(new BigDecimal("1"));
+        entity2.setRateUnit("kg");
         entity2.setCalculatedTariffCost(new BigDecimal("300.00"));
         entity2.setTotalCost(new BigDecimal("2300.00"));
         entity2.setNotes("Notes 2");
@@ -291,9 +306,12 @@ class CalculationHistoryImplTest {
         assertEquals(1L, dto1.getId());
         assertEquals("Calculation 1", dto1.getCalculationName());
         assertEquals(new BigDecimal("1000.00"), dto1.getProductValue());
+        assertEquals(new BigDecimal("1000.00"), dto1.getProductQuantity());
         assertEquals("USD", dto1.getCurrencyCode());
         assertEquals(new BigDecimal("0.10"), dto1.getTariffRate());
         assertEquals("ad-valorem", dto1.getTariffType());
+        assertEquals(null, dto1.getUnitQuantity());
+        assertEquals(null, dto1.getRateUnit());
         assertEquals(new BigDecimal("100.00"), dto1.getCalculatedTariffCost());
         assertEquals(new BigDecimal("1100.00"), dto1.getTotalCost());
         assertEquals("Notes 1", dto1.getNotes());
@@ -306,9 +324,12 @@ class CalculationHistoryImplTest {
         assertEquals(2L, dto2.getId());
         assertEquals("Calculation 2", dto2.getCalculationName());
         assertEquals(new BigDecimal("2000.00"), dto2.getProductValue());
+        assertEquals(new BigDecimal("2000.00"), dto2.getProductQuantity());
         assertEquals("EUR", dto2.getCurrencyCode());
         assertEquals(new BigDecimal("0.15"), dto2.getTariffRate());
         assertEquals("specific", dto2.getTariffType());
+        assertEquals(new BigDecimal("1"), dto2.getUnitQuantity());
+        assertEquals("kg", dto2.getRateUnit());
         assertEquals(new BigDecimal("300.00"), dto2.getCalculatedTariffCost());
         assertEquals(new BigDecimal("2300.00"), dto2.getTotalCost());
         assertEquals("Notes 2", dto2.getNotes());
@@ -345,9 +366,12 @@ class CalculationHistoryImplTest {
         SaveCalculationRequestDTO requestWithNullNotes = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 null, // null notes
@@ -411,9 +435,12 @@ class CalculationHistoryImplTest {
         verify(savedCalculationsRepository).save(argThat(entity -> {
             assertEquals("Test Calculation", entity.getCalculationName());
             assertEquals(new BigDecimal("1000.00"), entity.getProductValue());
+            assertEquals(new BigDecimal("1000.00"), entity.getProductQuantity());
             assertEquals("USD", entity.getCurrencyCode());
             assertEquals(new BigDecimal("0.10"), entity.getTariffRate());
             assertEquals("ad-valorem", entity.getTariffType());
+            assertEquals(null, entity.getUnitQuantity());
+            assertEquals(null, entity.getRateUnit());
             assertEquals(new BigDecimal("100.00"), entity.getCalculatedTariffCost());
             assertEquals(new BigDecimal("1100.00"), entity.getTotalCost());
             assertEquals("Test notes", entity.getNotes());
@@ -448,9 +475,12 @@ class CalculationHistoryImplTest {
         SaveCalculationRequestDTO requestWithPreciseValues = new SaveCalculationRequestDTO(
                 "Precise Calculation",
                 new BigDecimal("1234.5678"),
+                new BigDecimal("1234.5678"),
                 "USD",
                 new BigDecimal("0.1234"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("152.3456"),
                 new BigDecimal("1386.9134"),
                 "Precise notes",
@@ -474,6 +504,7 @@ class CalculationHistoryImplTest {
 
         verify(savedCalculationsRepository).save(argThat(entity -> {
             assertEquals(new BigDecimal("1234.5678"), entity.getProductValue());
+            assertEquals(new BigDecimal("1234.5678"), entity.getProductQuantity());
             assertEquals(new BigDecimal("0.1234"), entity.getTariffRate());
             assertEquals(new BigDecimal("152.3456"), entity.getCalculatedTariffCost());
             assertEquals(new BigDecimal("1386.9134"), entity.getTotalCost());
@@ -492,9 +523,12 @@ class CalculationHistoryImplTest {
         userCalc.setId(1L);
         userCalc.setCalculationName("User 1 Calculation");
         userCalc.setProductValue(new BigDecimal("1000.00"));
+        userCalc.setProductQuantity(new BigDecimal("1000.00"));
         userCalc.setCurrencyCode("USD");
         userCalc.setTariffRate(new BigDecimal("0.10"));
         userCalc.setTariffType("ad-valorem");
+        userCalc.setUnitQuantity(null);
+        userCalc.setRateUnit(null);
         userCalc.setCalculatedTariffCost(new BigDecimal("100.00"));
         userCalc.setTotalCost(new BigDecimal("1100.00"));
         userCalc.setNotes("Test notes");
@@ -502,8 +536,8 @@ class CalculationHistoryImplTest {
         userCalc.setUpdatedAt(LocalDateTime.now());
         userCalc.setUser(testUser); // userId = 1
         userCalc.setImportingCountry(importingCountry);
-        userCalc.setExportingCountry(exportingCountry); 
-        userCalc.setProductCategory(productCategory); 
+        userCalc.setExportingCountry(exportingCountry);
+        userCalc.setProductCategory(productCategory);
 
         when(savedCalculationsRepository.findByUserId(1L))
                 .thenReturn(Arrays.asList(userCalc));

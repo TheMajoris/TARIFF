@@ -122,6 +122,7 @@ test('check Ad Valorem history', async ({ page }) => {
     await expect(page.getByRole('main')).toContainText('851713');
     await expect(page.getByRole('main')).toContainText('MY → AU');
     await expect(page.getByRole('main')).toContainText('USD 100.00');
+    await expect(page.getByRole('main')).toContainText('200');
     await expect(page.getByRole('main')).toContainText('2.50%');
     await expect(page.getByRole('main')).toContainText('Ad Valorem');
     await expect(page.getByRole('main')).toContainText('USD 2.50');
@@ -135,6 +136,7 @@ test('check Specific history', async ({ page }) => {
     await expect(page.getByRole('main')).toContainText('854170');
     await expect(page.getByRole('main')).toContainText('CN → AU');
     await expect(page.getByRole('main')).toContainText('USD 7000.00');
+    await expect(page.getByRole('main')).toContainText('200');
     await expect(page.getByRole('main')).toContainText('$35.00/1.00kg');
     await expect(page.getByRole('main')).toContainText('Specific');
     await expect(page.getByRole('main')).toContainText('USD 7000.00');
@@ -149,6 +151,7 @@ test('check history without notes', async ({ page }) => {
     await expect(page.getByRole('main')).toContainText('851713');
     await expect(page.getByRole('main')).toContainText('CN → SG');
     await expect(page.getByRole('main')).toContainText('USD 100.00');
+    await expect(page.getByRole('main')).toContainText('200');
     await expect(page.getByRole('main')).toContainText('$2.50/1.00kg');
     await expect(page.getByRole('main')).toContainText('Specific');
     await expect(page.getByRole('main')).toContainText('USD 500.00');

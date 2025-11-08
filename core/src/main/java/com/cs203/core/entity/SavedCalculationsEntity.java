@@ -27,6 +27,11 @@ public class SavedCalculationsEntity {
     @DecimalMin(value = "0.01", message = "Product value must be greater than 0")
     private BigDecimal productValue;
 
+    @Column(name = "product_quantity", nullable = false, precision = 12, scale = 2)
+    @NotNull(message = "Product quantity is required")
+    @DecimalMin(value = "1", message = "Product quantity must be greater than 0")
+    private BigDecimal productQuantity;
+
     @Column(name = "currency_code", nullable = false, length = 3)
     @NotBlank(message = "Currency code is required")
     @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
@@ -99,7 +104,8 @@ public class SavedCalculationsEntity {
 
     public SavedCalculationsEntity(String calculationName, UserEntity user, CountryEntity importingCountry,
             CountryEntity exportingCountry, ProductCategoriesEntity productCategory,
-            BigDecimal productValue, String currencyCode, BigDecimal tariffRate, BigDecimal unitQuantity,
+            BigDecimal productValue, BigDecimal productQuantity, String currencyCode, BigDecimal tariffRate,
+            BigDecimal unitQuantity,
             String rateUnit,
             String tariffType, BigDecimal calculatedTariffCost, BigDecimal totalCost,
             String notes) {
@@ -109,6 +115,7 @@ public class SavedCalculationsEntity {
         this.exportingCountry = exportingCountry;
         this.productCategory = productCategory;
         this.productValue = productValue;
+        this.productQuantity = productQuantity;
         this.currencyCode = currencyCode;
         this.tariffRate = tariffRate;
         this.unitQuantity = unitQuantity;
@@ -174,6 +181,14 @@ public class SavedCalculationsEntity {
 
     public void setProductValue(BigDecimal productValue) {
         this.productValue = productValue;
+    }
+
+    public BigDecimal getProductQuantity(){
+        return productQuantity;
+    }
+
+    public void setProductQuantity(BigDecimal productQuantity){
+        this.productQuantity = productQuantity;
     }
 
     public String getCurrencyCode() {
@@ -262,6 +277,7 @@ public class SavedCalculationsEntity {
                 "id=" + id +
                 ", calculationName='" + calculationName + '\'' +
                 ", productValue=" + productValue +
+                ", productQuantity=" + productQuantity +
                 ", currencyCode='" + currencyCode + '\'' +
                 ", tariffRate=" + tariffRate +
                 ", unitQuantity=" + unitQuantity +

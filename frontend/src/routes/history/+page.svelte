@@ -1,11 +1,50 @@
+<script>
+	import { getCalculations } from '$lib/api/calculationHistory.js';
+	import Alert from '$lib/components/Alert.svelte';
+	import { onMount } from 'svelte';
+
+	let calculations = [];
+	let loading = true;
+	let errorMessage = '';
+
+	onMount(async () => {
+		await loadCalculations();
+	});
+
+	async function loadCalculations() {
+		loading = true;
+		errorMessage = '';
+		try {
+			const result = await getCalculations();
+
+			// Handle the GenericResponse structure from backend
+			if (result.data) {
+				calculations = result.data;
+			} else {
+				calculations = [];
+			}
+
+			console.log('Loaded calculations:', calculations);
+		} catch (error) {
+			console.error('Error loading calculations:', error);
+			errorMessage = error.message || 'Failed to load calculations';
+			calculations = [];
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function refreshCalculations() {
+		await loadCalculations();
+	}
+</script>
+
 <div class="space-y-6 p-6">
 	<!-- Page Title -->
 	<div class="flex items-center justify-between">
 		<div>
 			<h1 class="text-primary text-2xl font-semibold">Calculation History</h1>
-			<p class="text-sm text-gray-500">
-				View and manage your saved tariff calculations
-			</p>
+			<p class="text-sm text-gray-500">View and manage your saved tariff calculations</p>
 		</div>
 		<button class="btn btn-primary btn-sm" on:click={refreshCalculations}>
 			<svg
@@ -88,8 +127,15 @@
 							<div class="flex justify-between">
 								<span class="text-gray-500">Product Value:</span>
 								<span class="font-medium"
-									>{calculation.currencyCode} {parseFloat(calculation.productValue).toFixed(2)}</span
+									>{calculation.currencyCode}
+									{parseFloat(calculation.productValue).toFixed(2)}</span
 								>
+							</div>
+
+							<!-- Product Quantity -->
+							<div class="flex justify-between">
+								<span class="text-gray-500">Product Quantity:</span>
+								<span class="font-medium"> {calculation.productQuantity}</span>
 							</div>
 
 							<!-- Tariff Rate -->
@@ -97,26 +143,27 @@
 								<span class="text-gray-500">Tariff Rate:</span>
 								<span class="font-medium text-blue-600"
 									>{calculation.tariffType == 'specific' ? '$' : ''}{parseFloat(
-													calculation.tariffRate
-												).toFixed(2)}{calculation.tariffType == 'specific'
-													? '/' + parseFloat(calculation.unitQuantity).toFixed(2) + calculation.rateUnit
-													: '%'}</span
+										calculation.tariffRate
+									).toFixed(2)}{calculation.tariffType == 'specific'
+										? '/' + parseFloat(calculation.unitQuantity).toFixed(2) + calculation.rateUnit
+										: '%'}</span
 								>
 							</div>
 
 							<!-- Tariff Type -->
 							<div class="flex justify-between">
 								<span class="text-gray-500">Type:</span>
-								<span class="badge badge-info badge-sm">{calculation.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}</span>
+								<span class="badge badge-info badge-sm"
+									>{calculation.tariffType == 'ad_valorem' ? 'Ad Valorem' : 'Specific'}</span
+								>
 							</div>
 
 							<!-- Tariff Cost -->
 							<div class="flex justify-between">
 								<span class="text-gray-500">Tariff Cost:</span>
 								<span class="font-medium text-red-600"
-									>{calculation.currencyCode} {parseFloat(calculation.calculatedTariffCost).toFixed(
-										2
-									)}</span
+									>{calculation.currencyCode}
+									{parseFloat(calculation.calculatedTariffCost).toFixed(2)}</span
 								>
 							</div>
 
@@ -147,45 +194,3 @@
 		</div>
 	{/if}
 </div>
-
-<script>
-	import { getCalculations } from '$lib/api/calculationHistory.js';
-	import Alert from '$lib/components/Alert.svelte';
-	import { onMount } from 'svelte';
-
-	let calculations = [];
-	let loading = true;
-	let errorMessage = '';
-
-	onMount(async () => {
-		await loadCalculations();
-	});
-
-	async function loadCalculations() {
-		loading = true;
-		errorMessage = '';
-		try {
-			const result = await getCalculations();
-			
-			// Handle the GenericResponse structure from backend
-			if (result.data) {
-				calculations = result.data;
-			} else {
-				calculations = [];
-			}
-			
-			console.log('Loaded calculations:', calculations);
-		} catch (error) {
-			console.error('Error loading calculations:', error);
-			errorMessage = error.message || 'Failed to load calculations';
-			calculations = [];
-		} finally {
-			loading = false;
-		}
-	}
-
-	async function refreshCalculations() {
-		await loadCalculations();
-	}
-</script>
-

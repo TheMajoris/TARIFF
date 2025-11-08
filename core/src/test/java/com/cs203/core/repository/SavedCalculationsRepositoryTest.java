@@ -100,9 +100,12 @@ public class SavedCalculationsRepositoryTest {
         calculation1.setExportingCountry(exportingCountry);
         calculation1.setProductCategory(productCategory);
         calculation1.setProductValue(new BigDecimal("1000.00"));
+        calculation1.setProductQuantity(new BigDecimal("1000.00"));
         calculation1.setCurrencyCode("USD");
         calculation1.setTariffRate(new BigDecimal("10.5000"));
         calculation1.setTariffType("Ad Valorem");
+        calculation1.setUnitQuantity(null);
+        calculation1.setRateUnit(null);
         calculation1.setCalculatedTariffCost(new BigDecimal("105.00"));
         calculation1.setTotalCost(new BigDecimal("1105.00"));
         calculation1.setNotes("Test notes for calculation 1");
@@ -115,9 +118,12 @@ public class SavedCalculationsRepositoryTest {
         calculation2.setExportingCountry(exportingCountry);
         calculation2.setProductCategory(productCategory);
         calculation2.setProductValue(new BigDecimal("2000.00"));
+        calculation2.setProductQuantity(new BigDecimal("2000.00"));
         calculation2.setCurrencyCode("USD");
         calculation2.setTariffRate(new BigDecimal("15.0000"));
         calculation2.setTariffType("Specific");
+        calculation2.setUnitQuantity(new BigDecimal("1"));
+        calculation2.setRateUnit("kg");
         calculation2.setCalculatedTariffCost(new BigDecimal("300.00"));
         calculation2.setTotalCost(new BigDecimal("2300.00"));
         calculation2.setNotes("Test notes for calculation 2");
@@ -130,9 +136,12 @@ public class SavedCalculationsRepositoryTest {
         calculation3.setExportingCountry(exportingCountry);
         calculation3.setProductCategory(productCategory);
         calculation3.setProductValue(new BigDecimal("500.00"));
+        calculation3.setProductQuantity(new BigDecimal("500.00"));
         calculation3.setCurrencyCode("SGD");
         calculation3.setTariffRate(new BigDecimal("8.0000"));
         calculation3.setTariffType("Ad Valorem");
+        calculation3.setUnitQuantity(null);
+        calculation3.setRateUnit(null);
         calculation3.setCalculatedTariffCost(new BigDecimal("40.00"));
         calculation3.setTotalCost(new BigDecimal("540.00"));
         calculation3.setNotes("Test notes for calculation 3");

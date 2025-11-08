@@ -21,6 +21,10 @@ public class SavedCalculationDto {
     @DecimalMin(value = "0.01", message = "Product value must be greater than 0")
     private BigDecimal productValue;
 
+    @NotNull(message = "Product quantity is required")
+    @DecimalMin(value = "1", message = "Product quantity must be greater than 0")
+    private BigDecimal productQuantity;
+
     @NotBlank(message = "Currency code is required")
     @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
     private String currencyCode;

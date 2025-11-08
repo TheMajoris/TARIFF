@@ -268,6 +268,7 @@
 			const calculationData = {
 				calculationName: saveCalculationName,
 				productValue: parseFloat(goodsValue),
+				productQuantity: parseFloat(quantity),
 				currencyCode: 'USD', // Default currency, can be made configurable
 				tariffRate: parseFloat(calculationResult.tariffRate),
 				tariffType: calculationResult.tariffType,

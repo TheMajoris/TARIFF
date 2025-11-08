@@ -16,6 +16,9 @@ public record SaveCalculationRequestDTO(
     @NotNull
     @PositiveOrZero
     BigDecimal productValue,
+    @NotNull
+    @PositiveOrZero
+    BigDecimal productQuantity,
     @NotBlank
     String currencyCode,
     @NotNull
