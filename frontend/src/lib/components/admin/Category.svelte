@@ -107,10 +107,10 @@
 					error = 'Category Description can only have up to 500 characters';
 				}
 			} else {
-				error = 'Category Name can only have up to 100 characters';
+				error = 'Category Name can only have up to 100 characters and must not be empty';
 			}
 		} else {
-			error = 'Category Code can only be from 100000 to 999999';
+			error = 'HSCode must be 6 digits long';
 		}
 
 		return false;
@@ -181,7 +181,7 @@
 			} else {
 				result = await deleteSpecificProductCategory(id);
 			}
-
+			
 			success = result.message;
 			fetchProductCategories(sortKey, sortAsc);
 			error = '';
