@@ -31,7 +31,7 @@ TARIFF is an application designed to help international traders navigate current
 - **Database**: PostgreSQL 16
 - **ORM**: Spring Data JPA (Hibernate)
 - **Build Tool**: Gradle 8.14
-- **Testing**: JUnit 5, Spring Boot Test
+- **Testing**: JUnit 5, Spring Boot Test, JaCoCo
 - **Security**: Spring Security + OAuth2 + JWT (Nimbus JOSE)
 - **API Documentation**: SpringDoc OpenAPI 2.8 + SwaggerUI
 - **Object Mapping**: MapStruct 1.6
