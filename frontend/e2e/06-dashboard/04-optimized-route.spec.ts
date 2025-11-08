@@ -30,7 +30,7 @@ test('calculator no optimized route', async ({ page }) => {
     await expect(page.getByRole('main')).toContainText('No alternative routes found. The direct route is already optimal.');
 })
 
-test('calculator success specific calculation', async ({ page }) => {
+test('calculator have optimized route', async ({ page }) => {
 
     await page.getByRole('textbox', { name: 'Enter HS Code (e.g., 850110)' }).click();
     await page.getByRole('textbox', { name: 'Enter HS Code (e.g., 850110)' }).fill('851713');
