@@ -4,11 +4,14 @@ import com.cs203.core.dto.CreateTariffRateDto;
 import com.cs203.core.dto.GenericResponse;
 import com.cs203.core.dto.ProductCategoriesDto;
 import com.cs203.core.dto.TariffRateDto;
+import com.cs203.core.dto.requests.TariffCalculatorRequestDto;
+import com.cs203.core.dto.responses.TariffCalculatorResponseDto;
 import com.cs203.core.entity.TariffRateEntity;
 import com.cs203.core.exception.GlobalExceptionHandler;
 import com.cs203.core.service.TariffRateService;
 import com.cs203.core.strategy.TariffCalculationStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +19,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -35,8 +40,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,6 +62,8 @@ class TariffRateControllerTest {
     private TariffCalculationStrategy adValoremStrategy;
     @Mock
     private TariffCalculationStrategy specificStrategy;
+
+    TariffRateDto rate1 = new TariffRateDto();
 
     @BeforeEach
     void setUp() throws Exception {
@@ -75,6 +85,17 @@ class TariffRateControllerTest {
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .setValidator(validator) // Add validation support
                 .build();
+
+        rate1 = new TariffRateDto();
+        rate1.setId(1L);
+        rate1.setTariffRate(new BigDecimal("0.1"));
+        rate1.setTariffType("ad-valorem");
+        rate1.setUnitQuantity(new BigDecimal("1.0"));
+        rate1.setRateUnit("percent");
+        rate1.setEffectiveDate(LocalDate.now());
+        rate1.setImportingCountryCode("US");
+        rate1.setExportingCountryCode("CN");
+
     }
 
     @Test
@@ -103,7 +124,7 @@ class TariffRateControllerTest {
 
         List<TariffRateDto> rates = Arrays.asList(rate1, rate2);
 
-        Mockito.when(tariffRateService.getAllTariffRates()).thenReturn(rates);
+        when(tariffRateService.getAllTariffRates()).thenReturn(rates);
 
         mockMvc.perform(get("/api/v1/tariff-rate/all")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -128,7 +149,7 @@ class TariffRateControllerTest {
 
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.OK, "Tariff rate found", rate);
 
-        Mockito.when(tariffRateService.getTariffRateById(1L)).thenReturn(response);
+        when(tariffRateService.getTariffRateById(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/tariff-rate/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -144,13 +165,14 @@ class TariffRateControllerTest {
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.NOT_FOUND, "Tariff rate not found",
                 null);
 
-        Mockito.when(tariffRateService.getTariffRateById(999L)).thenReturn(response);
+        when(tariffRateService.getTariffRateById(999L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/tariff-rate/999")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Tariff rate not found"))
                 .andExpect(jsonPath("$.data").isEmpty());
+        verify(tariffRateService, times(1)).getTariffRateById(999L);
     }
 
     @ParameterizedTest
@@ -191,7 +213,7 @@ class TariffRateControllerTest {
 
         GenericResponse<TariffRateDto> response =
                 new GenericResponse<>(HttpStatus.CREATED, "Tariff rate created", createdRate);
-        Mockito.when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class)))
+        when(tariffRateService.createTariffRate(any(CreateTariffRateDto.class)))
                 .thenReturn(response);
 
         var request = mockMvc.perform(post("/api/v1/tariff-rate")
@@ -238,7 +260,7 @@ class TariffRateControllerTest {
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.OK, "Tariff rate updated",
                 updateDto);
 
-        Mockito.when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(1L))).thenReturn(response);
+        when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(1L))).thenReturn(response);
 
         mockMvc.perform(put("/api/v1/tariff-rate/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -270,7 +292,7 @@ class TariffRateControllerTest {
         GenericResponse<TariffRateDto> response = new GenericResponse<>(HttpStatus.NOT_FOUND, "Tariff rate not found",
                 null);
 
-        Mockito.when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(999L))).thenReturn(response);
+        when(tariffRateService.updateTariffRate(any(TariffRateDto.class), eq(999L))).thenReturn(response);
 
         mockMvc.perform(put("/api/v1/tariff-rate/999")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -284,7 +306,7 @@ class TariffRateControllerTest {
     void deleteTariffRate_returnsSuccess() throws Exception {
         GenericResponse<Void> response = new GenericResponse<>(HttpStatus.OK, "Tariff rate deleted", null);
 
-        Mockito.when(tariffRateService.deleteTariffRate(1L)).thenReturn(response);
+        when(tariffRateService.deleteTariffRate(1L)).thenReturn(response);
 
         mockMvc.perform(delete("/api/v1/tariff-rate/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -297,7 +319,7 @@ class TariffRateControllerTest {
     void deleteTariffRate_returnsNotFound_whenTariffRateDoesNotExist() throws Exception {
         GenericResponse<Void> response = new GenericResponse<>(HttpStatus.NOT_FOUND, "Tariff rate not found", null);
 
-        Mockito.when(tariffRateService.deleteTariffRate(999L)).thenReturn(response);
+        when(tariffRateService.deleteTariffRate(999L)).thenReturn(response);
 
         mockMvc.perform(delete("/api/v1/tariff-rate/999")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -315,19 +337,19 @@ class TariffRateControllerTest {
         mockEntity.setTariffType("ad valorem");
 
         // Mock getLowestActiveTariff to return the entity
-        Mockito.when(tariffRateService.getLowestActiveTariff(
-                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        when(tariffRateService.getLowestActiveTariff(
+                eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
                 .thenReturn(Optional.of(mockEntity));
 
         // Mock getFinalPrice
-        Mockito.when(tariffRateService.getFinalPrice(
-                        eq(1L), eq(2L), eq(123),
-                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
+        when(tariffRateService.getFinalPrice(
+                eq(1L), eq(2L), eq(123),
+                eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("110.00"));
 
         // Mock getTariffCost
-        Mockito.when(tariffRateService.getTariffCost(
-                        eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
+        when(tariffRateService.getTariffCost(
+                eq(new BigDecimal("110.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(new BigDecimal("10.00"));
 
         String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
@@ -349,17 +371,17 @@ class TariffRateControllerTest {
         mockEntity.setTariffRate(BigDecimal.ZERO);
         mockEntity.setTariffType("ad valorem");
 
-        Mockito.when(tariffRateService.getLowestActiveTariff(
-                        eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
+        when(tariffRateService.getLowestActiveTariff(
+                eq(1L), eq(2L), eq(123), eq(new BigDecimal("100.00")), eq(date)))
                 .thenReturn(Optional.of(mockEntity));
 
-        Mockito.when(tariffRateService.getFinalPrice(
-                        eq(1L), eq(2L), eq(123),
-                        eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
+        when(tariffRateService.getFinalPrice(
+                eq(1L), eq(2L), eq(123),
+                eq(new BigDecimal("100.00")), eq(new BigDecimal("1.0")), eq(date)))
                 .thenReturn(new BigDecimal("100.00"));
 
-        Mockito.when(tariffRateService.getTariffCost(
-                        eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
+        when(tariffRateService.getTariffCost(
+                eq(new BigDecimal("100.00")), eq(new BigDecimal("100.00"))))
                 .thenReturn(BigDecimal.ZERO);
 
         String requestJson = "{\"importingCountryId\":1,\"exportingCountryId\":2,\"hsCode\":123,\"initialPrice\":100.00,\"quantity\":1.0,\"date\":\"2025-01-01\"}";
@@ -448,4 +470,131 @@ class TariffRateControllerTest {
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.message").value("Data may be invalid. Please check your inputs."));
     }
+
+
+    @Test
+    void getAllTariffRates_shouldReturnAllRates() {
+        List<TariffRateDto> dtoList = List.of(rate1);
+        when(tariffRateService.getAllTariffRates()).thenReturn(dtoList);
+
+        ResponseEntity<List<TariffRateDto>> response = controller.getAllTariffRates();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(dtoList, response.getBody());
+        verify(tariffRateService).getAllTariffRates();
+    }
+
+    @Test
+    void getTariffRates_shouldReturnBadRequest_forInvalidPage() {
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(-1, 10, "id", "ascending");
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals("Invalid page number", response.getBody().getMessage());
+    }
+
+    @Test
+    void getTariffRates_shouldReturnBadRequest_forInvalidSize() {
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(0, 0, "id", "ascending");
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals("Invalid page size", response.getBody().getMessage());
+    }
+
+    @Test
+    void getTariffRates_shouldMapSortBy_importingCountryCode() {
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("importingCountry.countryName").ascending());
+        Page<TariffRateDto> page = new PageImpl<>(List.of(rate1));
+
+        when(tariffRateService.getTariffRates(pageable)).thenReturn(page);
+
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(0, 1, "importingCountryCode", "ascending");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals(page, response.getBody().getData());
+    }
+
+    @Test
+    void getTariffRates_shouldMapSortBy_exportingCountryCode() {
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("exportingCountry.countryName").ascending());
+        Page<TariffRateDto> page = new PageImpl<>(List.of(rate1));
+
+        when(tariffRateService.getTariffRates(pageable)).thenReturn(page);
+
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(0, 1, "exportingCountryCode", "ascending");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals(page, response.getBody().getData());
+    }
+
+    @Test
+    void getTariffRates_shouldSortDescending() {
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("id").descending());
+        Page<TariffRateDto> page = new PageImpl<>(List.of(rate1));
+
+        when(tariffRateService.getTariffRates(pageable)).thenReturn(page);
+
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(0, 1, "id", "descending");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals(page, response.getBody().getData());
+    }
+
+    @Test
+    void getTariffRates_shouldReturnBadRequest_forInvalidSortDirection() {
+        ResponseEntity<GenericResponse<Page<TariffRateDto>>> response =
+                controller.getTariffRates(0, 1, "id", "invalid");
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        assertEquals("Invalid sort direction", response.getBody().getMessage());
+    }
+
+    @Test
+    void getTariffCalculation_shouldReturn404_whenNoTariffFound() {
+        // Arrange
+        TariffCalculatorRequestDto requestDto = new TariffCalculatorRequestDto(
+                1L,
+                2L,
+                101010,
+                BigDecimal.TEN,
+                BigDecimal.TEN,
+                LocalDate.now()
+        );
+
+        when(tariffRateService.getLowestActiveTariff(
+                requestDto.importingCountryId(),
+                requestDto.exportingCountryId(),
+                requestDto.hsCode(),
+                requestDto.initialPrice(),
+                requestDto.date()))
+                .thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<TariffCalculatorResponseDto> response =
+                controller.getTariffCalculation(requestDto);
+
+        // Assert
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        assertNull(response.getBody());
+
+        // ✅ Verify service was called
+        verify(tariffRateService, times(1))
+                .getLowestActiveTariff(
+                        requestDto.importingCountryId(),
+                        requestDto.exportingCountryId(),
+                        requestDto.hsCode(),
+                        requestDto.initialPrice(),
+                        requestDto.date());
+    }
+
 }
