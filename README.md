@@ -33,7 +33,7 @@ TARIFF is an application designed to help international traders navigate current
 - **Build Tool**: Gradle 8.14
 - **Testing**: JUnit 5, Spring Boot Test
 - **Security**: Spring Security + OAuth2 + JWT (Nimbus JOSE)
-- **API Documentation**: SpringDoc OpenAPI 2.8
+- **API Documentation**: SpringDoc OpenAPI 2.8 + SwaggerUI
 - **Object Mapping**: MapStruct 1.6
 - **AI Integration**: Spring AI 1.0 (OpenAI)
 - **Code Quality**: SonarQube/SonarCloud
@@ -43,6 +43,7 @@ TARIFF is an application designed to help international traders navigate current
 - **CI/CD**: GitHub Actions
 - **Code Analysis**: SonarCloud
 - **Issue Tracking**: JIRA
+- **PR Reviews**: CodeRabbit
 
 ## Project Structure
 
