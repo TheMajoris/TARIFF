@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
 	globalSetup: './e2e/global-setup.js',
 	globalTeardown: './e2e/global-teardown.js',
+	reporter: [['html', { open: 'never', outputFolder: 'test-results/playwright-e2e-report' }]],
 	workers: 1,
 	webServer: {
 		command: 'npm run build && npm run preview',

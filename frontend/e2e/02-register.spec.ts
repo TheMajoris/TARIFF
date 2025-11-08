@@ -35,7 +35,6 @@ test('register invalid email', async ({ page }) => {
   await page.getByRole('textbox', { name: 'First Name' }).fill('test');
   await page.getByRole('textbox', { name: 'Last Name' }).click();
   await page.getByRole('textbox', { name: 'Last Name' }).fill('test2');
-  await page.getByRole('textbox', { name: 'Last Name' }).fill('test3');
   await page.getByRole('textbox', { name: 'Username' }).click();
   await page.getByRole('textbox', { name: 'Username' }).fill('test3');
   await page.getByRole('textbox', { name: 'Email' }).click();

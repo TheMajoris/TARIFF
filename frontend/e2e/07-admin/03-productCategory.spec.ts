@@ -173,7 +173,7 @@ test('admin product categories pagination', async ({ page }) => {
     `);
 })
 
-test('admin tariff sorting', async ({ page }) => {
+test('admin product category sorting', async ({ page }) => {
 
     await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - button "Tariffs"

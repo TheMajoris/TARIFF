@@ -6,5 +6,5 @@ test('sidebar check that admin is not there', async ({ page }) => {
     await loginUser({ page });
 
     await navBar({ page });
-    await expect(page.getByRole('link', { name: 'Admin' })).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Admin' })).not.toBeVisible();
 })
