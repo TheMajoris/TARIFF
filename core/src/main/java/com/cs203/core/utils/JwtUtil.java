@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
   @Value("${jwt.access.duration}")
-  private long expirationTime;
+  protected long expirationTime;
 
   @Value("${jwt.issuer}")
-  private String issuer;
+  protected String issuer;
 
   private final RSAKey rsaKey;
 
