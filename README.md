@@ -157,7 +157,7 @@ npx playwright install
 3. **Start development server:**
 ```bash
 npm run dev -- --open
-```
+``` 
 
 4. **Run Tests:**
 ```bash
@@ -200,5 +200,5 @@ API documentation is available on [our dedicated swagger page](http://localhost:
 ## Testing
 
 - **Backend**: Unit tests with JUnit; Generated code coverage report by JaCoCo can be found in this file: `core/build/reports/jacoco/test/html/index.html`
-- **Frontend**: Unit tests with Vitest, E2E tests with Playwright
+- **Frontend**: Unit tests with Vitest, E2E tests with Playwright can be found in this file: `frontend/test-results/playwright-e2e-report/index.html`
 - **CI**: Automated testing on pull requests
