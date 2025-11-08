@@ -8,9 +8,11 @@ TARIFF is an application designed to help international traders navigate current
 
 - **User Authentication**: Secure login system for users and admins
 - **Tariff Calculation**: Calculate the costs incurred for different products across countries
+- **Tariff Calculation History**: Save your calculations for future reference
 - **Trade Route Optimization**: Find the most cost-effective shipping routes to minimize expenses incurred
 - **Real-time Updates**: Live tariff and trade policy news
-- **Admin Dashboard**: Admin interface for tariff rule management
+- **Admin Dashboard**: Admin interface for tariff rule and product category management
+- **Settings**: Change the theme of the website from light to dark mode based on user's preference
 - **Modern UI**: Built with Svelte, TailwindCSS, and daisyUI for responsive design
 - **Robust Backend**: Scalable Spring Boot REST API
 - **Secure Database**: PostgreSQL database with proper data modeling
