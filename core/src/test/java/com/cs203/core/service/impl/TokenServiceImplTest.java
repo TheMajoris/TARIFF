@@ -5,7 +5,6 @@ import com.cs203.core.entity.RefreshToken;
 import com.cs203.core.entity.UserEntity;
 import com.cs203.core.repository.TokenRepository;
 import com.cs203.core.repository.UserRepository;
-import com.cs203.core.service.impl.TokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +19,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TokenServiceImplTest {
@@ -82,6 +80,43 @@ public class TokenServiceImplTest {
         // Assert
         assertTrue(response.success());
         verify(tokenRepository).save(any(RefreshToken.class));
+    }
+
+    @Test
+    void validateRefreshToken_shouldReturnTokenWhenValid() {
+        // Arrange
+        UUID tokenId = UUID.randomUUID();
+        RefreshToken token = new RefreshToken();
+        token.setToken(tokenId);
+        token.setExpiresAt(OffsetDateTime.now().plusDays(1));
+
+        when(tokenRepository.findByTokenAndExpiresAtAfter(eq(tokenId), any(OffsetDateTime.class)))
+                .thenReturn(Optional.of(token));
+
+        // Act
+        RefreshToken result = tokenService.validateRefreshToken(tokenId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(tokenId, result.getToken());
+        verify(tokenRepository, times(1))
+                .findByTokenAndExpiresAtAfter(eq(tokenId), any(OffsetDateTime.class));
+    }
+
+    @Test
+    void validateRefreshToken_shouldReturnNullWhenInvalid() {
+        // Arrange
+        UUID tokenId = UUID.randomUUID();
+        when(tokenRepository.findByTokenAndExpiresAtAfter(eq(tokenId), any(OffsetDateTime.class)))
+                .thenReturn(Optional.empty());
+
+        // Act
+        RefreshToken result = tokenService.validateRefreshToken(tokenId);
+
+        // Assert
+        assertNull(result);
+        verify(tokenRepository, times(1))
+                .findByTokenAndExpiresAtAfter(eq(tokenId), any(OffsetDateTime.class));
     }
 
 }

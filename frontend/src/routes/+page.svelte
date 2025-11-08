@@ -32,6 +32,15 @@
 			autoDismiss={true}
 		/>
 	{/if}
+	
+	{#if routeInfoMessage}
+		<Alert 
+			type="info" 
+			message={routeInfoMessage} 
+			show={true}
+			autoDismiss={true}
+		/>
+	{/if}
 
 	<!-- Two-column layout -->
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -460,7 +469,7 @@
 								<span class="badge badge-success badge-sm">Cheapest</span>
 							{/if}
 						</div>
-						<div class="text-xs text-gray-500">{route.estimatedDays} days</div>
+					<!-- Removed estimated days since backend does not provide it -->
 					</div>
 
 					<!-- Path -->
@@ -643,6 +652,7 @@
 	import { saveCalculation } from "$lib/api/calculationHistory.js";
 	import { fetchCountries } from "$lib/api/countries.js";
 	import { fetchNews } from "$lib/api/news.js";
+	import { getAlternativeRoutes } from "$lib/api/routes.js";
 	import { calculateTariffCost } from "$lib/api/tariff.js";
 	import Alert from "$lib/components/Alert.svelte";
 	import { onMount } from "svelte";
@@ -717,6 +727,7 @@
 		showAlternativeRoutes = false; // Clear optimized routes when recalculating
 		optimizedRoutes = [];
 		expandedRouteIndex = null;
+		routeInfoMessage = ''; // Clear route info message
 		isCalculating = true;
 		
 		if (hsCode && exportFrom && importTo && calculationDate && goodsValue && quantity) {
@@ -766,64 +777,81 @@
 	let isLoadingRoutes = false;
 	let optimizedRoutes = [];
 	let expandedRouteIndex = null;
+	let routeInfoMessage = '';
 
 	async function findOptimizedRoute() {
 		isLoadingRoutes = true;
 		showAlternativeRoutes = false;
 		expandedRouteIndex = null; // Reset details view
-		
+		routeInfoMessage = ''; // Clear previous info message
+
 		try {
-			// Simulate API call - replace with actual API later
-			await new Promise(resolve => setTimeout(resolve, 1500));
-			
-			// Get country names for display
+			// Ensure prerequisites
+			if (!calculationResult) {
+				throw new Error('Please calculate the base tariff first.');
+			}
 			const importingCountry = countries.find(c => c.id == importTo);
 			const exportingCountry = countries.find(c => c.id == exportFrom);
-			
-			// Mock 1-3 optimized routes
+			if (!importingCountry || !exportingCountry) {
+				throw new Error('Country information not found');
+			}
+
+			const apiResponse = await getAlternativeRoutes({
+				exportingCountryCode: exportingCountry.code,
+				importingCountryCode: importingCountry.code,
+				hsCode: hsCode,
+				initialPrice: goodsValue,
+				quantity: quantity,
+				date: calculationDate
+			});
+
 			const originalCost = parseFloat(calculationResult.totalCost);
-			const candidates = [
-				{
-					path: [exportingCountry.name, "Malaysia", importingCountry.name],
-					totalCost: originalCost * 0.85,
-					estimatedDays: 12,
-					tariffBreakdown: [
-						{ from: exportingCountry.name, to: "Malaysia", tariffCost: originalCost * 0.85 * 0.3, tariffRate: 5.0 },
-						{ from: "Malaysia", to: importingCountry.name, tariffCost: originalCost * 0.85 * 0.2, tariffRate: 3.5 }
-					]
-				},
-				{
-					path: [exportingCountry.name, "Vietnam", importingCountry.name],
-					totalCost: originalCost * 0.88,
-					estimatedDays: 10,
-					tariffBreakdown: [
-						{ from: exportingCountry.name, to: "Vietnam", tariffCost: originalCost * 0.88 * 0.28, tariffRate: 4.2 },
-						{ from: "Vietnam", to: importingCountry.name, tariffCost: originalCost * 0.88 * 0.22, tariffRate: 3.0 }
-					]
-				},
-				{
-					path: [exportingCountry.name, "Thailand", importingCountry.name],
-					totalCost: originalCost * 0.9,
-					estimatedDays: 11,
-					tariffBreakdown: [
-						{ from: exportingCountry.name, to: "Thailand", tariffCost: originalCost * 0.9 * 0.3, tariffRate: 5.1 },
-						{ from: "Thailand", to: importingCountry.name, tariffCost: originalCost * 0.9 * 0.2, tariffRate: 3.4 }
-					]
+			const routes = /** @type {any[]} */(Array.isArray(apiResponse?.data) ? apiResponse.data : []);
+
+			// Check if no routes found
+			if (routes.length === 0) {
+				routeInfoMessage = 'No alternative routes found. The direct route is already optimal.';
+				showAlternativeRoutes = false;
+				// Scroll to top to surface the flash message
+				if (typeof window !== 'undefined') {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 				}
-			];
-			// Randomly pick 1-3 options to mimic backend variability
-			const count = Math.floor(Math.random() * 3) + 1;
-			optimizedRoutes = candidates.slice(0, count)
-				.map(r => ({
-					...r,
-					savings: originalCost - r.totalCost,
-					savingsPercent: Math.round(((originalCost - r.totalCost) / originalCost) * 100)
-				}))
-				.sort((a, b) => a.totalCost - b.totalCost); // ensure cheapest first
+				return;
+			}
+
+			// Map backend response to UI model
+			optimizedRoutes = routes.map((route) => {
+				const pathCodes = (route.routes || []).map((r) => [r.sourceCountryCode, r.destinationCountryCode]).flat();
+				// dedupe sequential duplicates without introducing implicit any types
+				const codes = [];
+				for (let i = 0; i < pathCodes.length; i++) {
+					if (i === 0 || pathCodes[i] !== pathCodes[i - 1]) codes.push(pathCodes[i]);
+				}
+				const pathNames = codes.map(code => countries.find(c => c.code === code)?.name || code);
+
+				const tariffBreakdown = (route.routes || []).map((r) => ({
+					from: countries.find(c => c.code === r.sourceCountryCode)?.name || r.sourceCountryCode,
+					to: countries.find(c => c.code === r.destinationCountryCode)?.name || r.destinationCountryCode,
+					tariffCost: parseFloat(String(r.cost)),
+					tariffRate: r.tariffRate?.tariffRate ?? null
+				}));
+
+				const baseValue = parseFloat(String(goodsValue || '0'));
+				const routeCost = route.totalCost ?? route.tariffTotalCost ?? 0;
+				const totalCost = parseFloat(String(routeCost)) || (Number(routeCost) + baseValue);
+				return {
+					path: pathNames,
+					totalCost,
+					tariffBreakdown,
+					savings: originalCost - totalCost,
+					savingsPercent: Math.round(((originalCost - totalCost) / originalCost) * 100)
+				};
+			}).sort((a,b) => a.totalCost - b.totalCost);
+
 			showAlternativeRoutes = true;
 		} catch (error) {
 			console.error('Error finding optimized route:', error);
-			calculationError = 'Failed to find optimized routes. Please try again.';
+			calculationError = (error && /** @type {any} */(error).message) ? /** @type {any} */(error).message : 'Failed to find optimized routes. Please try again.';
 			showErrorAlert = true;
 		} finally {
 			isLoadingRoutes = false;
@@ -928,7 +956,7 @@
 	
 	// Pagination state
 	let currentPage = 1;
-	let pageSize = 2; // Changed to 2 for testing
+	let pageSize = 3;
 	let displayNews = [];
 	
 	// Calculate displayed news based on pagination
