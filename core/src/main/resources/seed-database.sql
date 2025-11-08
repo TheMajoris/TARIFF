@@ -244,6 +244,100 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
  (SELECT country_id FROM country WHERE country_code = 'US'), (SELECT country_id FROM country WHERE country_code = 'CN'), 854110, NOW(), NOW()),
 
 -- =====================================================
+-- SPECIFIC TARIFFS (Per Unit/Weight) - CURRENT
+-- =====================================================
+
+-- 34. Singapore importing Smartphones from China (specific per kg)
+(3.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 35. Singapore importing Laptops from China (specific per unit)
+(25.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 36. Malaysia importing Smartphones from Vietnam (specific per kg)
+(2.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
+ 851713, NOW(), NOW()),
+
+-- 37. Thailand importing Memory Chips from China (specific per kg)
+(15.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'TH'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 854232, NOW(), NOW()),
+
+-- 38. India importing Desktop Computers from China (specific per unit)
+(50.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847149, NOW(), NOW()),
+
+-- 39. Indonesia importing LED TVs from China (specific per unit)
+(75.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'ID'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852872, NOW(), NOW()),
+
+-- 40. Philippines importing Laptops from Taiwan (specific per kg)
+(12.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'PH'),
+ (SELECT country_id FROM country WHERE country_code = 'TW'),
+ 847141, NOW(), NOW()),
+
+-- 41. Vietnam importing Microprocessors from South Korea (specific per kg)
+(20.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
+ (SELECT country_id FROM country WHERE country_code = 'KR'),
+ 854231, NOW(), NOW()),
+
+-- 42. Brazil importing Smartphones from China (specific per kg)
+(8.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'BR'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 43. Mexico importing Computer Monitors from China (specific per unit)
+(18.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MX'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852852, NOW(), NOW()),
+
+-- 44. Australia importing LED Components from China (specific per kg)
+(35.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 854170, NOW(), NOW()),
+
+-- 45. Canada importing Semiconductor Diodes from Japan (specific per kg)
+(5.50, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CA'),
+ (SELECT country_id FROM country WHERE country_code = 'JP'),
+ 854110, NOW(), NOW()),
+
+-- 46. Russia importing Laptops from China (specific per unit)
+(40.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'RU'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 47. Hong Kong importing Microprocessors from Taiwan (specific per kg)
+(0.00, 'specific', 1.00, 'kg', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'HK'),
+ (SELECT country_id FROM country WHERE country_code = 'TW'),
+ 854231, NOW(), NOW()),
+
+-- 48. UK importing Desktop Computers from China (specific per unit)
+(30.00, 'specific', 1.00, 'unit', '2024-01-01', '2025-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'GB'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847149, NOW(), NOW()),
+
+-- =====================================================
 -- EXPIRED TARIFFS (2023 and earlier)
 -- =====================================================
 
@@ -329,7 +423,83 @@ INSERT INTO tariff_rates (tariff_rate, tariff_type, unit_quantity, rate_unit, ef
 
 -- 54. EU importing Smartphones from US (Pre-reciprocal rate)
 (4.80, 'ad_valorem', NULL, 'percent', '2020-01-01', '2025-07-26', false,
- (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW());
+ (SELECT country_id FROM country WHERE country_code = 'DE'), (SELECT country_id FROM country WHERE country_code = 'US'), 851713, NOW(), NOW()),
+
+-- =====================================================
+-- SPECIFIC TARIFFS (Per Unit/Weight) - EXPIRED
+-- =====================================================
+
+-- 55. Singapore importing Smartphones from China (expired specific)
+(2.50, 'specific', 1.00, 'kg', '2021-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'SG'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 56. Malaysia importing Laptops from China (expired specific)
+(8.00, 'specific', 1.00, 'unit', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MY'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 57. India importing Smartphones from China (expired specific)
+(5.00, 'specific', 1.00, 'kg', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'IN'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 58. Thailand importing Memory Chips from China (expired specific)
+(10.00, 'specific', 1.00, 'kg', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'TH'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 854232, NOW(), NOW()),
+
+-- 59. Vietnam importing Laptops from China (expired specific)
+(15.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'VN'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 60. Indonesia importing Smartphones from China (expired specific)
+(4.00, 'specific', 1.00, 'kg', '2018-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'ID'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW()),
+
+-- 61. Philippines importing Desktop Computers from China (expired specific)
+(35.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'PH'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847149, NOW(), NOW()),
+
+-- 62. Brazil importing Laptops from China (expired specific)
+(20.00, 'specific', 1.00, 'kg', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'BR'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 63. Mexico importing LED TVs from China (expired specific)
+(60.00, 'specific', 1.00, 'unit', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'MX'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 852872, NOW(), NOW()),
+
+-- 64. Australia importing Memory Chips from South Korea (expired specific)
+(8.00, 'specific', 1.00, 'kg', '2018-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'AU'),
+ (SELECT country_id FROM country WHERE country_code = 'KR'),
+ 854232, NOW(), NOW()),
+
+-- 65. Canada importing Laptops from China (expired specific)
+(22.00, 'specific', 1.00, 'unit', '2020-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'CA'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 847141, NOW(), NOW()),
+
+-- 66. UK importing Smartphones from China (expired specific)
+(3.50, 'specific', 1.00, 'kg', '2019-01-01', '2023-12-31', false,
+ (SELECT country_id FROM country WHERE country_code = 'GB'),
+ (SELECT country_id FROM country WHERE country_code = 'CN'),
+ 851713, NOW(), NOW());
 
 
 -- =====================================================
