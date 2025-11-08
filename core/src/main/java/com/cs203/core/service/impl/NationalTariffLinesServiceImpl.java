@@ -53,10 +53,6 @@ public class NationalTariffLinesServiceImpl implements NationalTariffLinesServic
 
         // Verify Country Code exists
         CountryEntity country = getCountryByCode(dto.getCountryCode());
-        if (country == null) {
-            return new GenericResponse<NationalTariffLinesDto>(HttpStatus.NOT_FOUND,
-                    "Country not found with code: " + dto.getCountryCode(), null);
-        }
 
         // Verify Parent HS Code exists if provided
         Optional<ProductCategoriesEntity> parentHs = productCategoriesRepository
