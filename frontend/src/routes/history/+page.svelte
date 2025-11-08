@@ -96,7 +96,11 @@
 							<div class="flex justify-between">
 								<span class="text-gray-500">Tariff Rate:</span>
 								<span class="font-medium text-blue-600"
-									>{parseFloat(calculation.tariffRate).toFixed(2)}%</span
+									>{calculation.tariffType == 'specific' ? '$' : ''}{parseFloat(
+													calculation.tariffRate
+												).toFixed(2)}{calculation.tariffType == 'specific'
+													? '/' + parseFloat(calculation.unitQuantity).toFixed(2) + calculation.rateUnit
+													: '%'}</span
 								>
 							</div>
 

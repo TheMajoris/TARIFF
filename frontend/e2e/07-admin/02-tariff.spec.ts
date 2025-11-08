@@ -25,43 +25,10 @@ test('admin tariff loaded', async ({ page }) => {
           - cell "Expiry Date"
           - cell
       - rowgroup:
-        - row /1 SG CN No Ad Valorem 1% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /1 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell "1"
-          - cell "SG"
-          - cell "CN"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "1%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /2 SG US No Ad Valorem 5% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "2"
-          - cell "SG"
           - cell "US"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "5%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /3 MY SG Yes Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "3"
-          - cell "MY"
-          - cell "SG"
-          - cell "Yes"
-          - cell "Ad Valorem"
-          - cell "0%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /4 CN US No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "4"
           - cell "CN"
-          - cell "US"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+%/
@@ -69,13 +36,46 @@ test('admin tariff loaded', async ({ page }) => {
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /5 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "5"
+        - row /2 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "2"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /3 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "3"
           - cell "US"
           - cell "CN"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /4 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "4"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /5 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "5"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
@@ -88,6 +88,7 @@ test('admin tariff loaded', async ({ page }) => {
 
 test('admin tariff pagination', async ({ page }) => {
 
+
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - button "Tariffs"
     - button "Product Categories"
@@ -105,43 +106,10 @@ test('admin tariff pagination', async ({ page }) => {
           - cell "Expiry Date"
           - cell
       - rowgroup:
-        - row /1 SG CN No Ad Valorem 1% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /1 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell "1"
-          - cell "SG"
-          - cell "CN"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "1%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /2 SG US No Ad Valorem 5% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "2"
-          - cell "SG"
           - cell "US"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "5%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /3 MY SG Yes Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "3"
-          - cell "MY"
-          - cell "SG"
-          - cell "Yes"
-          - cell "Ad Valorem"
-          - cell "0%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /4 CN US No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "4"
           - cell "CN"
-          - cell "US"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+%/
@@ -149,13 +117,46 @@ test('admin tariff pagination', async ({ page }) => {
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /5 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "5"
+        - row /2 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "2"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /3 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "3"
           - cell "US"
           - cell "CN"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /4 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "4"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /5 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "5"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
@@ -164,166 +165,165 @@ test('admin tariff pagination', async ({ page }) => {
     - button "Previous" [disabled]
     - button "Next"
     `);
-
   await page.getByRole('button', { name: 'Next' }).click();
-
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
-      - button "Tariffs"
-      - button "Product Categories"
-      - button "Create"
-      - table:
-        - rowgroup:
-          - row "Tariff Id ▲ Importing Country Exporting Country Preferential Tariff Tariff Type Tariff Rate Effective Date Expiry Date":
-            - cell "Tariff Id ▲"
-            - cell "Importing Country"
-            - cell "Exporting Country"
-            - cell "Preferential Tariff"
-            - cell "Tariff Type"
-            - cell "Tariff Rate"
-            - cell "Effective Date"
-            - cell "Expiry Date"
-            - cell
-        - rowgroup:
-          - row /6 DE US No Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "6"
-            - cell "DE"
-            - cell "US"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell "0%"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /7 JP KR No Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "7"
-            - cell "JP"
-            - cell "KR"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell "0%"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /8 IN CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "8"
-            - cell "IN"
-            - cell "CN"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell /\\d+%/
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /9 SG CN No Specific \\$3 \\/ 1 kg \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "9"
-            - cell "SG"
-            - cell "CN"
-            - cell "No"
-            - cell "Specific"
-            - cell "$3 / 1 kg"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /\\d+ SG US No Specific \\$5 \\/ 1 kg \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell /\\d+/
-            - cell "SG"
-            - cell "US"
-            - cell "No"
-            - cell "Specific"
-            - cell "$5 / 1 kg"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-      - text: /Showing 6-\\d+ of \\d+ tariffs/
-      - button "Previous"
-      - button "Next"
-      `);
+    - button "Tariffs"
+    - button "Product Categories"
+    - button "Create"
+    - table:
+      - rowgroup:
+        - row "Tariff Id ▲ Importing Country Exporting Country Preferential Tariff Tariff Type Tariff Rate Effective Date Expiry Date":
+          - cell "Tariff Id ▲"
+          - cell "Importing Country"
+          - cell "Exporting Country"
+          - cell "Preferential Tariff"
+          - cell "Tariff Type"
+          - cell "Tariff Rate"
+          - cell "Effective Date"
+          - cell "Expiry Date"
+          - cell
+      - rowgroup:
+        - row /6 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "6"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /7 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "7"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /8 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "8"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /9 CN US No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "9"
+          - cell "CN"
+          - cell "US"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /\\d+ CN US No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell /\\d+/
+          - cell "CN"
+          - cell "US"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+    - text: /Showing 6-\\d+ of \\d+ tariffs/
+    - button "Previous"
+    - button "Next"
+    `);
   await page.getByRole('button', { name: 'Previous' }).click();
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
-      - button "Tariffs"
-      - button "Product Categories"
-      - button "Create"
-      - table:
-        - rowgroup:
-          - row "Tariff Id ▲ Importing Country Exporting Country Preferential Tariff Tariff Type Tariff Rate Effective Date Expiry Date":
-            - cell "Tariff Id ▲"
-            - cell "Importing Country"
-            - cell "Exporting Country"
-            - cell "Preferential Tariff"
-            - cell "Tariff Type"
-            - cell "Tariff Rate"
-            - cell "Effective Date"
-            - cell "Expiry Date"
-            - cell
-        - rowgroup:
-          - row /1 SG CN No Ad Valorem 1% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "1"
-            - cell "SG"
-            - cell "CN"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell "1%"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /2 SG US No Ad Valorem 5% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "2"
-            - cell "SG"
-            - cell "US"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell "5%"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /3 MY SG Yes Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "3"
-            - cell "MY"
-            - cell "SG"
-            - cell "Yes"
-            - cell "Ad Valorem"
-            - cell "0%"
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /4 CN US No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "4"
-            - cell "CN"
-            - cell "US"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell /\\d+%/
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-          - row /5 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-            - cell "5"
-            - cell "US"
-            - cell "CN"
-            - cell "No"
-            - cell "Ad Valorem"
-            - cell /\\d+\\.\\d+%/
-            - cell /\\d+-\\d+-\\d+/
-            - cell /\\d+-\\d+-\\d+/
-            - cell "⋮":
-              - button "⋮"
-      - text: /Showing 1-5 of \\d+ tariffs/
-      - button "Previous" [disabled]
-      - button "Next"
-      `);
+    - button "Tariffs"
+    - button "Product Categories"
+    - button "Create"
+    - table:
+      - rowgroup:
+        - row "Tariff Id ▲ Importing Country Exporting Country Preferential Tariff Tariff Type Tariff Rate Effective Date Expiry Date":
+          - cell "Tariff Id ▲"
+          - cell "Importing Country"
+          - cell "Exporting Country"
+          - cell "Preferential Tariff"
+          - cell "Tariff Type"
+          - cell "Tariff Rate"
+          - cell "Effective Date"
+          - cell "Expiry Date"
+          - cell
+      - rowgroup:
+        - row /1 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "1"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /2 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "2"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /3 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "3"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /4 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "4"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /5 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "5"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+    - text: /Showing 1-5 of \\d+ tariffs/
+    - button "Previous" [disabled]
+    - button "Next"
+    `);
 })
 
 
 test('admin tariff sorting', async ({ page }) => {
+
 
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - button "Tariffs"
@@ -342,43 +342,10 @@ test('admin tariff sorting', async ({ page }) => {
           - cell "Expiry Date"
           - cell
       - rowgroup:
-        - row /1 SG CN No Ad Valorem 1% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /1 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell "1"
-          - cell "SG"
-          - cell "CN"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "1%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /2 SG US No Ad Valorem 5% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "2"
-          - cell "SG"
           - cell "US"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "5%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /3 MY SG Yes Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "3"
-          - cell "MY"
-          - cell "SG"
-          - cell "Yes"
-          - cell "Ad Valorem"
-          - cell "0%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /4 CN US No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "4"
           - cell "CN"
-          - cell "US"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+%/
@@ -386,13 +353,46 @@ test('admin tariff sorting', async ({ page }) => {
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /5 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "5"
+        - row /2 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "2"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /3 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "3"
           - cell "US"
           - cell "CN"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /4 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "4"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /5 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "5"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
@@ -452,24 +452,24 @@ test('admin tariff sorting', async ({ page }) => {
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /\\d+ AU SG No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /\\d+ GB CN No Specific \\$3\\.5 \\/ 1 kg \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell /\\d+/
-          - cell "AU"
-          - cell "SG"
+          - cell "GB"
+          - cell "CN"
           - cell "No"
-          - cell "Ad Valorem"
-          - cell /\\d+%/
+          - cell "Specific"
+          - cell "$3.5 / 1 kg"
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /\\d+ IN CN No Specific \\$2 \\/ \\d+ g \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /\\d+ CA CN No Specific \\$\\d+ \\/ 1 unit \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell /\\d+/
-          - cell "IN"
+          - cell "CA"
           - cell "CN"
           - cell "No"
           - cell "Specific"
-          - cell /\\$2 \\/ \\d+ g/
+          - cell /\\$\\d+ \\/ 1 unit/
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
@@ -496,43 +496,10 @@ test('admin tariff sorting', async ({ page }) => {
           - cell "Expiry Date"
           - cell
       - rowgroup:
-        - row /1 SG CN No Ad Valorem 1% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+        - row /1 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
           - cell "1"
-          - cell "SG"
-          - cell "CN"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "1%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /2 SG US No Ad Valorem 5% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "2"
-          - cell "SG"
           - cell "US"
-          - cell "No"
-          - cell "Ad Valorem"
-          - cell "5%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /3 MY SG Yes Ad Valorem 0% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "3"
-          - cell "MY"
-          - cell "SG"
-          - cell "Yes"
-          - cell "Ad Valorem"
-          - cell "0%"
-          - cell /\\d+-\\d+-\\d+/
-          - cell /\\d+-\\d+-\\d+/
-          - cell "⋮":
-            - button "⋮"
-        - row /4 CN US No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "4"
           - cell "CN"
-          - cell "US"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+%/
@@ -540,13 +507,46 @@ test('admin tariff sorting', async ({ page }) => {
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
             - button "⋮"
-        - row /5 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
-          - cell "5"
+        - row /2 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "2"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /3 US CN No Ad Valorem \\d+\\.\\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "3"
           - cell "US"
           - cell "CN"
           - cell "No"
           - cell "Ad Valorem"
           - cell /\\d+\\.\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /4 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "4"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
+          - cell /\\d+-\\d+-\\d+/
+          - cell /\\d+-\\d+-\\d+/
+          - cell "⋮":
+            - button "⋮"
+        - row /5 US CN No Ad Valorem \\d+% \\d+-\\d+-\\d+ \\d+-\\d+-\\d+ ⋮/:
+          - cell "5"
+          - cell "US"
+          - cell "CN"
+          - cell "No"
+          - cell "Ad Valorem"
+          - cell /\\d+%/
           - cell /\\d+-\\d+-\\d+/
           - cell /\\d+-\\d+-\\d+/
           - cell "⋮":
@@ -560,7 +560,8 @@ test('admin tariff sorting', async ({ page }) => {
 
 test('admin get individual tariff', async ({ page }) => {
 
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByText('Tariff ID 1').click();
   await page.getByRole('button', { name: 'Close', exact: true }).click();
@@ -778,28 +779,30 @@ test('admin create tariff missing effective date', async ({ page }) => {
 })
 
 test('admin edit tariff successful', async ({ page }) => {
-  await page.getByRole('row', { name: '2 SG US No Ad Valorem 5% 2024' }).getByRole('button').click();
+
+  await page.getByRole('row', { name: '2 US CN No Ad Valorem 50%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
-  await page.getByText('(SG) Singapore').click();
-  await page.getByText('(AU) Australia').click();
+  await page.locator('div').filter({ hasText: /^\(US\) United States$/ }).click();
+  await page.locator('form div').filter({ hasText: '(AU) Australia' }).nth(4).click();
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page.getByRole('main')).toContainText('Successfully updated Tariff Rate');
 })
 
 test('admin edit tariff import and export country is the same', async ({ page }) => {
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
-  await page.locator('div').filter({ hasText: /^\(SG\) Singapore$/ }).click();
-  await page.locator('form div').filter({ hasText: '(BR) Brazil' }).nth(4).click();
-  await page.locator('div').filter({ hasText: /^\(CN\) China$/ }).click();
-  await page.locator('.max-h-60 > div:nth-child(2)').click();
+  await page.getByText('(US) United States').click();
+  await page.getByText('(AU) Australia').click();
+  await page.getByText('(CN) China').click();
+  await page.getByText('(AU) Australia').nth(1).click();
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page.locator('form')).toContainText('Importing and Exporting country must not be the same');
 
 })
 
 test('admin edit tariff, tariff rate invalid number', async ({ page }) => {
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByRole('spinbutton', { name: 'Tariff Rate' }).click();
   await page.getByRole('spinbutton', { name: 'Tariff Rate' }).fill('999999');
@@ -808,7 +811,7 @@ test('admin edit tariff, tariff rate invalid number', async ({ page }) => {
 })
 
 test('admin edit tariff missing quantity', async ({ page }) => {
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByLabel('Tariff Type').selectOption('specific');
   await page.getByRole('spinbutton', { name: 'Quantity' }).click();
@@ -819,7 +822,7 @@ test('admin edit tariff missing quantity', async ({ page }) => {
 })
 
 test('admin edit tariff missing unit', async ({ page }) => {
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByLabel('Tariff Type').selectOption('specific');
   await page.getByRole('spinbutton', { name: 'Quantity' }).click();
@@ -829,7 +832,7 @@ test('admin edit tariff missing unit', async ({ page }) => {
 })
 
 test('admin edit tariff missing effective date', async ({ page }) => {
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByRole('textbox', { name: 'Effective Date' }).fill('');
   await page.getByRole('button', { name: 'Submit' }).click();
@@ -838,7 +841,7 @@ test('admin edit tariff missing effective date', async ({ page }) => {
 
 test('admin delete tariff', async ({ page }) => {
 
-  await page.getByRole('row', { name: '1 SG CN No Ad Valorem 1% 2024' }).getByRole('button').click();
+  await page.getByRole('row', { name: '1 US CN No Ad Valorem 54%' }).getByRole('button').click();
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByRole('main')).toContainText('Successfully deleted Tariff Rate');
 })

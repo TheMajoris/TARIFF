@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
     await loginAdmin({ page });
 
     await navBar({page});
-    await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Tariff Management' })).toBeVisible();
 });
 
 test('sidebar click dashboard', async ({ page }) => {
@@ -22,7 +22,7 @@ test('sidebar click Calculation History', async ({ page }) => {
 
 test('sidebar click Admin', async ({ page }) => {
 
-    await page.getByRole('link', { name: 'Admin' }).click();
+    await page.getByRole('link', { name: 'Tariff Management' }).click();
     await expect(page).toHaveURL('/admin');
 })
 
