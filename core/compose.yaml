@@ -12,9 +12,9 @@ services:
       - db_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 3s
-      timeout: 5s
-      retries: 5
+      interval: 10s
+      timeout: 10s
+      retries: 10
   app:
     build: .
     restart: always
@@ -28,7 +28,7 @@ services:
       SPRING_APPLICATION_NAME: ${SPRING_APP_NAME}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${JPA_DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${JPA_SHOW_SQL}
-      PERPLEXITY_KEY: ${PERPLEXITY_KEY}
+      PERPLEXITY_KEY: ${PERPLEXITY_KEY:-fake-key-for-testing}
     ports:
       - "8080:8080"
 volumes:

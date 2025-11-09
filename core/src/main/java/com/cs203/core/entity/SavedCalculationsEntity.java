@@ -27,6 +27,11 @@ public class SavedCalculationsEntity {
     @DecimalMin(value = "0.01", message = "Product value must be greater than 0")
     private BigDecimal productValue;
 
+    @Column(name = "product_quantity", nullable = false, precision = 12, scale = 2)
+    @NotNull(message = "Product quantity is required")
+    @DecimalMin(value = "1", message = "Product quantity must be greater than 0")
+    private BigDecimal productQuantity;
+
     @Column(name = "currency_code", nullable = false, length = 3)
     @NotBlank(message = "Currency code is required")
     @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
@@ -36,6 +41,14 @@ public class SavedCalculationsEntity {
     @NotNull(message = "Tariff rate is required")
     @DecimalMin(value = "0.0", message = "Tariff rate must be non-negative")
     private BigDecimal tariffRate;
+
+    @Column(name = "unit_quantity", precision = 10, scale = 4)
+    @DecimalMin(value = "0.0", message = "Unit quantity must be positive")
+    private BigDecimal unitQuantity; // amt of unit that tariff applies to
+
+    @Column(name = "rate_unit", length = 20)
+    @Size(max = 20, message = "Rate unit cannot exceed 20 characters")
+    private String rateUnit; // eg "kg", "g", "kWh"
 
     @Column(name = "tariff_type", nullable = false, length = 50)
     @NotBlank(message = "Tariff type is required")
@@ -91,7 +104,9 @@ public class SavedCalculationsEntity {
 
     public SavedCalculationsEntity(String calculationName, UserEntity user, CountryEntity importingCountry,
             CountryEntity exportingCountry, ProductCategoriesEntity productCategory,
-            BigDecimal productValue, String currencyCode, BigDecimal tariffRate,
+            BigDecimal productValue, BigDecimal productQuantity, String currencyCode, BigDecimal tariffRate,
+            BigDecimal unitQuantity,
+            String rateUnit,
             String tariffType, BigDecimal calculatedTariffCost, BigDecimal totalCost,
             String notes) {
         this.calculationName = calculationName;
@@ -100,8 +115,11 @@ public class SavedCalculationsEntity {
         this.exportingCountry = exportingCountry;
         this.productCategory = productCategory;
         this.productValue = productValue;
+        this.productQuantity = productQuantity;
         this.currencyCode = currencyCode;
         this.tariffRate = tariffRate;
+        this.unitQuantity = unitQuantity;
+        this.rateUnit = rateUnit;
         this.tariffType = tariffType;
         this.calculatedTariffCost = calculatedTariffCost;
         this.totalCost = totalCost;
@@ -165,6 +183,14 @@ public class SavedCalculationsEntity {
         this.productValue = productValue;
     }
 
+    public BigDecimal getProductQuantity(){
+        return productQuantity;
+    }
+
+    public void setProductQuantity(BigDecimal productQuantity){
+        this.productQuantity = productQuantity;
+    }
+
     public String getCurrencyCode() {
         return currencyCode;
     }
@@ -187,6 +213,22 @@ public class SavedCalculationsEntity {
 
     public void setTariffType(String tariffType) {
         this.tariffType = tariffType;
+    }
+
+    public BigDecimal getUnitQuantity() {
+        return unitQuantity;
+    }
+
+    public void setUnitQuantity(BigDecimal unitQuantity) {
+        this.unitQuantity = unitQuantity;
+    }
+
+    public String getRateUnit() {
+        return rateUnit;
+    }
+
+    public void setRateUnit(String rateUnit) {
+        this.rateUnit = rateUnit;
     }
 
     public BigDecimal getCalculatedTariffCost() {
@@ -235,8 +277,11 @@ public class SavedCalculationsEntity {
                 "id=" + id +
                 ", calculationName='" + calculationName + '\'' +
                 ", productValue=" + productValue +
+                ", productQuantity=" + productQuantity +
                 ", currencyCode='" + currencyCode + '\'' +
                 ", tariffRate=" + tariffRate +
+                ", unitQuantity=" + unitQuantity +
+                ", rateUnit=" + rateUnit +
                 ", tariffType='" + tariffType + '\'' +
                 ", calculatedTariffCost=" + calculatedTariffCost +
                 ", totalCost=" + totalCost +

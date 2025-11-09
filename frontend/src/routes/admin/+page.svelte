@@ -92,11 +92,11 @@
 		<!-- Global Alerts - Below page title -->
 		{#if error}
 			<Alert type="error" message={error} show={true} autoDismiss={true} />
-		{/if}
+			{/if}
 
 		{#if success}
 			<Alert type="success" message={success} show={true} autoDismiss={true} />
-		{/if}
+			{/if}
 
 		<!-- Two-column layout -->
 		<div class="grid grid-cols-1">

@@ -349,4 +349,29 @@ class CalculationHistoryControllerTest {
     }
 
 
+        @Test
+        @DisplayName("POST - Returns 400 when productQuantity is null")
+        void saveCalculation_withNullProductQuantity_returnsBadRequest() throws Exception {
+                SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
+                                "Test Calculation",
+                                new BigDecimal("1000.00"),
+                                null, // null value
+                                "USD",
+                                new BigDecimal("0.10"),
+                                "ad-valorem",
+                                null,
+                                null,
+                                new BigDecimal("100.00"),
+                                new BigDecimal("1100.00"),
+                                "Test notes",
+                                "US",
+                                "CN",
+                                123456);
+
+                mockMvc.perform(post("/api/v1/calculation-history")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDto))
+                                .principal(mockAuthentication))
+                                .andExpect(status().isBadRequest());
+        }
 }

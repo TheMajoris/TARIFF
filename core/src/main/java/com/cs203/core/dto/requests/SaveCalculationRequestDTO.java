@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 //request these from the user to pass to save calculation to make a new saved calculation
 public record SaveCalculationRequestDTO(
@@ -15,6 +16,9 @@ public record SaveCalculationRequestDTO(
     @NotNull
     @PositiveOrZero
     BigDecimal productValue,
+    @NotNull
+    @PositiveOrZero
+    BigDecimal productQuantity,
     @NotBlank
     String currencyCode,
     @NotNull
@@ -22,6 +26,8 @@ public record SaveCalculationRequestDTO(
     BigDecimal tariffRate,
     @NotBlank
     String tariffType,
+    BigDecimal unitQuantity,
+    String rateUnit,
     @NotNull
     BigDecimal calculatedTariffCost,
     @NotNull 

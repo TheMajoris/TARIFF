@@ -83,8 +83,11 @@ public class CalculationHistoryImpl implements CalculationHistoryService {
         SavedCalculationsEntity entity = new SavedCalculationsEntity();
         entity.setCalculationName(requestDto.calculationName());
         entity.setProductValue(requestDto.productValue());
+        entity.setProductQuantity(requestDto.productQuantity());
         entity.setCurrencyCode(requestDto.currencyCode());
         entity.setTariffRate(requestDto.tariffRate());
+        entity.setUnitQuantity(requestDto.unitQuantity());
+        entity.setRateUnit(requestDto.rateUnit());
         entity.setTariffType(requestDto.tariffType());
         entity.setCalculatedTariffCost(requestDto.calculatedTariffCost());
         entity.setTotalCost(requestDto.totalCost());
@@ -105,9 +108,12 @@ public class CalculationHistoryImpl implements CalculationHistoryService {
         dto.setId(entity.getId());
         dto.setCalculationName(entity.getCalculationName());
         dto.setProductValue(entity.getProductValue());
+        dto.setProductQuantity(entity.getProductQuantity());
         dto.setCurrencyCode(entity.getCurrencyCode());
         dto.setTariffRate(entity.getTariffRate());
         dto.setTariffType(entity.getTariffType());
+        dto.setUnitQuantity(entity.getUnitQuantity());
+        dto.setRateUnit(entity.getRateUnit());
         dto.setCalculatedTariffCost(entity.getCalculatedTariffCost());
         dto.setTotalCost(entity.getTotalCost());
         dto.setNotes(entity.getNotes());

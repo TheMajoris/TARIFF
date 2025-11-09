@@ -21,6 +21,10 @@ public class SavedCalculationDto {
     @DecimalMin(value = "0.01", message = "Product value must be greater than 0")
     private BigDecimal productValue;
 
+    @NotNull(message = "Product quantity is required")
+    @DecimalMin(value = "1", message = "Product quantity must be greater than 0")
+    private BigDecimal productQuantity;
+
     @NotBlank(message = "Currency code is required")
     @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
     private String currencyCode;
@@ -28,6 +32,12 @@ public class SavedCalculationDto {
     @NotNull(message = "Tariff rate is required")
     @DecimalMin(value = "0.0", message = "Tariff rate must be non-negative")
     private BigDecimal tariffRate;
+
+    @DecimalMin(value = "0.0", message = "Unit quantity must be positive")
+    private BigDecimal unitQuantity;  // amt of unit that tariff applies to
+
+    @Size(max = 20, message = "Rate unit cannot exceed 20 characters")
+    private String rateUnit;
 
     @NotBlank(message = "Tariff type is required")
     @Size(max = 50, message = "Tariff type cannot exceed 50 characters")
