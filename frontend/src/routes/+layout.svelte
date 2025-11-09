@@ -196,36 +196,10 @@
 
 				<!-- Social Media -->
 				<div>
-					<h3 class="mb-3 text-sm font-semibold text-gray-700">Connect with us</h3>
+					<h3 class="mb-3 text-sm font-semibold text-gray-700">Github Repository</h3>
 					<div class="flex space-x-4 text-gray-500">
-						<!-- Twitter -->
-						<a href="https://twitter.com" target="_blank" class="hover:text-primary">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4 1c-.88.52-1.85.9-2.88 1.1A4.52 4.52 0 0 0 16.11 0c-2.5 0-4.5 2.07-4.5 4.63 0 .36.04.72.12 1.05C7.69 5.5 4.07 3.7 1.64.9a4.7 4.7 0 0 0-.61 2.33c0 1.6.8 3.01 2.02 3.84a4.48 4.48 0 0 1-2.05-.6v.06c0 2.23 1.53 4.09 3.56 4.51a4.52 4.52 0 0 1-2.04.08c.57 1.85 2.22 3.2 4.18 3.24A9.06 9.06 0 0 1 0 19.54 12.8 12.8 0 0 0 7.07 22c8.5 0 13.15-7.3 13.15-13.63 0-.21 0-.42-.01-.62A9.73 9.73 0 0 0 23 3z"
-								/>
-							</svg>
-						</a>
-						<!-- LinkedIn -->
-						<a href="https://linkedin.com" target="_blank" class="hover:text-primary">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.44-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.62 0 4.29 2.38 4.29 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.21 0 22.23 0z"
-								/>
-							</svg>
-						</a>
 						<!-- GitHub -->
-						<a href="https://github.com" target="_blank" class="hover:text-primary">
+						<a href="https://github.com/TheMajoris/TARIFF" target="_blank" class="hover:text-primary">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-5 w-5"
