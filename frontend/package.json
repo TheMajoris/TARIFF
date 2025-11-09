@@ -12,9 +12,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"test:unit": "vitest run --reporter=verbose --reporter=json --outputFile.json=./test-results/results.json && node scripts/generate-html-report.js",
-		"test:unit:watch": "vitest",
-		"test:unit:report": "vitest run --reporter=verbose --reporter=json --outputFile.json=./test-results/results.json && node scripts/generate-html-report.js",
+		"test:unit": "vitest",
 		"test:coverage": "vitest run --coverage --project=server",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright test"
