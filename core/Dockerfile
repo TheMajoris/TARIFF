@@ -23,6 +23,10 @@ RUN ./gradlew clean bootJar -x test --no-daemon
 # Stage 2: Run the JAR
 FROM eclipse-temurin:17-jre-jammy
 
+# Set timezone to Singapore
+ENV TZ=Asia/Singapore
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 WORKDIR /app
 
 # Add non-root user
