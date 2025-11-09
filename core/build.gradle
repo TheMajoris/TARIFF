@@ -76,21 +76,33 @@ tasks.named('test') {
 }
 
 sonar {
-  properties {
-    property "sonar.projectKey", "TheMajoris_TARIFF"
-    property "sonar.organization", "majoris"
-    property "sonar.host.url", "https://sonarcloud.io"
-    property "sonar.sources", "src/main/java"
-    property "sonar.tests", "src/test/java"
-    property "sonar.java.binaries", "build/classes/java/main"
-    property "sonar.java.test.binaries", "build/classes/java/test"
-    property "sonar.sourceEncoding", "UTF-8"
-    property "sonar.exclusions", "**/generated/**,**/build/**"
-  }
+    properties {
+        property "sonar.projectKey", "TheMajoris_TARIFF"
+        property "sonar.organization", "majoris"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.sources", "src/main/java"
+        property "sonar.tests", "src/test/java"
+        property "sonar.java.binaries", "build/classes/java/main"
+        property "sonar.java.test.binaries", "build/classes/java/test"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.exclusions", "**/generated/**,**/build/**"
+    }
 }
 
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/CoreApplication.class",
+                    "**/config/*",
+                    "**/dto/*",
+                    "**/enums/*",
+                    "**/mapper/*"
+            ])
+        }))
+    }
+
     reports {
         xml.required = true
         html.required = true

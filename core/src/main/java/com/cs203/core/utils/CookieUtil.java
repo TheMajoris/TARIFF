@@ -12,13 +12,13 @@ public class CookieUtil {
     private final List<String> cookiePaths = List.of("/api/v1/auth/refresh", "/api/v1/auth/logout");
 
     @Value("${cookie.httpsEnabled}")
-    private boolean httpsEnabled;
+    protected boolean httpsEnabled;
 
     @Value("${jwt.refresh.duration}")
-    private long refreshTokenDurationInSeconds;
+    protected long refreshTokenDurationInSeconds;
 
     @Value("${jwt.refresh.duration}")
-    private long accessTokenDurationInSeconds;
+    protected long accessTokenDurationInSeconds;
 
     public List<ResponseCookie> buildRefreshToken(String attributeValue) {
         List<ResponseCookie> cookies = new ArrayList<>();

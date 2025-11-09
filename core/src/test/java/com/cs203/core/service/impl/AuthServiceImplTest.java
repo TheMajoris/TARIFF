@@ -3,6 +3,7 @@ package com.cs203.core.service.impl;
 import com.cs203.core.dto.requests.LoginRequestDTO;
 import com.cs203.core.dto.responses.GenericResponseDTO;
 import com.cs203.core.entity.UserEntity;
+import com.cs203.core.exception.InvalidUserCredentials;
 import com.cs203.core.repository.UserRepository;
 import com.cs203.core.utils.JwtUtil;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -22,8 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -92,4 +92,22 @@ public class AuthServiceImplTest {
         assertTrue(jwkString.startsWith("{"));
         assertTrue(jwkString.contains("keys=["));
     }
+
+    @Test
+    void loginUserDoesNotExist_ShouldThrowInvalidUserCredentials() {
+        // Arrange
+        LoginRequestDTO loginRequest = new LoginRequestDTO("missing@example.com", "password");
+        when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        InvalidUserCredentials exception = assertThrows(
+                InvalidUserCredentials.class,
+                () -> authService.login(loginRequest)
+        );
+
+        assertEquals("User does not exist", exception.getMessage());
+        verify(userRepository).findByEmail("missing@example.com");
+        verifyNoInteractions(authenticationManager, jwtUtil);
+    }
+
 }
