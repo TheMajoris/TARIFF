@@ -99,7 +99,9 @@ TARIFF/
 │   ├── api.json                   # API specification
 │   ├── api-guide.md               # API usage guide
 │   ├── sonarqube-setup.md         # SonarQube integration guide
-│   └── standups/                  # Team standup notes
+│   └── Standups/                  # Team standup notes
+│   └── Sprint Meeting Agenda/     # Team Sprint meeting agenda notes
+│   └── Wireframe/                  # Wireframes created for each sprint
 │
 ├── .github/
 │   ├── workflows/                 # CI/CD pipelines
