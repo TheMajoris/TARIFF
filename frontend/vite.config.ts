@@ -6,6 +6,10 @@ export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		expect: { requireAssertions: true },
+		reporters: ['verbose', 'json'],
+		outputFile: {
+			json: './test-results/results.json'
+		},
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'json', 'html'],
