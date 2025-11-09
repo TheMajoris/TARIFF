@@ -92,6 +92,16 @@ npm run test:unit
 npm run test:e2e
 ```
 
+
+4. **Code Coverage**
+Generate HTML coverage report:
+```bash
+npm run test:coverage
+```
+
+The coverage report will be generated in the `coverage/` directory. Open `coverage/index.html` in your browser to view the detailed coverage report.
+
+
 ### **Database Setup** (Optional)
 If you're not using Docker and want to run PostgreSQL manually:
 ```bash

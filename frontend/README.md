@@ -37,6 +37,34 @@ npm run build
 npm run preview
 ```
 
+## Testing
+
+### Running Tests
+
+Run unit tests:
+```bash
+npm run test:unit
+```
+
+Run all tests (unit + e2e):
+```bash
+npm test
+```
+
+### Code Coverage
+
+Generate HTML coverage report:
+```bash
+npm run test:coverage
+```
+
+The coverage report will be generated in the `coverage/` directory. Open `coverage/index.html` in your browser to view the detailed coverage report.
+
+The coverage report includes:
+- Overall coverage statistics
+- Per-file coverage details
+- Statement, branch, function, and line coverage
+- Color-coded visualization
 
 ## Contributing
 - View feature requests on JIRA.
