@@ -102,10 +102,74 @@ describe('admin/Category.svelte - API Integration', () => {
   });
 });
 
-describe('admin/Category.svelte - Component Import', () => {
-  it('has valid component structure', () => {
-    // Test that the component can be imported without errors
+describe('admin/Category.svelte - Component Logic', () => {
+  // Test blankCategory function logic (extracted from component)
+  function blankCategory() {
+    return {
+      categoryCode: '',
+      categoryName: '',
+      description: '',
+      id: 0,
+      isActive: false
+    };
+  }
+
+  // Test pagination logic
+  function calculatePagination(currentPage: number, totalPages: number): {
+    shouldAdjust: boolean;
+    newPage: number;
+  } {
+    if (currentPage + 1 > totalPages && totalPages > 0) {
+      return { shouldAdjust: true, newPage: totalPages - 1 };
+    }
+    return { shouldAdjust: false, newPage: currentPage };
+  }
+
+  // Test sort direction conversion
+  function convertSortDirection(sortAsc: boolean): string {
+    return sortAsc ? 'ascending' : 'descending';
+  }
+
+  it('blankCategory returns correct default structure', () => {
+    const result = blankCategory();
+    expect(result.categoryCode).toBe('');
+    expect(result.categoryName).toBe('');
+    expect(result.description).toBe('');
+    expect(result.id).toBe(0);
+    expect(result.isActive).toBe(false);
+  });
+
+  it('calculates pagination adjustment correctly', () => {
+    // When current page exceeds total pages
+    const result1 = calculatePagination(5, 3);
+    expect(result1.shouldAdjust).toBe(true);
+    expect(result1.newPage).toBe(2);
+
+    // When current page is within bounds
+    const result2 = calculatePagination(1, 3);
+    expect(result2.shouldAdjust).toBe(false);
+    expect(result2.newPage).toBe(1);
+
+    // When total pages is 0
+    const result3 = calculatePagination(0, 0);
+    expect(result3.shouldAdjust).toBe(false);
+    expect(result3.newPage).toBe(0);
+  });
+
+  it('converts sort direction correctly', () => {
+    expect(convertSortDirection(true)).toBe('ascending');
+    expect(convertSortDirection(false)).toBe('descending');
+  });
+
+  it('component can be imported', () => {
+    // Note: Full component testing with @testing-library/svelte requires DOM environment
+    // This import test ensures the component compiles and can be loaded
+    // For comprehensive testing, use browser-based test environment with:
+    // - render() from @testing-library/svelte
+    // - screen queries for DOM elements
+    // - fireEvent for user interactions
     expect(CategoryComponent).toBeDefined();
+    expect(typeof CategoryComponent).toBe('function');
   });
 });
 

@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
+import { beforeEach, describe, expect, it } from 'vitest';
 // Import store to increase coverage
-import { alertStore, showAlert, AlertMessages } from './alertStore.js';
+import { AlertMessages, alertStore, showAlert } from './alertStore.js';
 
 describe('alertStore - Store Logic', () => {
   beforeEach(() => {
@@ -16,12 +16,23 @@ describe('alertStore - Store Logic', () => {
     expect(AlertMessages).toBeDefined();
   });
 
-  it('defines correct alert types', () => {
-    const alertTypes = ['success', 'error', 'warning', 'info'];
-    expect(alertTypes).toContain('success');
-    expect(alertTypes).toContain('error');
-    expect(alertTypes).toContain('warning');
-    expect(alertTypes).toContain('info');
+  it('showAlert supports all required alert types', () => {
+    // Test that showAlert object has methods for all supported alert types
+    // This validates the actual implementation, not a local array
+    const supportedTypes = ['success', 'error', 'warning', 'info'];
+    
+    supportedTypes.forEach((type) => {
+      expect(showAlert).toHaveProperty(type);
+      expect(typeof showAlert[type as keyof typeof showAlert]).toBe('function');
+    });
+    
+    // Verify that calling these methods sets the correct type in the store
+    supportedTypes.forEach((type) => {
+      showAlert[type as keyof typeof showAlert]('Test message');
+      const storeValue = get(alertStore);
+      expect(storeValue.type).toBe(type);
+      showAlert.clear();
+    });
   });
 
   it('defines alert message constants', () => {

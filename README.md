@@ -93,7 +93,7 @@ npm run test:e2e
 ```
 
 
-4. **Code Coverage**
+5. **Code Coverage**
 Generate HTML coverage report:
 ```bash
 npm run test:coverage
