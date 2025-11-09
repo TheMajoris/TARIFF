@@ -1,6 +1,5 @@
 package com.cs203.core.entity;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -23,16 +22,19 @@ public class SavedCalculationsEntityTest {
         CountryEntity exporting = new CountryEntity();
         ProductCategoriesEntity product = new ProductCategoriesEntity();
         BigDecimal productValue = new BigDecimal("100.00");
+        BigDecimal productQuantity = new BigDecimal("100.00");
         String currency = "USD";
         BigDecimal tariffRate = new BigDecimal("5.00");
-        String tariffType = "Percentage";
+        BigDecimal unitQuantity = new BigDecimal("100.0");
+        String rateUnit = "Percentage";
+        String tariffType = "ad_valorem";
         BigDecimal tariffCost = new BigDecimal("5.00");
         BigDecimal totalCost = new BigDecimal("105.00");
         String notes = "Sample calculation";
 
         SavedCalculationsEntity entity = new SavedCalculationsEntity(
                 calcName, user, importing, exporting, product,
-                productValue, currency, tariffRate, tariffType,
+                productValue, productQuantity, currency, tariffRate, unitQuantity, rateUnit, tariffType,
                 tariffCost, totalCost, notes
         );
 

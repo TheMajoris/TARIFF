@@ -1,16 +1,14 @@
 package com.cs203.core.dto.requests;
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter()
 @Getter()
 public class RouteOptimizationRequestDto {

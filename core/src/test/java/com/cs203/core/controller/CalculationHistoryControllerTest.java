@@ -38,10 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CalculationHistoryControllerTest {
     private MockMvc mockMvc;
     private CalculationHistoryService calculationHistoryService;
-    private CalculationHistoryController controller;
     private ObjectMapper objectMapper;
     private Authentication mockAuthentication;
-    private UserEntity mockUser;
+    private CalculationHistoryController controller;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -56,7 +55,7 @@ class CalculationHistoryControllerTest {
 
         // Create mock authentication and user
         mockAuthentication = Mockito.mock(Authentication.class);
-        mockUser = new UserEntity();
+        UserEntity mockUser = new UserEntity();
         mockUser.setId(1L);
         mockUser.setFirstName("John");
         mockUser.setLastName("Doe");
@@ -77,15 +76,18 @@ class CalculationHistoryControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/calculation-history saves calculation successfully")
-    void saveCalculation_returnsCreatedResponse() throws Exception {
+    @DisplayName("POST /api/v1/calculation-history saves ad valorem calculation successfully")
+    void saveCalculation_ad_valorem_returnsCreatedResponse() throws Exception {
         // Create test request
         SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -98,6 +100,7 @@ class CalculationHistoryControllerTest {
         savedDto.setId(1L);
         savedDto.setCalculationName("Test Calculation");
         savedDto.setProductValue(new BigDecimal("1000.00"));
+        savedDto.setProductQuantity(new BigDecimal("1000.00"));
         savedDto.setCurrencyCode("USD");
         savedDto.setTariffRate(new BigDecimal("0.10"));
         savedDto.setTariffType("ad-valorem");
@@ -127,9 +130,83 @@ class CalculationHistoryControllerTest {
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.calculationName").value("Test Calculation"))
                 .andExpect(jsonPath("$.data.productValue").value(1000.00))
+                .andExpect(jsonPath("$.data.productQuantity").value(1000.00))
                 .andExpect(jsonPath("$.data.currencyCode").value("USD"))
                 .andExpect(jsonPath("$.data.tariffRate").value(0.10))
                 .andExpect(jsonPath("$.data.tariffType").value("ad-valorem"))
+                .andExpect(jsonPath("$.data.calculatedTariffCost").value(100.00))
+                .andExpect(jsonPath("$.data.totalCost").value(1100.00))
+                .andExpect(jsonPath("$.data.notes").value("Test notes"))
+                .andExpect(jsonPath("$.data.userId").value(1))
+                .andExpect(jsonPath("$.data.importingCountryCode").value("US"))
+                .andExpect(jsonPath("$.data.exportingCountryCode").value("CN"))
+                .andExpect(jsonPath("$.data.productCategoryCode").value(123456))
+                .andExpect(jsonPath("$.message").value("Calculation saved successfully"));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/calculation-history saves specific calculation successfully")
+    void saveCalculation_specific_returnsCreatedResponse() throws Exception {
+        // Create test request
+        SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
+                "Test Calculation",
+                new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
+                "USD",
+                new BigDecimal("0.10"),
+                "specific",
+                new BigDecimal("1"),
+                "kg",
+                new BigDecimal("100.00"),
+                new BigDecimal("1100.00"),
+                "Test notes",
+                "US",
+                "CN",
+                123456);
+
+        // Create expected response
+        SavedCalculationDto savedDto = new SavedCalculationDto();
+        savedDto.setId(1L);
+        savedDto.setCalculationName("Test Calculation");
+        savedDto.setProductValue(new BigDecimal("1000.00"));
+        savedDto.setProductQuantity(new BigDecimal("1000.00"));
+        savedDto.setCurrencyCode("USD");
+        savedDto.setTariffRate(new BigDecimal("0.10"));
+        savedDto.setTariffType("specific");
+        savedDto.setUnitQuantity(new BigDecimal(1));
+        savedDto.setRateUnit("kg");
+        savedDto.setCalculatedTariffCost(new BigDecimal("100.00"));
+        savedDto.setTotalCost(new BigDecimal("1100.00"));
+        savedDto.setNotes("Test notes");
+        savedDto.setCreatedAt(LocalDateTime.now());
+        savedDto.setUpdatedAt(LocalDateTime.now());
+        savedDto.setUserId(1L);
+        savedDto.setImportingCountryCode("US");
+        savedDto.setExportingCountryCode("CN");
+        savedDto.setProductCategoryCode(123456);
+
+        GenericResponse<SavedCalculationDto> response = new GenericResponse<>(
+                HttpStatus.CREATED,
+                "Calculation saved successfully",
+                savedDto);
+
+        when(calculationHistoryService.saveCalculation(any(SaveCalculationRequestDTO.class), eq(1L)))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/v1/calculation-history")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .principal(mockAuthentication))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.calculationName").value("Test Calculation"))
+                .andExpect(jsonPath("$.data.productValue").value(1000.00))
+                .andExpect(jsonPath("$.data.productQuantity").value(1000.00))
+                .andExpect(jsonPath("$.data.currencyCode").value("USD"))
+                .andExpect(jsonPath("$.data.tariffRate").value(0.10))
+                .andExpect(jsonPath("$.data.tariffType").value("specific"))
+                .andExpect(jsonPath("$.data.unitQuantity").value(1))
+                .andExpect(jsonPath("$.data.rateUnit").value("kg"))
                 .andExpect(jsonPath("$.data.calculatedTariffCost").value(100.00))
                 .andExpect(jsonPath("$.data.totalCost").value(1100.00))
                 .andExpect(jsonPath("$.data.notes").value("Test notes"))
@@ -148,9 +225,12 @@ class CalculationHistoryControllerTest {
         calculation1.setId(1L);
         calculation1.setCalculationName("Calculation 1");
         calculation1.setProductValue(new BigDecimal("1000.00"));
+        calculation1.setProductQuantity(new BigDecimal("1000.00"));
         calculation1.setCurrencyCode("USD");
         calculation1.setTariffRate(new BigDecimal("0.10"));
         calculation1.setTariffType("ad-valorem");
+        calculation1.setUnitQuantity(null);
+        calculation1.setRateUnit(null);
         calculation1.setCalculatedTariffCost(new BigDecimal("100.00"));
         calculation1.setTotalCost(new BigDecimal("1100.00"));
         calculation1.setNotes("Notes 1");
@@ -165,9 +245,12 @@ class CalculationHistoryControllerTest {
         calculation2.setId(2L);
         calculation2.setCalculationName("Calculation 2");
         calculation2.setProductValue(new BigDecimal("2000.00"));
+        calculation2.setProductQuantity(new BigDecimal("2000.00"));
         calculation2.setCurrencyCode("EUR");
         calculation2.setTariffRate(new BigDecimal("0.15"));
         calculation2.setTariffType("specific");
+        calculation1.setUnitQuantity(new BigDecimal("1"));
+        calculation1.setRateUnit("kg");
         calculation2.setCalculatedTariffCost(new BigDecimal("300.00"));
         calculation2.setTotalCost(new BigDecimal("2300.00"));
         calculation2.setNotes("Notes 2");
@@ -196,10 +279,12 @@ class CalculationHistoryControllerTest {
                 .andExpect(jsonPath("$.data[0].id").value(1))
                 .andExpect(jsonPath("$.data[0].calculationName").value("Calculation 1"))
                 .andExpect(jsonPath("$.data[0].productValue").value(1000.00))
+                .andExpect(jsonPath("$.data[0].productQuantity").value(1000.00))
                 .andExpect(jsonPath("$.data[0].currencyCode").value("USD"))
                 .andExpect(jsonPath("$.data[1].id").value(2))
                 .andExpect(jsonPath("$.data[1].calculationName").value("Calculation 2"))
                 .andExpect(jsonPath("$.data[1].productValue").value(2000.00))
+                .andExpect(jsonPath("$.data[1].productQuantity").value(2000.00))
                 .andExpect(jsonPath("$.data[1].currencyCode").value("EUR"))
                 .andExpect(jsonPath("$.message").value("Calculations retrieved successfully"));
     }
@@ -207,7 +292,7 @@ class CalculationHistoryControllerTest {
     @Test
     @DisplayName("GET /api/v1/calculation-history returns empty list when no calculations exist")
     void getCalculationsByUserId_returnsEmptyList_whenNoCalculationsExist() throws Exception {
-        List<SavedCalculationDto> emptyList = Arrays.asList();
+        List<SavedCalculationDto> emptyList = List.of();
 
         GenericResponse<List<SavedCalculationDto>> response = new GenericResponse<>(
                 HttpStatus.OK,
@@ -245,9 +330,12 @@ class CalculationHistoryControllerTest {
         SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
                 "", // blank name
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -268,9 +356,38 @@ class CalculationHistoryControllerTest {
         SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 null, // null value
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
+                new BigDecimal("100.00"),
+                new BigDecimal("1100.00"),
+                "Test notes",
+                "US",
+                "CN",
+                123456);
+
+        mockMvc.perform(post("/api/v1/calculation-history")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .principal(mockAuthentication))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST - Returns 400 when productQuantity is null")
+    void saveCalculation_withNullProductQuantity_returnsBadRequest() throws Exception {
+        SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
+                "Test Calculation",
+                new BigDecimal("1000.00"),
+                null, // null value
+                "USD",
+                new BigDecimal("0.10"),
+                "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -297,9 +414,12 @@ class CalculationHistoryControllerTest {
         SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -331,9 +451,12 @@ class CalculationHistoryControllerTest {
         SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
                 "Test Calculation",
                 new BigDecimal("1000.00"),
+                new BigDecimal("1000.00"),
                 "USD",
                 new BigDecimal("0.10"),
                 "ad-valorem",
+                null,
+                null,
                 new BigDecimal("100.00"),
                 new BigDecimal("1100.00"),
                 "Test notes",
@@ -347,31 +470,4 @@ class CalculationHistoryControllerTest {
 
         assertTrue(ex.getMessage().contains("Unsupported principal type"));
     }
-
-
-        @Test
-        @DisplayName("POST - Returns 400 when productQuantity is null")
-        void saveCalculation_withNullProductQuantity_returnsBadRequest() throws Exception {
-                SaveCalculationRequestDTO requestDto = new SaveCalculationRequestDTO(
-                                "Test Calculation",
-                                new BigDecimal("1000.00"),
-                                null, // null value
-                                "USD",
-                                new BigDecimal("0.10"),
-                                "ad-valorem",
-                                null,
-                                null,
-                                new BigDecimal("100.00"),
-                                new BigDecimal("1100.00"),
-                                "Test notes",
-                                "US",
-                                "CN",
-                                123456);
-
-                mockMvc.perform(post("/api/v1/calculation-history")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(requestDto))
-                                .principal(mockAuthentication))
-                                .andExpect(status().isBadRequest());
-        }
 }
