@@ -990,7 +990,6 @@
 
 		<div class="modal-box max-w-2xl">
 			<h3 class="mb-2 text-lg font-semibold">{selectedArticle.title}</h3>
-			<p class="mb-4 text-xs text-gray-500">{selectedArticle.date}</p>
 			<p class="mb-4 text-sm">{selectedArticle.summary}</p>
 			{#if selectedArticle.tags && selectedArticle.tags.length > 0}
 				<div class="mb-4 flex flex-wrap gap-1">
