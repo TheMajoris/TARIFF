@@ -1,5 +1,6 @@
 package com.cs203.core.config;
 
+import com.cs203.core.enums.UserRole;
 import com.cs203.core.resolver.CustomBearerTokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,14 +49,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculation").authenticated()
 
                 // tariff CUD stuff
-                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
 
                 // Product Categories CUD
-                .requestMatchers(HttpMethod.POST, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/product-categories/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
 
                 // calculation history - allow any authenticated user
                 .requestMatchers("/api/v1/calculation-history/**").authenticated()

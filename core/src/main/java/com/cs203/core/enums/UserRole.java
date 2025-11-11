@@ -12,4 +12,8 @@ public enum UserRole {
     UserRole(String authority) {
         this.authority = authority;
     }
+
+    public String getScopeAuthority() {
+        return "SCOPE_" + authority;
+    }
 }
