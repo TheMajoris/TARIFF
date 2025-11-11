@@ -1,5 +1,6 @@
 package com.cs203.core.config;
 
+import com.cs203.core.enums.ApiPath;
 import com.cs203.core.enums.UserRole;
 import com.cs203.core.resolver.CustomBearerTokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,34 +43,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
-                // tariff, productCategories R stuff
-                .requestMatchers(HttpMethod.GET, "/api/v1/tariff-rate/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/v1/product-categories/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/calculation").authenticated()
+        http.authorizeHttpRequests(auth -> {
+            // --- Admin-only CUD endpoints ---
+            String[] adminCudEndpoints = ApiPath.pathsOf(
+                    ApiPath.TARIFF_RATE,
+                    ApiPath.PRODUCT_CATEGORIES
+            );
 
-                // tariff CUD stuff
-                .requestMatchers(HttpMethod.POST, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
-                .requestMatchers(HttpMethod.PUT, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/tariff-rate/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+            for (String path : adminCudEndpoints) {
+                auth
+                        .requestMatchers(HttpMethod.POST, path).hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                        .requestMatchers(HttpMethod.PUT, path).hasAuthority(UserRole.ADMIN.getScopeAuthority())
+                        .requestMatchers(HttpMethod.DELETE, path).hasAuthority(UserRole.ADMIN.getScopeAuthority());
+            }
 
-                // Product Categories CUD
-                .requestMatchers(HttpMethod.POST, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
-                .requestMatchers(HttpMethod.PUT, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/product-categories/**").hasAuthority(UserRole.ADMIN.getScopeAuthority())
+            // --- Authenticated endpoints ---
+            auth
+                    .requestMatchers(HttpMethod.GET, ApiPath.TARIFF_RATE.getPath()).authenticated()
+                    .requestMatchers(HttpMethod.GET, ApiPath.PRODUCT_CATEGORIES.getPath()).authenticated()
+                    .requestMatchers(HttpMethod.POST, ApiPath.TARIFF_RATE_CALCULATION.getPath()).authenticated()
+                    .requestMatchers(ApiPath.CALCULATION_HISTORY.getPath()).authenticated()
+                    .requestMatchers(HttpMethod.POST, ApiPath.ROUTE.getPath()).authenticated()
+                    .requestMatchers(
+                            ApiPath.AUTH_LOGOUT.getPath(),
+                            ApiPath.AUTH_REFRESH.getPath()
+                    ).authenticated()
 
-                // calculation history - allow any authenticated user
-                .requestMatchers("/api/v1/calculation-history/**").authenticated()
-
-                // alternative routes - allow any authenticated user similar to calculation
-                .requestMatchers(HttpMethod.POST, "/api/v1/route/**").authenticated()
-
-                // auth stuff
-                .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/refresh").authenticated()
-
-                // everything else
-                .anyRequest().permitAll()
-        );
+                    // --- Public fallback ---
+                    .anyRequest().permitAll();
+        });
 
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
