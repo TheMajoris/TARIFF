@@ -8,9 +8,11 @@ TARIFF is an application designed to help international traders navigate current
 
 - **User Authentication**: Secure login system for users and admins
 - **Tariff Calculation**: Calculate the costs incurred for different products across countries
+- **Tariff Calculation History**: Save your calculations for future reference
 - **Trade Route Optimization**: Find the most cost-effective shipping routes to minimize expenses incurred
 - **Real-time Updates**: Live tariff and trade policy news
-- **Admin Dashboard**: Admin interface for tariff rule management
+- **Admin Dashboard**: Admin interface for tariff rule and product category management
+- **Settings**: Change the theme of the website from light to dark mode based on user's preference
 - **Modern UI**: Built with Svelte, TailwindCSS, and daisyUI for responsive design
 - **Robust Backend**: Scalable Spring Boot REST API
 - **Secure Database**: PostgreSQL database with proper data modeling
@@ -18,21 +20,97 @@ TARIFF is an application designed to help international traders navigate current
 ## Tech Stack
 
 ### Frontend
-- **Framework**: SvelteKit
-- **Styling**: TailwindCSS + daisyUI
-- **Language**: TypeScript
-- **Testing**: Vitest (unit), Playwright (E2E)
+- **Framework**: SvelteKit 2.22
+- **Language**: TypeScript 5.0
+- **Styling**: TailwindCSS 4.1 + daisyUI 5.1
+- **Testing**: Vitest 3.2 (unit), Playwright 1.49 (E2E)
+- **Build Tool**: Vite 7.0
+- **Code Quality**: ESLint, Prettier
 
 ### Backend
-- **Framework**: Spring Boot
-- **Language**: Java
-- **Database**: PostgreSQL
-- **Build Tool**: Gradle
-- **Testing**: JUnit
+- **Framework**: Spring Boot 3.5.5
+- **Language**: Java 17
+- **Database**: PostgreSQL 16
+- **ORM**: Spring Data JPA (Hibernate)
+- **Build Tool**: Gradle 8.14
+- **Testing**: JUnit 5, Spring Boot Test, JaCoCo
+- **Security**: Spring Security + OAuth2 + JWT (Nimbus JOSE)
+- **API Documentation**: SpringDoc OpenAPI 2.8 + SwaggerUI
+- **Object Mapping**: MapStruct 1.6
+- **AI Integration**: Spring AI 1.0 (OpenAI)
+- **Code Quality**: SonarQube/SonarCloud
+
+### DevOps & Tools
+- **Containerization**: Docker
+- **CI/CD**: GitHub Actions
+- **Code Analysis**: SonarCloud
+- **Issue Tracking**: JIRA
+- **PR Reviews**: CodeRabbit
 
 ## Project Structure
 
-*Blank for now as this is subject to change
+```
+TARIFF/
+├── core/                          # Backend (Spring Boot)
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/cs203/core/
+│   │   │   │   ├── controller/    # REST API endpoints
+│   │   │   │   ├── service/       # Business logic
+│   │   │   │   ├── repository/    # Database access layer
+│   │   │   │   ├── model/         # Entity classes
+│   │   │   │   ├── dto/           # Data Transfer Objects
+│   │   │   │   ├── config/        # Configuration classes
+│   │   │   │   └── security/      # Authentication & authorization
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       └── seed-database.sql
+│   │   └── test/
+│   │       ├── java/com/cs203/core/
+│   │       │   ├── controller/    # Controller tests
+│   │       │   ├── service/       # Service tests
+│   │       │   └── repository/    # Repository tests
+│   │       └── resources/
+│   │           └── application-test.properties
+│   ├── build.gradle               # Gradle build configuration
+│   ├── Dockerfile                 # Docker configuration
+│   └── compose.yaml               # Docker Compose setup
+│
+├── frontend/                      # Frontend (SvelteKit)
+│   ├── src/
+│   │   ├── lib/
+│   │   │   ├── components/        # Svelte components
+│   │   │   ├── api/               # API client functions
+│   │   │   ├── stores/            # State management
+│   │   │   └── assets/            # Images, icons, etc.
+│   │   └── routes/                # SvelteKit routes (pages)
+│   │       ├── admin/             # Admin dashboard
+│   │       ├── history/           # Calculation history
+│   │       ├── login/             # Login page
+│   │       ├── register/          # Registration page
+│   │       └── settings/          # User settings
+│   ├── e2e/                       # Playwright E2E tests
+│   ├── static/                    # Static assets
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── playwright.config.ts
+│
+├── docs/                          # Documentation
+│   ├── api.json                   # API specification
+│   ├── api-guide.md               # API usage guide
+│   ├── sonarqube-setup.md         # SonarQube integration guide
+│   └── Standups/                  # Team standup notes
+│   └── Sprint Meeting Agenda/     # Team Sprint meeting agenda notes
+│   └── Wireframe/                  # Wireframes created for each sprint
+│
+├── .github/
+│   ├── workflows/                 # CI/CD pipelines
+│   │   ├── unit-test.yml          # Backend unit tests
+│   │   └── sonarqube.yml          # Code quality analysis
+│   └── pull_request_template.md   # PR template
+│
+└── README.md                      # README
+```
 
 ## Getting Started
 
@@ -51,7 +129,7 @@ git clone https://github.com/TheMajoris/TARIFF
 cd core
 ```
 
-2. **Setup local instance of DB**
+2. **Start the Backend Spring Boot Application**
 This will build the Spring Boot JAR and start both the backend and PostgreSQL containers.
 ```bash
 docker compose up --build -d
@@ -63,7 +141,7 @@ Backend by default will be available at http://localhost:8080
 
 4. **[Optional] Run Tests:**
 ```bash
-bash gradlew test
+bash gradlew clean test jacocoTestReport
 ```
 
 ### **Frontend Setup**
@@ -81,7 +159,7 @@ npx playwright install
 3. **Start development server:**
 ```bash
 npm run dev -- --open
-```
+``` 
 
 4. **Run Tests:**
 ```bash
@@ -104,8 +182,6 @@ sudo docker exec -it core-db-1 psql -U admin -d tariff_db
 You guys should see something like this
 <img width="800" height="651" alt="image" src="https://github.com/user-attachments/assets/aa80d9c1-1bbe-4ec6-9a17-ecbd176704db" />
 
-
-
 6. **Tear Down**
 ```bash
 docker compose down -v
@@ -113,17 +189,18 @@ docker compose down -v
 
 ## API Documentation
 
-API documentation is available in [docs/api.json](docs/api.json).
+API documentation is available on [our dedicated swagger page](http://localhost:8080/swagger-ui.html)
 
 ## Development Workflow
 
 - **Issue Tracking**: Issues are tracked in JIRA
-- **Branch Naming**: Relevant 
+- **Branch Naming**: Relevant to the issue or named after the SCRUM task
 - **Pull Requests**: Use the provided [PR template](.github/pull_request_template.md)
 - **CI/CD**: Automated testing via GitHub Actions
+- **Code Review**: CodeRabbitAI for a first look, then shifted to manual review.
 
 ## Testing
 
-- **Backend**: Unit tests with JUnit
-- **Frontend**: Unit tests with Vitest, E2E tests with Playwright
+- **Backend**: Unit tests with JUnit; Generated code coverage report by JaCoCo can be found in this file: `core/build/reports/jacoco/test/html/index.html`
+- **Frontend**: Unit tests with Vitest, E2E tests with Playwright can be found in this file: `frontend/test-results/playwright-e2e-report/index.html`
 - **CI**: Automated testing on pull requests
