@@ -4,11 +4,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-        import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;
 
 class CustomBearerTokenResolverTest {
 
@@ -114,6 +114,32 @@ class CustomBearerTokenResolverTest {
         when(request.getCookies()).thenReturn(cookies);
 
         String token = resolver.resolve(request);
+        assertNull(token);
+    }
+
+    @Test
+    void shouldCheckCookiesWhenHeaderTokenIsNull() {
+        // Arrange
+        CustomBearerTokenResolver spyResolver = spy(resolver);
+
+        when(request.getRequestURI()).thenReturn("/api/v1/tariff-rate");
+        when(request.getMethod()).thenReturn("GET");
+        // Simulate no Authorization header
+        when(request.getHeaders("Authorization"))
+                .thenReturn(Collections.emptyEnumeration());
+
+        // Force defaultResolver.resolve(request) to return null
+        doReturn(null)
+                .when(spyResolver)
+                .resolve(any(HttpServletRequest.class));
+
+        Cookie[] cookies = {new Cookie("accessToken", "cookie-token")};
+        when(request.getCookies()).thenReturn(cookies);
+
+        // Act
+        String token = spyResolver.resolve(request);
+
+        // Assert
         assertNull(token);
     }
 }
