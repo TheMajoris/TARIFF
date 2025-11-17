@@ -4,11 +4,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-        import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;
 
 class CustomBearerTokenResolverTest {
 
@@ -115,5 +115,67 @@ class CustomBearerTokenResolverTest {
 
         String token = resolver.resolve(request);
         assertNull(token);
+    }
+
+    @Test
+    void shouldUseCookiesWhenHeaderTokenIsNull() {
+        // Protected path -> allow resolver to run
+        when(request.getRequestURI()).thenReturn("/api/v1/tariff-rate");
+        when(request.getMethod()).thenReturn("GET");
+
+        // DefaultBearerTokenResolver internally calls getHeaders("Authorization")
+        when(request.getHeaders("Authorization"))
+                .thenReturn(Collections.emptyEnumeration());
+
+        // Provide cookies -> branch is hit
+        when(request.getCookies()).thenReturn(new Cookie[]{
+                new Cookie("accessToken", "cookie-token")
+        });
+
+        String token = resolver.resolve(request);
+
+        assertEquals("cookie-token", token);
+    }
+
+    @Test
+    void shouldCheckCookiesWhenHeaderTokenIsNull() {
+        // Arrange
+        when(request.getRequestURI()).thenReturn("/api/v1/tariff-rate");
+        when(request.getMethod()).thenReturn("GET");
+
+        // Simulate no Authorization header by returning empty enumeration
+        when(request.getHeaders("Authorization"))
+                .thenReturn(Collections.emptyEnumeration());
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        Cookie[] cookies = {new Cookie("accessToken", "cookie-token")};
+        when(request.getCookies()).thenReturn(cookies);
+
+        // Act
+        String token = resolver.resolve(request);
+
+        // Assert
+        assertEquals("cookie-token", token);
+    }
+
+    @Test
+    void shouldNotCheckCookiesWhenHeaderTokenExists() {
+        // Arrange
+        when(request.getRequestURI()).thenReturn("/api/v1/tariff-rate");
+        when(request.getMethod()).thenReturn("GET");
+
+        // Mock Authorization header to exist
+        when(request.getHeader("Authorization")).thenReturn("Bearer header-token");
+
+        // Provide cookies (but they should be ignored)
+        Cookie[] cookies = {new Cookie("accessToken", "cookie-token")};
+        when(request.getCookies()).thenReturn(cookies);
+
+        // Act
+        String token = resolver.resolve(request);
+
+        // Assert
+        // DefaultBearerTokenResolver strips "Bearer " prefix
+        assertEquals("header-token", token);
     }
 }
